@@ -31,4 +31,6 @@ public class Prescription {
     private String diagnosis;
     @Column(name = "medical_facility")
     private String medicalFacility;
+
+
 }

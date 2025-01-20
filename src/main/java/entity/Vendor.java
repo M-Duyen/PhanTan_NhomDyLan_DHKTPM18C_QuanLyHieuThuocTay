@@ -21,7 +21,7 @@ public class Vendor {
     }
 
     @Id
-    @Column(name = "vendor_id")
+    @Column(name = "vendor_id", nullable = false)
     private String vendorID;
 
     @Column(name = "vendor_name")
