@@ -21,7 +21,7 @@ public class Product {
     @Column(name = "registration_number", columnDefinition = "varchar(16)")
     private String registrationNumber;
 
-    @Column(name = "purchase_price", columnDefinition = "money")
+    @Column(name = "purchase_price")
     private double purchasePrice;
 
     @Column(name = "tax_percentage", columnDefinition = "float")
@@ -42,7 +42,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(columnDefinition = "varchar(60)")
+    @Column(name ="unit_note", columnDefinition = "varchar(60)")
     private String unitNote;
 
 

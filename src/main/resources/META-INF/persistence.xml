@@ -12,7 +12,7 @@
         <class>entity.MedicalSupplies</class>
         <class>entity.Medicine</class>
         <class>entity.Order</class>
-        <class>entity.OrderDetails</class>
+        <class>entity.OrderDetail</class>
         <class>entity.Prescription</class>
         <class>entity.ProductUnit</class>
         <class>entity.Promotion</class>
