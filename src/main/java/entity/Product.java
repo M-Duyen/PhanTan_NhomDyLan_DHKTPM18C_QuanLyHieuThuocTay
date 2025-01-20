@@ -50,10 +50,10 @@ public class Product {
     @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "productID"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
-    private Map<Enum_PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
+    private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
 
-    public double getSellPrice(Enum_PackagingUnit unit) {
+    public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
     }
 

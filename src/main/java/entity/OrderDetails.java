@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
-
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -26,7 +24,7 @@ public class OrderDetails {
     @Id
     @EqualsAndHashCode.Include
     @Enumerated(EnumType.STRING)
-    private Enum_PackagingUnit unit;
+    private PackagingUnit unit;
 
     @Column(name = "order_quantity", nullable = false)
     private int orderQuantity;

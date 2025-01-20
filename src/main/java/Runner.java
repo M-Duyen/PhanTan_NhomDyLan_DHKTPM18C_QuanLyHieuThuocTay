@@ -5,11 +5,11 @@ import entity.Vendor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import net.datafaker.Faker;
+//import net.datafaker.Faker;
 
 public class Runner {
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+        EntityManager em = Persistence.createEntityManagerFactory("SHH-mariaDB").createEntityManager();
 //        EntityTransaction tr = em.getTransaction();
 //        Faker faker = new Faker();
 //        tr.begin();
