@@ -2,6 +2,8 @@ package entity;
 
 import dao.OrderDetails_DAO;
 import dao.Order_DAO;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -12,18 +14,55 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "orders")
 public class Order {
+    @Id
+    @EqualsAndHashCode.Include
+    @Column(name = "order_id", nullable = false)
     private String orderID;
+
+    @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
+
+    @Column(name = "ship_to_address")
     private String shipToAddress;
     private Enum_PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @Column(name = "discount")
     private double discount;
+
+    @OneToOne
+    @JoinColumn(name = "employee_id")
     private Employee employee;
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @OneToOne
+    @JoinColumn(name = "prescription_id")
     private Prescription prescription;
+    @OneToMany
+    @JoinColumn(name = "order")
     private ArrayList<OrderDetails> listOrderDetail;
 
+    @Transient
+    public double getTotalDue() {
+        double totalDue = 0;
+        if (listOrderDetail != null) {
+            for (OrderDetail orderDetail : listOrderDetail) {
+                totalDue += orderDetail.getLineTotal();
+            }
+        }
+        return totalDue * (1 - discount);
+    }
 
     public Order() {
     }
@@ -52,9 +91,9 @@ public class Order {
         this.discount = discount;
     }
 
-    public double getTotalDue(){
-        return Math.ceil(Order_DAO.getInstance().getTotalDue(orderID));
-    }
+//    public double getTotalDue(){
+//        return Math.ceil(Order_DAO.getInstance().getTotalDue(orderID));
+//    }
 
     public void addOrderDetail(OrderDetails odt){
         listOrderDetail.add(odt);

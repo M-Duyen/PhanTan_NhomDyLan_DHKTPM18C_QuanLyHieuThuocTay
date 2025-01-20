@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "products")
 public class Product {
     @Id
     @Column(unique = true, nullable = false, columnDefinition = "char(14)")
@@ -300,8 +301,8 @@ public class Product {
         String unitPriceString = " ";
         for (Map.Entry<Enum_PackagingUnit, Double> entry : unitPrice.entrySet()) {
 //                String packagingUnitStr = entry.getKey().name();
-                unitPriceString += productID + "//" + entry.getKey().name() + "//" + entry.getValue();
-            }
+            unitPriceString += productID + "//" + entry.getKey().name() + "//" + entry.getValue();
+        }
         return "Product{" +
                 "productID='" + productID + '\'' +
                 ", productName='" + productName + '\'' +
