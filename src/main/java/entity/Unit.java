@@ -29,15 +29,6 @@ public class Unit {
         this.unitID = unitID;
     }
 
-    public void setUnitID(String unitID) {
-        this.unitID = unitID;
-    }
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public Unit() {}
 }
 

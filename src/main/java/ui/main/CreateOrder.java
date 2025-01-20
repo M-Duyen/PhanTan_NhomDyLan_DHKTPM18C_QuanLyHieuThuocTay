@@ -2,7 +2,7 @@ package ui.main;
 
 import dao.Product_DAO;
 import dao.Unit_DAO;
-import entity.Enum_PackagingUnit;
+import entity.PackagingUnit;
 import entity.Product;
 import ui.button.Button;
 import ui.dialog.Message;
@@ -164,7 +164,7 @@ public class CreateOrder extends JPanel {
         productConfirm.showAlert();
 
         if(productConfirm.flag) {
-            Enum_PackagingUnit unit = productConfirm.getEnumUnit();
+            PackagingUnit unit = productConfirm.getEnumUnit();
             int qty = productConfirm.getQuantity();
             double sellPrice = productConfirm.getSellPrice();
 
@@ -382,7 +382,7 @@ public class CreateOrder extends JPanel {
      * @param quantity
      * @param unit
      */
-    private void addRow(TempOrderForm tempOrderForm, Product product, int quantity, Enum_PackagingUnit unit){
+    private void addRow(TempOrderForm tempOrderForm, Product product, int quantity, PackagingUnit unit){
         DecimalFormat df = new DecimalFormat("#,##0.00 VND");
         Object[] rowData = {product.getProductID(), product.getProductName(), new Unit_DAO().convertUnit(unit), quantity, df.format(product.getSellPrice(unit)), df.format(quantity * product.getSellPrice(unit))}; //product.getSellPrice(), product.getSellPrice()
         tempOrderForm.addProductRow(rowData);

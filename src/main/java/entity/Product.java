@@ -97,15 +97,15 @@ public class Product {
         this.unitStock = new HashMap<>();
     }
 
-    public double getSellPrice(Enum_PackagingUnit unit) {
+    public double getSellPrice(PackagingUnit unit) {
         return unitPrice.get(unit);
     }
 
-    public Map<Enum_PackagingUnit, Integer> getInStock_BySmallestUnit() {
-        Enum_PackagingUnit unitTemp = null;
+    public Map<PackagingUnit, Integer> getInStock_BySmallestUnit() {
+        PackagingUnit unitTemp = null;
         int inStockTemp = 0;
 
-        for (Map.Entry<Enum_PackagingUnit, Integer> entry : unitStock.entrySet()) {
+        for (Map.Entry<PackagingUnit, Integer> entry : unitStock.entrySet()) {
             if (entry.getValue() > inStockTemp || (entry.getValue() == inStockTemp &&
                     (unitTemp == null || entry.getKey().ordinal() < unitTemp.ordinal()))) {
                 inStockTemp = entry.getValue();
@@ -113,7 +113,7 @@ public class Product {
             }
         }
 
-        Map<Enum_PackagingUnit, Integer> result = new HashMap<>();
+        Map<PackagingUnit, Integer> result = new HashMap<>();
         if (unitTemp != null) {
             result.put(unitTemp, inStockTemp);
         }
@@ -121,7 +121,7 @@ public class Product {
         return result;
     }
 
-    public double setSellPrice(Enum_PackagingUnit unit){
+    public double setSellPrice(PackagingUnit unit){
         double price = unitPrice.get(unit);
         double sellPrice = 0;
 
@@ -136,28 +136,20 @@ public class Product {
         //Math.ceil(sellPrice); //Làm tròn lên
     }
 
-    public HashMap<Enum_PackagingUnit, Double> getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(HashMap<Enum_PackagingUnit, Double> unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public void addUnit(Enum_PackagingUnit unit, double price, int inStock){
+    public void addUnit(PackagingUnit unit, double price, int inStock){
         unitPrice.put(unit, price);
         unitStock.put(unit, inStock);
     }
     // Getter cho danh sách đơn vị đóng gói
-    public List<Enum_PackagingUnit> getPackagingUnitsList() {
+    public List<PackagingUnit> getPackagingUnitsList() {
         return new ArrayList<>(unitPrice.keySet());
     }
 
-    public double getPriceByUnit(Enum_PackagingUnit unit){
+    public double getPriceByUnit(PackagingUnit unit){
         return unitPrice.getOrDefault(unit, 0.0);
     }
 
-    public int getInStockByUnit(Enum_PackagingUnit unit){
+    public int getInStockByUnit(PackagingUnit unit){
         return unitStock.getOrDefault(unit, 0);
     }
     //get giá bán

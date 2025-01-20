@@ -101,7 +101,7 @@ public class ProductConfirm extends SweetAlert {
             public void keyReleased(KeyEvent e) {
                 String quantity = txtQuantity.getText().trim();
                 String unitName = Unit_DAO.getInstance().convertDes_ToUnit(String.valueOf(cbbUnit.getSelectedItem()));
-                Enum_PackagingUnit unitEnum = Enum_PackagingUnit.fromString(unitName);
+                PackagingUnit unitEnum = PackagingUnit.fromString(unitName);
                 int inStock = Product_DAO.getInstance().getProduct_ByID(product.getProductID()).getInStockByUnit(unitEnum);
 
                 if(!quantity.isEmpty()){
@@ -251,7 +251,7 @@ public class ProductConfirm extends SweetAlert {
                 String description = String.valueOf(cbbUnit.getSelectedItem());
                 String unitName = Unit_DAO.getInstance().getUnit_ByDes(description).getUnitName();
 
-                Enum_PackagingUnit unitE = Enum_PackagingUnit.fromString(unitName);
+                PackagingUnit unitE = PackagingUnit.fromString(unitName);
 
                 txtInStock.setText(String.valueOf(product.getInStockByUnit(unitE)));
                 txtQuantity.setText(String.valueOf(1));
@@ -321,7 +321,7 @@ public class ProductConfirm extends SweetAlert {
     }
 //String orderID, LocalDateTime orderDate, String shipToAddress, Enum_PaymentMethod paymentMethod, double discount, Employee employee, Customer customer, Prescription prescription
     public OrderDetails getOrderDetails(Order or, String orderIDNew){
-        return new OrderDetails(Integer.parseInt(txtQuantity.getText().trim()), new Order(orderIDNew, LocalDateTime.now(), or.getShipToAddress(), or.getPaymentMethod(), or.getDiscount(), StaticProcess.empLogin, or.getCustomer(), or.getPrescription()), Product_DAO.getInstance().getProduct_ByID(txtProductID.getText()), Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByDes(cbbUnit.getSelectedItem().toString()).getUnitName()));
+        return new OrderDetails(Integer.parseInt(txtQuantity.getText().trim()), new Order(orderIDNew, LocalDateTime.now(), or.getShipToAddress(), or.getPaymentMethod(), or.getDiscount(), StaticProcess.empLogin, or.getCustomer(), or.getPrescription()), Product_DAO.getInstance().getProduct_ByID(txtProductID.getText()), PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByDes(cbbUnit.getSelectedItem().toString()).getUnitName()));
     }
 
     public void updateComboboxUnit(){
@@ -352,8 +352,8 @@ public class ProductConfirm extends SweetAlert {
         }
     }
 
-    public Enum_PackagingUnit getEnumUnit(){
-        return Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByDes(cbbUnit.getSelectedItem().toString()).getUnitName());
+    public PackagingUnit getEnumUnit(){
+        return PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByDes(cbbUnit.getSelectedItem().toString()).getUnitName());
     }
 
     public void setSelectedComboboxUnit(String desUnit, int qty) {

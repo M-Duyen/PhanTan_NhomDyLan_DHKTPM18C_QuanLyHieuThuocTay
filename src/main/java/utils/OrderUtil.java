@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class OrderUtil {
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("mariadb")
+        EntityManager em = Persistence.createEntityManagerFactory("SHH-mariaDB")
                 .createEntityManager();
 
         EntityTransaction tr = em.getTransaction();
@@ -34,9 +34,14 @@ public class OrderUtil {
             order.setPaymentMethod(faker.options().option(PaymentMethod.class));
             order.setDiscount(faker.number().randomDouble(2, 0, 20) / 100);
 
-            order.setEmployee(createSampleEmployee(faker));
-            order.setCustomer(createSampleCustomer(faker));
-            order.setPrescription(createSamplePrescription(faker));
+            Employee employee = createSampleEmployee(faker);
+            order.setEmployee(employee);
+
+            Customer customer = createSampleCustomer(faker);
+            order.setCustomer(customer);
+
+            Prescription prescription = createSamplePrescription(faker);
+            order.setPrescription(prescription);
 
             int numOfDetails = faker.number().numberBetween(1, 5);
             for (int j = 0; j < numOfDetails; j++) {
@@ -53,12 +58,19 @@ public class OrderUtil {
 
             order.setListOrderDetail(orderDetailList);
             orderList.add(order);
+
+            tr.begin();
+            em.persist(employee);
+            em.persist(customer);
+            em.persist(prescription);
+            em.persist(order);
+            tr.commit();
         }
     }
 
     private static Prescription createSamplePrescription(Faker faker) {
         Prescription prescription = new Prescription();
-        prescription.setPrescriptionId("PC" + faker.number().digits(3));
+        prescription.setPrescriptionID("PC" + faker.number().digits(3));
         return prescription;
     }
 

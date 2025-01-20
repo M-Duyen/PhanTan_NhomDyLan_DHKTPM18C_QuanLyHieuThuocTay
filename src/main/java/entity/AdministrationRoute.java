@@ -1,14 +1,25 @@
 package entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Objects;
 
 @Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "administration_routes")
 public class AdministrationRoute {
+    //TODO:
     @Id
+    @EqualsAndHashCode.Include
+    @Column(name = "administration_id")
     private String administrationID;
+
     private String administrationName;
 
     public AdministrationRoute() {
@@ -44,33 +55,5 @@ public class AdministrationRoute {
             throw new IllegalArgumentException("Tên đường dùng không được rỗng");
         }
         this.administrationName = administrationName;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final AdministrationRoute other = (AdministrationRoute) obj;
-        return Objects.equals(this.administrationID, other.administrationID);
-    } 
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(administrationID);
-    }
-
-    @Override
-    public String toString() {
-        return "AdministrationRoute{" +
-                "administrationID='" + administrationID + '\'' +
-                ", administrationName='" + administrationName + '\'' +
-                '}';
     }
 }

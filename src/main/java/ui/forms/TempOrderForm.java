@@ -926,7 +926,7 @@ public class TempOrderForm extends TabbedForm {
 
                 int quantity = quantityList.get(i);
                 String unitName = unitNameList.get(i);
-                Enum_PackagingUnit unit = Enum_PackagingUnit.fromString(new Unit_DAO().convertDes_ToUnit(unitName));
+                PackagingUnit unit = PackagingUnit.fromString(new Unit_DAO().convertDes_ToUnit(unitName));
 
                 OrderDetails od = new OrderDetails(quantity, order, product, unit);
                 if (!new OrderDetails_DAO().addOrderDetails(od, con)) {
@@ -1015,11 +1015,11 @@ public class TempOrderForm extends TabbedForm {
         txtNote.setText("Ghi chú đơn hàng ...");
     }
 
-    public int findRowByProductID(String productID, Enum_PackagingUnit unitEnum) {
+    public int findRowByProductID(String productID, PackagingUnit unitEnum) {
         for (int i = 0; i < model.getRowCount(); i++) {
             String id = (String) model.getValueAt(i, 0);
             String unit = (String) model.getValueAt(i, 2);
-            Enum_PackagingUnit unitE = Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByDes(unit).getUnitName());
+            PackagingUnit unitE = PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByDes(unit).getUnitName());
 
             if (id.equals(productID) && unitE.equals(unitEnum)) {
                 return i;

@@ -7,7 +7,7 @@ public class OrderDetails {
 
     private Order order;
     private Product product;
-    private Enum_PackagingUnit unit;
+    private PackagingUnit unit;
 
     public OrderDetails() {
     }
@@ -23,18 +23,18 @@ public class OrderDetails {
         setOrderQuantity(orderQuantity);
     }
 
-    public OrderDetails(int orderQuantity, Order order, Product product, Enum_PackagingUnit unit) {
+    public OrderDetails(int orderQuantity, Order order, Product product, PackagingUnit unit) {
         this.orderQuantity = orderQuantity;
         this.order = order;
         this.product = product;
         this.unit = unit;
     }
 
-    public Enum_PackagingUnit getUnit() {
+    public PackagingUnit getUnit() {
         return unit;
     }
 
-    public void setUnit(Enum_PackagingUnit unit) {
+    public void setUnit(PackagingUnit unit) {
         this.unit = unit;
     }
 

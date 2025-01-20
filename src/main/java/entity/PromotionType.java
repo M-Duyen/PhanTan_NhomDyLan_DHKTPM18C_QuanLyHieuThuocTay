@@ -1,14 +1,24 @@
 package entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
 
 @Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "promotion_types")
 public class PromotionType {
+
     @Id
+    @EqualsAndHashCode.Include
+    @Column(name = "promotion_type_id")
     private String promotionTypeID;
+
     private String promotionTypeName;
 
     public PromotionType() {
@@ -43,33 +53,5 @@ public class PromotionType {
             throw new IllegalArgumentException("Tên loại khuyến mãi không được rỗng");
         }
         this.promotionTypeName = promotionTypeName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PromotionType other = (PromotionType) obj;
-        return Objects.equals(this.promotionTypeID, other.promotionTypeID);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(promotionTypeID);
-    }
-
-    @Override
-    public String toString() {
-        return "PromotionType{" +
-                "promotionTypeID='" + promotionTypeID + '\'' +
-                ", promotionName='" + promotionTypeName + '\'' +
-                '}';
     }
 }

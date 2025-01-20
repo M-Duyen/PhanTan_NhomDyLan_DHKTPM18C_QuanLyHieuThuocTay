@@ -131,7 +131,7 @@ public class Product_DAO {
                 int inStock = rs2.getInt("inStock");
                 double sellPrice = rs2.getDouble("sellPrice");
 
-                Enum_PackagingUnit unit = Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unitID).getUnitName());
+                PackagingUnit unit = PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unitID).getUnitName());
                 if (product != null) {
                     product.addUnit(unit, sellPrice, inStock);
                 } else {
@@ -315,7 +315,7 @@ public class Product_DAO {
 
 
                 //Xử lý đơn vị, tồn kho và giá cho mỗi đơn vị
-                for (Map.Entry<Enum_PackagingUnit, Double> entry : product.getUnitPrice().entrySet()) {
+                for (Map.Entry<PackagingUnit, Double> entry : product.getUnitPrice().entrySet()) {
                     String unitProduct = "INSERT INTO ProductUnit(productID, unitID, inStock, sellPrice) VALUES (?, ?, ?, ?)";
                     stmt = con.prepareStatement(unitProduct);
                     String unitID = Unit_DAO.getInstance().getUnitByName(entry.getKey().name()).getFirst().getUnitID();
@@ -473,7 +473,7 @@ public class Product_DAO {
                             String unit = rsUnit.getString("unitID");
                             int inStock = rsUnit.getInt("inStock");
                             double sellPrice = rsUnit.getDouble("sellPrice");
-                            medicine.addUnit(Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
+                            medicine.addUnit(PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
                         }
                         productList.add(medicine);
                         break;
@@ -486,7 +486,7 @@ public class Product_DAO {
                             String unit = rsUnitMedical.getString("unitID");
                             int inStock = rsUnitMedical.getInt("inStock");
                             double sellPrice = rsUnitMedical.getDouble("sellPrice");
-                            medical.addUnit(Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
+                            medical.addUnit(PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
                         }
                         productList.add(medical);
                         break;
@@ -499,7 +499,7 @@ public class Product_DAO {
                             String unit = rsUnitFuntionFood.getString("unitID");
                             int inStock = rsUnitFuntionFood.getInt("inStock");
                             double sellPrice = rsUnitFuntionFood.getDouble("sellPrice");
-                            tempFunctionFood.addUnit(Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
+                            tempFunctionFood.addUnit(PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
                         }
                         productList.add(tempFunctionFood);
                         break;
@@ -691,7 +691,7 @@ public class Product_DAO {
                 int inStock = rs2.getInt("inStock");
                 double sellPrice = rs2.getDouble("sellPrice");
 
-                Enum_PackagingUnit unit = Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unitID).getUnitName());
+                PackagingUnit unit = PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unitID).getUnitName());
                 if (product != null) {
                     product.addUnit(unit, sellPrice, inStock);
                 } else {
@@ -743,7 +743,7 @@ public class Product_DAO {
      * @param con
      * @return
      */
-    public boolean updateProductInStock_WithTransaction(String productID, int qtyChange, Enum_PackagingUnit unitEnum, boolean inc, Connection con) {
+    public boolean updateProductInStock_WithTransaction(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc, Connection con) {
         int quantity = 0;
         PreparedStatement sm1 = null;
         PreparedStatement sm2 = null;
@@ -959,7 +959,7 @@ public class Product_DAO {
                             String unit = rsUnit.getString("unitID");
                             int inStock = rsUnit.getInt("inStock");
                             double sellPrice = rsUnit.getDouble("sellPrice");
-                            medicine.addUnit(Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
+                            medicine.addUnit(PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
                         }
                         productList.add(medicine);
                         break;
@@ -972,7 +972,7 @@ public class Product_DAO {
                             String unit = rsUnitMedical.getString("unitID");
                             int inStock = rsUnitMedical.getInt("inStock");
                             double sellPrice = rsUnitMedical.getDouble("sellPrice");
-                            medical.addUnit(Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
+                            medical.addUnit(PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
                         }
                         productList.add(medical);
                         break;
@@ -985,7 +985,7 @@ public class Product_DAO {
                             String unit = rsUnitFuntionFood.getString("unitID");
                             int inStock = rsUnitFuntionFood.getInt("inStock");
                             double sellPrice = rsUnitFuntionFood.getDouble("sellPrice");
-                            tempFunctionFood.addUnit(Enum_PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
+                            tempFunctionFood.addUnit(PackagingUnit.fromString(Unit_DAO.getInstance().getUnit_ByID(unit).getUnitName()), sellPrice, inStock);
                         }
                         productList.add(tempFunctionFood);
                         break;
@@ -1056,9 +1056,9 @@ public class Product_DAO {
         ConnectDB.getInstance().connect();
         Connection con = ConnectDB.getConnection();
         Product_DAO product_dao = new Product_DAO();
-        Enum_PackagingUnit unitEnum = Enum_PackagingUnit.fromString("PILL");
-        Enum_PackagingUnit unitEnum2 = Enum_PackagingUnit.fromString("BLISTER_PACK");
-        Enum_PackagingUnit unitEnum3 = Enum_PackagingUnit.fromString("BOX");
+        PackagingUnit unitEnum = PackagingUnit.fromString("PILL");
+        PackagingUnit unitEnum2 = PackagingUnit.fromString("BLISTER_PACK");
+        PackagingUnit unitEnum3 = PackagingUnit.fromString("BOX");
 
         //product_dao.updateProductInStock_WithTransaction("PM121224000003", 10, unitEnum2, false, con);
     }

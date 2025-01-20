@@ -17,9 +17,8 @@ import com.itextpdf.layout.property.TextAlignment;
 import dao.OrderDetails_DAO;
 import dao.Order_DAO;
 import database.ConnectDB;
-import entity.Enum_PackagingUnit;
+import entity.PackagingUnit;
 import entity.Order;
-import entity.OrderDetails;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 
@@ -111,7 +110,7 @@ public class PDF {
             tableHeader.addCell(getCell10Center("Gói",false).setFont(font));
             tableHeader.addCell(getCell10Center(String.valueOf(detail.getOrderQuantity()),false).setFont(font));
             //TODO: XỬ LÝ ĐƠN VỊ CHỔ NÀY
-            tableHeader.addCell(getCell10Right(String.valueOf(detail.getProduct().getSellPrice(Enum_PackagingUnit.AEROSOL_CAN)),false).setFont(font));
+            tableHeader.addCell(getCell10Right(String.valueOf(detail.getProduct().getSellPrice(PackagingUnit.AEROSOL_CAN)),false).setFont(font));
             tableHeader.addCell(getCell10Right(String.valueOf(detail.getLineTotal()),false).setFont(font));
             i++;
         }

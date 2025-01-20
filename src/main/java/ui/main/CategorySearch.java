@@ -456,7 +456,7 @@ public class CategorySearch extends javax.swing.JPanel {
         List<MedicalSupplies> suppliesList = arrayList.stream().filter(x -> x instanceof MedicalSupplies).map(product -> (MedicalSupplies) product).collect(Collectors.toList());
         List<FunctionalFood> funtionFoodList = arrayList.stream().filter(x -> x instanceof FunctionalFood).map(product -> (FunctionalFood) product).collect(Collectors.toList());
         for (Medicine medicine : medicineList) {
-            for (Map.Entry<Enum_PackagingUnit, Double> entry : medicine.getUnitPrice().entrySet()) {
+            for (Map.Entry<PackagingUnit, Double> entry : medicine.getUnitPrice().entrySet()) {
                 model.addRow(new Object[]{
                         medicine.getProductID(),
                         medicine.getProductName(),
@@ -476,7 +476,7 @@ public class CategorySearch extends javax.swing.JPanel {
         }
 
         for (MedicalSupplies supplies : suppliesList) {
-            for (Map.Entry<Enum_PackagingUnit, Double> entry : supplies.getUnitPrice().entrySet()) {
+            for (Map.Entry<PackagingUnit, Double> entry : supplies.getUnitPrice().entrySet()) {
                 model.addRow(new Object[]{
                         supplies.getProductID(),
                         supplies.getProductName(),
@@ -493,7 +493,7 @@ public class CategorySearch extends javax.swing.JPanel {
             }
         }
         for (FunctionalFood functionalFood : funtionFoodList) {
-            for (Map.Entry<Enum_PackagingUnit, Double> entry : functionalFood.getUnitPrice().entrySet()) {
+            for (Map.Entry<PackagingUnit, Double> entry : functionalFood.getUnitPrice().entrySet()) {
                 model.addRow(new Object[]{
                         functionalFood.getProductID(),
                         functionalFood.getProductName(),

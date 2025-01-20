@@ -5,9 +5,11 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class ProductUnit {
-    @Column(columnDefinition = "money")
+
+    @Column(name = "sell_price", columnDefinition = "money")
     private double sellPrice;
-    @Column(columnDefinition = "int")
+
+    @Column(name = "in_stock", columnDefinition = "int")
     private int inStock;
 
     public ProductUnit() {}

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "categories")
 public class Category {
+    //TODO:
     @Id
     @Column(name = "category_id", nullable = false, unique = true)
     @EqualsAndHashCode.Include

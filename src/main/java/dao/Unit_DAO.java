@@ -1,7 +1,7 @@
 package dao;
 
 import database.ConnectDB;
-import entity.Enum_PackagingUnit;
+import entity.PackagingUnit;
 import entity.Unit;
 
 import java.sql.Connection;
@@ -75,7 +75,7 @@ public class Unit_DAO {
      * @param unit
      * @return
      */
-    public String convertUnit(Enum_PackagingUnit unit) {
+    public String convertUnit(PackagingUnit unit) {
         String name = "";
         Connection con = ConnectDB.getConnection();
         PreparedStatement sm = null;
@@ -100,7 +100,7 @@ public class Unit_DAO {
      * @param unitEnum
      * @return
      */
-    public Unit getUnit_ByEnumUnit(Enum_PackagingUnit unitEnum) {
+    public Unit getUnit_ByEnumUnit(PackagingUnit unitEnum) {
         Unit unitEn = null;
         Connection con = ConnectDB.getConnection();
         PreparedStatement sm = null;
@@ -206,7 +206,7 @@ public class Unit_DAO {
 
     public static void main(String[] args) {
         ConnectDB.getInstance().connect();
-//        System.out.println(new Unit_DAO().convertUnit(Enum_PackagingUnit.fromString("BLISTER_PACK")));
+//        System.out.println(new Unit_DAO().convertUnit(PackagingUnit.fromString("BLISTER_PACK")));
 //        System.out.println(new Unit_DAO().convertDes_ToUnit("Hộp"));
         //Unit_DAO.getInstance().getUnit_ByProductID("PF101224000020").forEach(x -> System.out.println(x));
         System.out.println(Unit_DAO.getInstance().getUnit_ByDes("Hộp"));;

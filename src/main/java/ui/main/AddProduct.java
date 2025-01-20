@@ -320,7 +320,7 @@ public class AddProduct extends javax.swing.JPanel {
                         String administrationID = row.getCell(15).getStringCellValue();
                         String administrationName = row.getCell(16).getStringCellValue();
                         Medicine medicine = new Medicine(new Product_DAO().getIDProduct("PM", xM), productName, registrationNumber, purchasePrice, taxPercentage, new Vendor(vendorID, vendorName, vendorCountry), new Category(categoryID, categoryName), null, endDate, activeIngredient, conversionUnit, new AdministrationRoute(administrationID, administrationName), noteUnit);
-                        medicine.addUnit(Enum_PackagingUnit.fromString(conversionUnit), calSellPrice(purchasePrice , medicine), quantityInStock);
+                        medicine.addUnit(PackagingUnit.fromString(conversionUnit), calSellPrice(purchasePrice , medicine), quantityInStock);
                         //Các đơn vị còn lại
                         addUnitByString(row.getCell(20).getStringCellValue(), purchasePrice, medicine);
                         xM++;
@@ -333,7 +333,7 @@ public class AddProduct extends javax.swing.JPanel {
                         FunctionalFood ff = new FunctionalFood(new Product_DAO().getIDProduct("PF", xFF), productName, registrationNumber, purchasePrice, taxPercentage, new Vendor(vendorID, vendorName, vendorCountry), new Category(categoryID, categoryName), null, endDate, mainNutrients, supplementaryIngredients, noteUnit);
                         xFF++;
 
-                        ff.addUnit(Enum_PackagingUnit.fromString(conversionUnit), calSellPrice(purchasePrice , ff), quantityInStock);
+                        ff.addUnit(PackagingUnit.fromString(conversionUnit), calSellPrice(purchasePrice , ff), quantityInStock);
                         //Các đơn vị còn lại
                         addUnitByString(row.getCell(20).getStringCellValue(), purchasePrice, ff);
                         listProduct.add(ff);
@@ -343,7 +343,7 @@ public class AddProduct extends javax.swing.JPanel {
                         String medicalSupplyType = row.getCell(19).getStringCellValue();
                         MedicalSupplies ms = new MedicalSupplies(new Product_DAO().getIDProduct("PS", xMS), productName, registrationNumber, purchasePrice, taxPercentage, new Vendor(vendorID, vendorName, vendorCountry), new Category(categoryID, categoryName), null, endDate, medicalSupplyType, noteUnit);
                         xMS++;
-                        ms.addUnit(Enum_PackagingUnit.fromString(conversionUnit), calSellPrice(purchasePrice , ms), quantityInStock);
+                        ms.addUnit(PackagingUnit.fromString(conversionUnit), calSellPrice(purchasePrice , ms), quantityInStock);
                         //Các đơn vị còn lại
                         addUnitByString(row.getCell(20).getStringCellValue(), purchasePrice,  ms);
                         listProduct.add(ms);
@@ -367,7 +367,7 @@ public class AddProduct extends javax.swing.JPanel {
         model.setRowCount(0);
         for (Product product : listProduct) {
 //            System.out.println(product);
-//            for (Map.Entry<Enum_PackagingUnit, Double> entry : product.getUnitPrice().entrySet()) {
+//            for (Map.Entry<PackagingUnit, Double> entry : product.getUnitPrice().entrySet()) {
 //                String packagingUnitStr = entry.getKey().name();
 //                System.out.println(product.getProductID() + "//" + entry.getKey().name() + "//" + entry.getValue());
 //            }
@@ -413,7 +413,7 @@ public class AddProduct extends javax.swing.JPanel {
                     continue;
                 }
                 priceTL *= multiplier;
-                Enum_PackagingUnit unit = Enum_PackagingUnit.fromString(enumName);
+                PackagingUnit unit = PackagingUnit.fromString(enumName);
                 double unitPrice = purchasePrice / priceTL;
                 int quantity =unitTL * multiplier;
                 product.addUnit(unit, calSellPrice(unitPrice, product), quantity);

@@ -2,13 +2,19 @@ package entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+
 @Entity
+@Data
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "meidcal_supplies")
 public class MedicalSupplies extends Product{
-    @Column(columnDefinition = "nvarchar(20)")
+
+    @Column(name = "medical_supply_type", columnDefinition = "nvarchar(20)")
     private String medicalSupplyType;
 
     public MedicalSupplies() {
@@ -25,12 +31,9 @@ public class MedicalSupplies extends Product{
         super(productID, productName, registrationNumber, purchasePrice, taxPercentage, endDate, promotion, vendor, category, noteUnit);
         setMedicalSupplyType(medicalSupplyType);
     }
+
 	public MedicalSupplies(String medicalSupplyType) {
         setMedicalSupplyType(medicalSupplyType);
-    }
-
-    public String getMedicalSupplyType() {
-        return medicalSupplyType;
     }
 
     public void setMedicalSupplyType(String medicalSupplyType) {
@@ -38,12 +41,5 @@ public class MedicalSupplies extends Product{
             throw new IllegalArgumentException("Loại vật tư y tế không được rỗng");
         }
         this.medicalSupplyType = medicalSupplyType;
-    }
-
-    @Override
-    public String toString() {
-        return "MedicalSupplies{" +
-                "medicalSupplyType='" + medicalSupplyType + '\'' +
-                "} " + super.toString();
     }
 }

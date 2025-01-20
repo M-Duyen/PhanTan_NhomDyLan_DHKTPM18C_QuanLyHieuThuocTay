@@ -3,16 +3,21 @@ package entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
 @Entity
+@Data
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "functional_foods")
 public class FunctionalFood extends Product{
-    @Column(columnDefinition = "nvarchar(20)")
+
+    @Column(name = "main_nutrients", columnDefinition = "nvarchar(20)")
     private String mainNutrients;
-    @Column(columnDefinition = "nvarchar(20)")
+
+    @Column(name = "supplementary_ingredients", columnDefinition = "nvarchar(20)")
     private String supplementaryIngredients;
 
     public FunctionalFood() {
@@ -49,17 +54,5 @@ public class FunctionalFood extends Product{
 
     public String getSupplementaryIngredients() {
         return supplementaryIngredients;
-    }
-
-    public void setSupplementaryIngredients(String supplementaryIngredients) {
-        this.supplementaryIngredients = supplementaryIngredients;
-    }
-
-    @Override
-    public String toString() {
-        return "FunctionalFood{" +
-                "mainNutrients='" + mainNutrients + '\'' +
-                ", supplementaryIngredients='" + supplementaryIngredients + '\'' +
-                "} " + super.toString();
     }
 }

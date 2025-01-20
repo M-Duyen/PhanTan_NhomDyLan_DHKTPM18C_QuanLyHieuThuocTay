@@ -83,11 +83,9 @@ public class Promotion extends PromotionType {
         if (startDate == null) {
             throw new IllegalArgumentException("Ngày bắt đầu không thể là null.");
         }
-
         if (startDate.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại.");
         }
-
         this.startDate = startDate;
     }
 
