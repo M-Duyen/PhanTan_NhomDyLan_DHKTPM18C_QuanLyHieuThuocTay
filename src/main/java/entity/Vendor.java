@@ -8,8 +8,18 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "vendor")
+@Table(name = "vendors")
 public class Vendor {
+
+    public Vendor(String vendorID, String vendorName, String country) {
+        this.vendorID = vendorID;
+        this.vendorName = vendorName;
+        this.country = country;
+    }
+
+    public Vendor() {
+    }
+
     @Id
     @Column(name = "vendor_id")
     private String vendorID;

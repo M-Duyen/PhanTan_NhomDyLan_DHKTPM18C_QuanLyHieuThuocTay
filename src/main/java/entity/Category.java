@@ -8,9 +8,17 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "category")
+@Table(name = "categorys")
 
 public class Category {
+    public Category(String categoryID, String categoryName) {
+        this.categoryID = categoryID;
+        this.categoryName = categoryName;
+    }
+
+    public Category() {
+    }
+
     @Id
     @Column(name = "category_id")
     private String categoryID;
