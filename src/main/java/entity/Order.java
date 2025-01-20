@@ -3,11 +3,8 @@ package entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -27,7 +24,7 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
-    private Enum_PaymentMethod paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @Column(name = "discount")
     private double discount;
@@ -36,33 +33,26 @@ public class Order {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 
     @OneToMany
     @JoinColumn(name = "order")
-    private ArrayList<OrderDetails> listOrderDetail;
+    private ArrayList<OrderDetail> listOrderDetail;
 
     @Transient
     public double getTotalDue() {
         double totalDue = 0;
         if (listOrderDetail != null) {
-            for (OrderDetails orderDetail : listOrderDetail) {
+            for (OrderDetail orderDetail : listOrderDetail) {
                 totalDue += orderDetail.getLineTotal();
             }
         }
         return totalDue * (1 - discount);
-    }
-
-    //Kiểm tra xem hóa đơn còn thời hạn đổi trả không
-    public boolean isOverdue() {
-        LocalDateTime now = LocalDateTime.now();
-        long daysBetween = ChronoUnit.DAYS.between(orderDate, now);
-        return daysBetween > 30;
     }
 }

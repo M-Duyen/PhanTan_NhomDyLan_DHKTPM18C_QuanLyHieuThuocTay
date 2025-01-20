@@ -1,42 +1,45 @@
 package entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 public class Product {
     @Id
-    @Column(unique = true, nullable = false, columnDefinition = "char(14)")
+    @EqualsAndHashCode.Include
+    @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
     private String productID;
 
-    @Column(columnDefinition = "nvarchar(50)")
+    @Column(name = "product_name", columnDefinition = "nvarchar(50)")
     private String productName;
 
-    @Column(columnDefinition = "varchar(16)")
+    @Column(name = "registration_number", columnDefinition = "varchar(16)")
     private String registrationNumber;
 
-    @Column(columnDefinition = "money")
+    @Column(name = "purchase_price", columnDefinition = "money")
     private double purchasePrice;
 
-    @Column(columnDefinition = "float")
+    @Column(name = "tax_percentage", columnDefinition = "float")
     private double taxPercentage;
 
-    @Column(columnDefinition = "date")
+    @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name = "promotionID")
+    @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
     @ManyToOne
-    @JoinColumn(name = "vendorID")
+    @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
     @ManyToOne
-    @JoinColumn(name = "categoryID")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Column(columnDefinition = "varchar(60)")
@@ -44,15 +47,31 @@ public class Product {
 
 
     @ElementCollection
-    @CollectionTable(name = "ProductUnit", joinColumns = @JoinColumn(name = "productID"))
+    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "productID"))
     @MapKeyEnumerated(EnumType.STRING)
-    @MapKeyColumn(name = "unitName")
+    @MapKeyColumn(name = "unit_name")
     private Map<Enum_PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
 
     public double getSellPrice(Enum_PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
     }
+
+    public boolean isMedicine() {
+        return productID.substring(0, 2).equals("PM");
+    }
+
+    public boolean isMedicalSupplies() {
+        return productID.substring(0, 2).equals("PS");
+    }
+
+    public boolean isFunctionalFood() {
+        return productID.substring(0, 2).equals("PF");
+    }
+
+}
+
+
 //
 //    public Map<Enum_PackagingUnit, Integer> getInStock_BySmallestUnit() {
 //        Enum_PackagingUnit unitTemp = null;
@@ -105,17 +124,3 @@ public class Product {
 //    public int getInStockByUnit(Enum_PackagingUnit unit){
 //        return unitStock.getOrDefault(unit, 0);
 //    }
-
-    public boolean isMedicine() {
-        return productID.substring(0, 2).equals("PM");
-    }
-
-    public boolean isMedicalSupplies() {
-        return productID.substring(0, 2).equals("PS");
-    }
-
-    public boolean isFunctionalFood() {
-        return productID.substring(0, 2).equals("PF");
-    }
-
-}

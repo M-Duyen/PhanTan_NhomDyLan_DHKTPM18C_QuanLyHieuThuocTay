@@ -1,14 +1,10 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -39,5 +35,9 @@ public class Employee {
     private boolean status;
 
     private String degree;
+
+    @OneToOne(mappedBy = "employee")
+    private Account account;
+
 
 }

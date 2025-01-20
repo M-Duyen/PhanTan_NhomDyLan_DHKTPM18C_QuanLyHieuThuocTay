@@ -1,29 +1,40 @@
 package entity;
 
-import java.time.LocalDate;
-import java.util.Objects;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.checkerframework.common.aliasing.qual.Unique;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "customers")
 public class Customer {
+    @Unique
+    @EqualsAndHashCode.Include
+    @Column(name = "customer_id", nullable = false, columnDefinition = "char(10)")
+    private String customerID;
+
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "customer_id")
-    private String customerID;
+    @Column(name = "phone_number", nullable = false, columnDefinition = "char(10)")
     private String phoneNumber;
+
+    @Column(name = "customer_name")
     private String customerName;
     private boolean gender;
+
+    @Column(name = "email", unique = true)
     private String email ;
     private String addr;
+    @Column(name = "birth_date")
     private LocalDate brithDate;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Order> order;
 
 
 

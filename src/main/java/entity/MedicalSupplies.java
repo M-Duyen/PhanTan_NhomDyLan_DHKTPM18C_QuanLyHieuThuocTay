@@ -2,15 +2,17 @@ package entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
-@Entity
 @Data
+@Entity
 @EqualsAndHashCode(callSuper = true)
-public class MedicalSupplies extends Product{
-    @Column(columnDefinition = "nvarchar(20)")
+@Table(name = "medical_supplies")
+public class MedicalSupplies extends Product {
+
+    @Column(name = "medicalSupply_type",columnDefinition = "nvarchar(20)")
     private String medicalSupplyType;
 
 }

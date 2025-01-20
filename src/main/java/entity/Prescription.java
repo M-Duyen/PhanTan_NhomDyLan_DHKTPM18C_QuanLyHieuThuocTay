@@ -1,25 +1,30 @@
 package entity;
 
-import java.time.LocalDate;
-import java.util.Objects;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
 @Table(name = "prescriptions")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Prescription {
     @Id
-    @Column(name = "prescription_id")
+    @Column(name = "prescription_id", nullable = false)
     @EqualsAndHashCode.Include
-    private String prescriptionId;
     private String prescriptionID;
-    private LocalDate createdDate;
+    @Column(name = "create_date")
+    private LocalDateTime createdDate;
     private String diagnosis;
+    @Column(name = "medical_facility")
     private String medicalFacility;
+
+    @OneToMany(mappedBy = "prescription")
+    private List<Order> orders;
+
+
 }

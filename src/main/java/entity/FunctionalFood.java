@@ -8,10 +8,12 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
-@Entity
 @Data
+@Entity
 @EqualsAndHashCode(callSuper = true)
-public class FunctionalFood extends Product{
+@Table(name = "functional_foods")
+public class FunctionalFood extends Product {
+
     @Column(columnDefinition = "nvarchar(20)")
     private String mainNutrients;
     @Column(columnDefinition = "nvarchar(20)")
