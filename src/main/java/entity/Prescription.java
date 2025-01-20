@@ -1,13 +1,12 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -33,6 +32,9 @@ public class Prescription {
     private String diagnosis;
     @Column(name = "medical_facility")
     private String medicalFacility;
+
+    @OneToMany(mappedBy = "prescription")
+    private List<Order> orders;
 
 
 }

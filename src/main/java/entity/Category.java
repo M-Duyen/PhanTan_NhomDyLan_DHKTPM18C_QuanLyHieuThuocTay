@@ -1,11 +1,10 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -28,4 +27,9 @@ public class Category {
 
     @Column(name = "category_name")
     private String categoryName;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
+
+
 }

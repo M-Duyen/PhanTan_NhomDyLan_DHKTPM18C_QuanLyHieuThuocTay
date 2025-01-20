@@ -18,20 +18,31 @@ public class Product {
     @Column(name = "product_id", nullable = false)
     private String productID;
 
+    @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "registration_number")
     private String registrationNumber;
 
+    @Column(name = "purchase_price")
     private double purchasePrice;
 
+    @Column(name = "tax_percentage")
     private double taxPercentage;
 
+    @Column(name = "start_date")
     private LocalDate endDate;
 
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
     private String unitNote;

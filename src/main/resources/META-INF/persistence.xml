@@ -10,6 +10,8 @@
         <class>entity.Category</class>
         <class>entity.Prescription</class>
         <class>entity.Vendor</class>
+        <class>entity.Order</class>
+
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
                       value="org.mariadb.jdbc.Driver" />
@@ -22,7 +24,7 @@
                       value="org.hibernate.dialect.MariaDBDialect" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
         </properties>
 
     </persistence-unit>
