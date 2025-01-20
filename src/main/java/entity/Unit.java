@@ -1,9 +1,6 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +10,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "units")
 public class Unit {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "unit_id", nullable = false)
     private String unitID;
 
@@ -20,4 +18,26 @@ public class Unit {
     private String unitName;
 
     private String description;
+
+    public Unit(String unitID, String unitName, String description) {
+        this.unitID = unitID;
+        this.unitName = unitName;
+        this.description = description;
+    }
+
+    public Unit(String unitID) {
+        this.unitID = unitID;
+    }
+
+    public void setUnitID(String unitID) {
+        this.unitID = unitID;
+    }
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
+
