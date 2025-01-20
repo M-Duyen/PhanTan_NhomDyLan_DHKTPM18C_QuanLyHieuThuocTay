@@ -1,10 +1,27 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd" version="3.0">
     <persistence-unit name="default"> </persistence-unit>
     <persistence-unit name="SHH-mariaDB">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+<!--        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>-->
+        <class>entity.Account</class>
+        <class>entity.Product</class>
+        <class>entity.AdministrationRoute</class>
+        <class>entity.Category</class>
+        <class>entity.Customer</class>
+        <class>entity.Employee</class>
+        <class>entity.FunctionalFood</class>
+        <class>entity.MedicalSupplies</class>
+        <class>entity.Medicine</class>
+        <class>entity.Order</class>
+        <class>entity.OrderDetails</class>
+        <class>entity.Prescription</class>
+        <class>entity.ProductUnit</class>
+        <class>entity.Promotion</class>
+        <class>entity.PromotionType</class>
+        <class>entity.Vendor</class>
+<!--        <class>entity.Manager</class>-->
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/lab1_db"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/pharmacy_management"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="sapassword"/>
             <property name="jakarta.persistence.jdbc.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
