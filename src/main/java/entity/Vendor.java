@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "vendors")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Vendor {
 
     public Vendor(String vendorID, String vendorName, String country) {
@@ -22,6 +24,7 @@ public class Vendor {
 
     @Id
     @Column(name = "vendor_id", nullable = false)
+    @EqualsAndHashCode.Include
     private String vendorID;
 
     @Column(name = "vendor_name")

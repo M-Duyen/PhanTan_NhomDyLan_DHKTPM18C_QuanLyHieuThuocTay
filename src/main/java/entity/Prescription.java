@@ -5,13 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "prescriptions")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Prescription {
     public Prescription(String prescriptionID, LocalDateTime createdDate, String diagnosis, String medicalFacility) {
         this.prescriptionID = prescriptionID;
@@ -24,7 +25,8 @@ public class Prescription {
     }
 
     @Id
-    @Column(name = "prescription_id")
+    @Column(name = "prescription_id", nullable = false)
+    @EqualsAndHashCode.Include
     private String prescriptionID;
     @Column(name = "create_date")
     private LocalDateTime createdDate;
