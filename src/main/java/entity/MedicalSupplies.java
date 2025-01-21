@@ -1,15 +1,18 @@
 package entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
 @Data
+@Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "medical_supplies")
-public class MedicalSupplies extends Product{
+public class MedicalSupplies extends Product {
 
-    @Column(name = "medical_supply_type", columnDefinition = "nvarchar(20)")
+    @Column(name = "medicalSupply_type",columnDefinition = "nvarchar(20)")
     private String medicalSupplyType;
+
 }

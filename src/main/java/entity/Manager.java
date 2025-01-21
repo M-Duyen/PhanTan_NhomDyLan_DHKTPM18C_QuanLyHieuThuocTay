@@ -29,42 +29,7 @@ public class Manager {
     @OneToMany(mappedBy = "manager")
     private List<Account> account;
 
-    public Manager(String managerID, String managerName, LocalDate birthDate, String phoneNumber) {
-        setManagerID(managerID);
-        setManagerName(managerName);
-        setBirthDate(birthDate);
-        setPhoneNumber(phoneNumber);
-    }
 
-    public Manager() {
 
-    }
 
-    public void setManagerID(String managerID) {
-        if (managerID == null || managerID.trim().isEmpty()) {
-            throw new IllegalArgumentException("Mã quản lý không được rỗng");
-        }
-        this.managerID = managerID;
-    }
-
-    public void setManagerName(String managerName) {
-        if (managerName == null || managerName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên quản lý không được rỗng");
-        }
-        this.managerName = managerName;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        if (birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Ngày sinh phải nhỏ hơn ngày hiện tại");
-        }
-        this.birthDate = birthDate;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            throw new IllegalArgumentException("Số điện thoại không được rỗng");
-        }
-        this.phoneNumber = phoneNumber;
-    }
 }

@@ -8,10 +8,8 @@ import lombok.Data;
 @Embeddable
 @Data
 public class ProductUnit {
-    @Column(name = "sell_price")
     private double sellPrice;
-
-    @Column(name = "in_stock", columnDefinition = "int")
+    @Column(columnDefinition = "int")
     private int inStock;
 
 }

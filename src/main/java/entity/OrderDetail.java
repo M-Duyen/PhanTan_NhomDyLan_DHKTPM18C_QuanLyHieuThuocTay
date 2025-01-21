@@ -12,7 +12,7 @@ public class OrderDetail {
     @Id
     @EqualsAndHashCode.Include
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name="order_id")
     private Order order;
 
     @Id

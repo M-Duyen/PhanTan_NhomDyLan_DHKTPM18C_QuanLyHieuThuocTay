@@ -6,16 +6,15 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.util.*;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
+@Data
 public class Product {
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "product_id", unique = true, nullable = false, columnDefinition = "char(14)")
+    @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
     private String productID;
 
     @Column(name = "product_name", columnDefinition = "nvarchar(50)")
@@ -24,10 +23,10 @@ public class Product {
     @Column(name = "registration_number", columnDefinition = "varchar(16)")
     private String registrationNumber;
 
-    @Column(name = "purchase_price", columnDefinition = "money")
+    @Column(name = "purchase_price")
     private double purchasePrice;
 
-    @Column(name = "tax_percentage",columnDefinition = "float")
+    @Column(name = "tax_percentage", columnDefinition = "float")
     private double taxPercentage;
 
     @Column(name = "end_date", columnDefinition = "date")
@@ -45,7 +44,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "unit_note", columnDefinition = "varchar(60)")
+    @Column(name ="unit_note", columnDefinition = "varchar(60)")
     private String unitNote;
 
 
@@ -74,6 +73,7 @@ public class Product {
     }
 
 }
+
 
 //
 //    public Map<Enum_PackagingUnit, Integer> getInStock_BySmallestUnit() {

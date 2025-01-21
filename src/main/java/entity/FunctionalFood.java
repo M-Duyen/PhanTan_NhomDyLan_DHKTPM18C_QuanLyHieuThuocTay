@@ -1,21 +1,21 @@
-    package entity;
+package entity;
 
-    import jakarta.persistence.*;
-    import lombok.EqualsAndHashCode;
-    import lombok.Data;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-    @Entity
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    @Table(name = "functional_foods")
-    public class FunctionalFood extends Product {
+import java.time.LocalDate;
 
-        @Column(name = "main_nutrients", columnDefinition = "nvarchar(20)")
-        private String mainNutrients;
+@Data
+@Entity
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "functional_foods")
+public class FunctionalFood extends Product {
 
-        @Column(name = "supplementary_ingredients", columnDefinition = "nvarchar(20)")
-        private String supplementaryIngredients;
-
-        public FunctionalFood() {
-        }
-    }
+    @Column(columnDefinition = "nvarchar(20)")
+    private String mainNutrients;
+    @Column(columnDefinition = "nvarchar(20)")
+    private String supplementaryIngredients;
+}

@@ -38,7 +38,7 @@ public class Unit_DAO {
 
     public static Unit createSapmleUnit() {
         Faker faker = new Faker();
-        Unit unit = new Unit();
+        Unit unit = new Unit("U01");
         unit.setUnitID("U" + faker.number().digits(3));
         unit.setUnitName(faker.company().name());
         unit.setDescription(faker.company().name());
