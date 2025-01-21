@@ -9,7 +9,7 @@ import net.datafaker.Faker;
 
 public class Runner {
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+        EntityManager em = Persistence.createEntityManagerFactory("SHH-mariaDB").createEntityManager();
 //        EntityTransaction tr = em.getTransaction();
 //        Faker faker = new Faker();
 //        tr.begin();

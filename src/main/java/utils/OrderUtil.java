@@ -1,5 +1,9 @@
 package utils;
 
+import dao.Customer_DAO;
+import dao.Employee_DAO;
+import dao.Prescription_DAO;
+import dao.Product_DAO;
 import entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -8,7 +12,6 @@ import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -18,12 +21,11 @@ public class OrderUtil {
                 .createEntityManager();
 
         EntityTransaction tr = em.getTransaction();
-        List<Product> productList = new ArrayList<>();
+        Faker faker = new Faker();
+        List<Product> productList = Product_DAO.createSampleProduct(faker);
         List<Order> orderList = new ArrayList<Order>();
         Random rand = new Random();
 
-        //Data Faker
-        Faker faker = new Faker();
         for (int i = 0; i < 10; i++) {
             Order order = new Order();
             ArrayList<OrderDetail> orderDetailList = new ArrayList<>();
@@ -34,13 +36,13 @@ public class OrderUtil {
             order.setPaymentMethod(faker.options().option(PaymentMethod.class));
             order.setDiscount(faker.number().randomDouble(2, 0, 20) / 100);
 
-            Employee employee = createSampleEmployee(faker);
+            Employee employee = Employee_DAO.createSampleEmployee(faker);
             order.setEmployee(employee);
 
-            Customer customer = createSampleCustomer(faker);
+            Customer customer = Customer_DAO.createSampleCustomer(faker);
             order.setCustomer(customer);
 
-            Prescription prescription = createSamplePrescription(faker);
+            Prescription prescription = Prescription_DAO.createSamplePrescription(faker);
             order.setPrescription(prescription);
 
             int numOfDetails = faker.number().numberBetween(1, 5);
@@ -66,47 +68,5 @@ public class OrderUtil {
             em.persist(order);
             tr.commit();
         }
-    }
-
-    private static Prescription createSamplePrescription(Faker faker) {
-        Prescription prescription = new Prescription();
-        prescription.setPrescriptionID("PC" + faker.number().digits(3));
-        return prescription;
-    }
-
-    private static Customer createSampleCustomer(Faker faker) {
-        Customer customer = new Customer();
-        customer.setCustomerID("CM" + faker.number().digits(3));
-        return customer;
-    }
-
-    private static List<Product> createSampleProduct(Faker faker) {
-        List<Product> productList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Product product = new Product();
-            product.setProductID("P" + faker.number().digits(4));
-            product.setProductName(faker.commerce().productName());
-            product.setPurchasePrice(faker.number().randomDouble(2, 5, 100));
-            product.setTaxPercentage(faker.number().randomDouble(2, 0, 15));
-            product.setEndDate(LocalDateTime.now().plusDays(1).toLocalDate());
-
-            HashMap<PackagingUnit, Double> unitPrice = new HashMap<>();
-            HashMap<PackagingUnit, Integer> unitStock = new HashMap<>();
-            for (PackagingUnit unit : PackagingUnit.values()) {
-                unitPrice.put(unit, faker.number().randomDouble(2, 1000, 200000));
-                unitStock.put(unit, faker.number().numberBetween(50, 500));
-            }
-            product.setUnitPrice(unitPrice);
-            product.setUnitStock(unitStock);
-            productList.add(product);
-        }
-        return productList;
-    }
-
-    public static Employee createSampleEmployee(Faker faker) {
-        Employee employee = new Employee();
-        employee.setEmployeeID("EP" + faker.number().digits(3));
-        employee.setEmployeeName(faker.name().fullName());
-        return employee;
     }
 }

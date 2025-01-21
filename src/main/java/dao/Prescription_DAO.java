@@ -3,6 +3,7 @@ package dao;
 import entity.Prescription;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,6 +65,13 @@ public class Prescription_DAO {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         return LocalDateTime.parse(date, dateTimeFormatter);
     }
+
+    public static Prescription createSamplePrescription(Faker faker) {
+        Prescription prescription = new Prescription();
+        prescription.setPrescriptionID("PC" + faker.number().digits(3));
+        return prescription;
+    }
+
     public static void main(String[] args) {
         Prescription_DAO prescription_dao = new Prescription_DAO();
 //        prescription_dao.getAll().forEach(System.out::println);

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -45,7 +46,7 @@ public class Order {
 
     @OneToMany
     @JoinColumn(name = "order")
-    private ArrayList<OrderDetail> listOrderDetail;
+    private List<OrderDetail> listOrderDetail;
 
     @Transient
     public double getTotalDue() {

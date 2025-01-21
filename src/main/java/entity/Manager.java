@@ -64,10 +64,6 @@ public class Manager {
         this.birthDate = birthDate;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     public void setPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Số điện thoại không được rỗng");

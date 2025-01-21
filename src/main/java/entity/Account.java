@@ -1,9 +1,6 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +11,6 @@ import java.util.Objects;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "accounts")
 public class Account {
-    //TODO
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "account_id", nullable = false, unique = true)
@@ -22,6 +18,8 @@ public class Account {
 
     private String password;
 
+    @OneToOne
+    @JoinColumn(name = "manager_id")
     private Manager manager;
 
     public Account() {

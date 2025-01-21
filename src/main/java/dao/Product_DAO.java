@@ -1,5 +1,14 @@
 package dao;
 
+import entity.PackagingUnit;
+import entity.Product;
+import net.datafaker.Faker;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class Product_DAO {
    public Product_DAO() {
     }
@@ -56,6 +65,29 @@ public class Product_DAO {
             }
         }
         return  -1;
+    }
+
+    public static List<Product> createSampleProduct(Faker faker) {
+        List<Product> productList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Product product = new Product();
+            product.setProductID("P" + faker.number().digits(4));
+            product.setProductName(faker.commerce().productName());
+            product.setPurchasePrice(faker.number().randomDouble(2, 5, 100));
+            product.setTaxPercentage(faker.number().randomDouble(2, 0, 15));
+            product.setEndDate(LocalDateTime.now().plusDays(1).toLocalDate());
+
+            HashMap<PackagingUnit, Double> unitPrice = new HashMap<>();
+            HashMap<PackagingUnit, Integer> unitStock = new HashMap<>();
+            for (PackagingUnit unit : PackagingUnit.values()) {
+                unitPrice.put(unit, faker.number().randomDouble(2, 1000, 200000));
+                unitStock.put(unit, faker.number().numberBetween(50, 500));
+            }
+            product.setUnitPrice(unitPrice);
+            product.setUnitStock(unitStock);
+            productList.add(product);
+        }
+        return productList;
     }
 
     public static void main(String[] args) {
