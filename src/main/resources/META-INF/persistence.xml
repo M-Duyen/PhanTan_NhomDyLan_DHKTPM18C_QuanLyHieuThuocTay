@@ -18,7 +18,7 @@
         <class>entity.Promotion</class>
         <class>entity.PromotionType</class>
         <class>entity.Vendor</class>
-<!--        <class>entity.Manager</class>-->
+        <class>entity.Manager</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/pharmacy_management"/>

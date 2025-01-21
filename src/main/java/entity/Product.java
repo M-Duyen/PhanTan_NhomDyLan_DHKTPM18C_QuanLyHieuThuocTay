@@ -47,7 +47,8 @@ public class Product {
 
 
     @ElementCollection
-    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "productID"))
+    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    )
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
