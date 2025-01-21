@@ -21,4 +21,12 @@ public class PromotionType {
 
     @OneToMany(mappedBy = "promotionType")
     private List<Promotion> promotion;
+
+    public PromotionType() {
+    }
+
+    public PromotionType(String promotionTypeID, String promotionTypeName) {
+        this.promotionTypeID = promotionTypeID;
+        this.promotionTypeName = promotionTypeName;
+    }
 }

@@ -6,9 +6,9 @@ import lombok.Data;
 import java.time.LocalDate;
 import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Promotion extends PromotionType {
     @Id
     @Column(name = "promotion_id", nullable = false)
@@ -30,9 +30,4 @@ public class Promotion extends PromotionType {
     @ManyToOne
     @JoinColumn(name = "promotion_type_id")
     private PromotionType promotionType;
-
-    public Promotion(String promotionTypeID, String promotionTypeName, String promotionId) {
-        super(promotionTypeID, promotionTypeName);
-        this.promotionId = promotionId;
-    }
 }

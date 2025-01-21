@@ -36,6 +36,10 @@ public class Manager {
         setPhoneNumber(phoneNumber);
     }
 
+    public Manager() {
+
+    }
+
     public void setManagerID(String managerID) {
         if (managerID == null || managerID.trim().isEmpty()) {
             throw new IllegalArgumentException("Mã quản lý không được rỗng");

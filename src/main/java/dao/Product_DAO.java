@@ -83,8 +83,6 @@ public class Product_DAO {
                 unitPrice.put(unit, faker.number().randomDouble(2, 1000, 200000));
                 unitStock.put(unit, faker.number().numberBetween(50, 500));
             }
-            product.setUnitPrice(unitPrice);
-            product.setUnitStock(unitStock);
             productList.add(product);
         }
         return productList;

@@ -3,6 +3,7 @@ package dao;
 import entity.OrderDetail;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -15,6 +16,20 @@ public class OrderDetail_DAO {
 
     public List getAll() {
         return em.createQuery("SELECT od FROM OrderDetail od").getResultList();
+    }
+
+    public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
+        try {
+            TypedQuery<OrderDetail> query = em.createQuery(
+                    "SELECT od FROM OrderDetail od WHERE od.order.orderID = :orderId",
+                    OrderDetail.class
+            );
+            query.setParameter("orderId", orderId);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean insertOrderDetail(List<OrderDetail> list) {
