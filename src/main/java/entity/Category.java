@@ -4,23 +4,30 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
+import java.util.List;
+
 @Data
+@Entity
+@Table(name = "categorys")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "categories")
+
 public class Category {
-    //TODO:
     @Id
-    @Column(name = "category_id", nullable = false, unique = true)
+    @Column(name = "category_id", nullable = false)
     @EqualsAndHashCode.Include
     private String categoryID;
+
+    @Column(name = "category_name")
     private String categoryName;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 
     public Category() {
     }
 
     public Category(String categoryID) {
-       setCategoryID(categoryID);
+        setCategoryID(categoryID);
     }
 
     public Category(String categoryID, String categoryName) {

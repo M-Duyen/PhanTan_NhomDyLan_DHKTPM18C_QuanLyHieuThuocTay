@@ -1,68 +1,82 @@
 package dao;
 
-import database.ConnectDB;
 import entity.Category;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Category_DAO {
+    private EntityManager em;
+
     public Category_DAO() {
+        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
-    /**
-     * Lọc tất cả danh mục sản phẩm
-     *
-     * @return
-     */
-    public ArrayList<Category> getCategoryList(){
-        Connection con = ConnectDB.getConnectDB_H();
-        ArrayList<Category> categoryList = new ArrayList<>();
-        PreparedStatement stmt = null;
+    public List<Category> getAll() {
+        return em.createQuery("SELECT c FROM Category c").getResultList();
+    }
 
+    public boolean create(Category category) {
         try {
-            stmt = con.prepareStatement("SELECT * FROM Category");
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()){
-                String categoryID = rs.getString(1);
-                String categoryName = rs.getString(2);
-
-                Category category = new Category(categoryID, categoryName);
-                categoryList.add(category);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            em.getTransaction().begin();
+            em.persist(category);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return categoryList;
+    }
+    public Category read(String id) {
+        return em.find(Category.class, id);
     }
 
-    /**
-     * Lọc danh mục theo tiêu chí bất kỳ
-     *
-     * @param criterous
-     * @return
-     */
-    public ArrayList<Category> getCategoryByCriterous(String criterous){
-        ArrayList<Category> categoryByCriterias = new ArrayList<>();
-        ArrayList<Category> categoryList = getCategoryList();
-        for(Category category : categoryList){
-            if(category.getCategoryID().toLowerCase().trim().contains(criterous.toLowerCase().trim())||
-                    category.getCategoryName().toLowerCase().trim().contains(criterous.toLowerCase().trim())) {
-                categoryByCriterias.add(category);
-            }
+    public boolean update(Category category) {
+        try {
+            em.getTransaction().begin();
+            em.merge(category);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return categoryByCriterias;
-
     }
+
+    public boolean delete(String id) {
+        try {
+            Category category = em.find(Category.class, id);
+            em.getTransaction().begin();
+            em.remove(category);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public static void main(String[] args) {
-        ConnectDB.getInstance().connect();
         Category_DAO category_dao = new Category_DAO();
-//        category_dao.getCategoryList().forEach(x -> System.out.println(x));
-        category_dao.getCategoryByCriterous("ca002").forEach(x -> System.out.println(x));
+//        test getAll
+//        category_dao.getAll().forEach(System.out::println);
+
+//        test create
+//        category_dao.create(new Category("C-1", "Category 1"));
+
+//        test read
+//        System.out.println(category_dao.read("C-1"));
+
+//        test update
+//        category_dao.update(new Category("C-1", "Category 1 updated"));
+
+//        test delete
+        category_dao.delete("C-1");
     }
+
 }

@@ -1,65 +1,85 @@
 package dao;
 
-import database.ConnectDB;
 import entity.AdministrationRoute;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+
+import java.util.List;
 
 public class AdministrationRoute_DAO {
+    private EntityManager em;
+
     public AdministrationRoute_DAO() {
+        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
-    /**
-     * Lọc danh sách tất cả đường dùng
-     *
-     * @return
-     */
-    public ArrayList<AdministrationRoute> getAllAdministrationRoute(){
-        Connection con = ConnectDB.getConnection();
-        ArrayList<AdministrationRoute> list = new ArrayList<>();
-        PreparedStatement stmt = null;
+    public List<AdministrationRoute> getAll() {
+        return em.createQuery("SELECT ar FROM AdministrationRoute ar").getResultList();
+    }
 
+    public boolean create(AdministrationRoute ar) {
         try {
-            stmt = con.prepareStatement("SELECT * FROM AdministrationRoute");
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()){
-                String administrationRouteID = rs.getString(1);
-                String administrationRouteName = rs.getString(2);
-
-                AdministrationRoute administrationRoute = new AdministrationRoute(administrationRouteID, administrationRouteName);
-                list.add(administrationRoute);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            em.getTransaction().begin();
+            em.persist(ar);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return list;
     }
 
-    /**
-     * Lọc đường dùng theo tiêu chí bất kỳ
-     *
-     * @param criterous
-     * @return
-     */
-    public ArrayList<AdministrationRoute> getAdminListByCriterous(String criterous) {
-        ArrayList<AdministrationRoute> adminListByCri = new ArrayList<>();
-        ArrayList<AdministrationRoute> adminList = getAllAdministrationRoute();
-        for (AdministrationRoute admin : adminList) {
-            if (admin.getAdministrationID().toLowerCase().trim().contains(criterous.toLowerCase().trim()) ||
-                    admin.getAdministrationName().toLowerCase().trim().contains(criterous.toLowerCase().trim())) {
-                adminListByCri.add(admin);
-            }
+    public AdministrationRoute read(String id) {
+        return em.find(AdministrationRoute.class, id);
+    }
+
+    public boolean update(AdministrationRoute ar) {
+        try {
+            em.getTransaction().begin();
+            em.merge(ar);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return adminListByCri;
+    }
+
+    public boolean delete(String id) {
+        try {
+            AdministrationRoute ar = em.find(AdministrationRoute.class, id);
+            em.getTransaction().begin();
+            em.remove(ar);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void main(String[] args) {
-        ConnectDB.getInstance().connect();
-        AdministrationRoute_DAO ar = new AdministrationRoute_DAO();
-        ar.getAllAdministrationRoute().forEach(x -> System.out.println(x));
+        AdministrationRoute_DAO dao = new AdministrationRoute_DAO();
+//        Test get all
+//        dao.getAll().forEach(ar -> System.out.println(ar.toString()));
+
+//        Test create
+//        AdministrationRoute ar = new AdministrationRoute();
+//        ar.setAdministrationRouteID("AD-123-test");
+//        ar.setAdministrationRouteName("Oral");
+//        System.out.println(dao.create(ar));
+
+//        Test read
+//        System.out.println(dao.read("AD-123-test"));
+
+//        Test update
+//        AdministrationRoute ar = new AdministrationRoute("AD-123-test", "Updated");
+//        dao.update(ar);
+
+//        Test delete
+        System.out.println(dao.delete("AD-123-test"));
     }
 }

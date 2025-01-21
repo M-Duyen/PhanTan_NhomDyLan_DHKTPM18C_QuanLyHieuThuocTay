@@ -7,53 +7,41 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
-
-@Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "administration_routes")
 public class AdministrationRoute {
-    //TODO:
     @Id
+    @Column(name = "administration_route_id")
     @EqualsAndHashCode.Include
-    @Column(name = "administration_id")
-    private String administrationID;
+    private String administrationRouteID;
 
-    private String administrationName;
+    @Column(name = "administration_route_name")
+    private String administrationRouteName;
 
     public AdministrationRoute() {
-
     }
 
-    public AdministrationRoute(String administrationID) {
-        setAdministrationID(administrationID);
+    public AdministrationRoute(String administrationRouteID) {
+        setAdministrationID(administrationRouteID);
     }
 
-    public AdministrationRoute(String administrationID, String administrationName) {
-        setAdministrationID(administrationID);
+    public AdministrationRoute(String administrationRouteID, String administrationName) {
+        setAdministrationID(administrationRouteID);
         setAdministrationName(administrationName);
     }
 
-    public String getAdministrationID() {
-        return administrationID;
-    }
-
-    public void setAdministrationID(String administrationID) {
-        if(administrationID == null || administrationID.trim().isEmpty()){
+    public void setAdministrationID(String administrationRouteID) {
+        if(administrationRouteID == null || administrationRouteID.trim().isEmpty()){
             throw new IllegalArgumentException("Mã đường dùng không được rỗng");
         }
-        this.administrationID = administrationID;
-    }
-
-    public String getAdministrationName() {
-        return administrationName;
+        this.administrationRouteID = administrationRouteID;
     }
 
     public void setAdministrationName(String administrationName) {
         if(administrationName == null || administrationName.trim().isEmpty()){
             throw new IllegalArgumentException("Tên đường dùng không được rỗng");
         }
-        this.administrationName = administrationName;
+        this.administrationRouteID = administrationName;
     }
 }

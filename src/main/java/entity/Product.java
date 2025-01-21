@@ -18,19 +18,19 @@ public class Product {
     @Column(name = "product_id", unique = true, nullable = false, columnDefinition = "char(14)")
     private String productID;
 
-    @Column(columnDefinition = "nvarchar(50)")
+    @Column(name = "product_name", columnDefinition = "nvarchar(50)")
     private String productName;
 
-    @Column(columnDefinition = "varchar(16)")
+    @Column(name = "registration_number", columnDefinition = "varchar(16)")
     private String registrationNumber;
 
-    @Column(columnDefinition = "money")
+    @Column(name = "purchase_price", columnDefinition = "money")
     private double purchasePrice;
 
-    @Column(columnDefinition = "float")
+    @Column(name = "tax_percentage",columnDefinition = "float")
     private double taxPercentage;
 
-    @Column(columnDefinition = "date")
+    @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
 
     @ManyToOne
@@ -45,10 +45,10 @@ public class Product {
     @JoinColumn(name = "categoryID")
     private Category category;
 
-    @Column(columnDefinition = "varchar(60)")
+    @Column(name = "unit_note", columnDefinition = "varchar(60)")
     private String unitNote;
 
-    //TODO: để tạm hai cái này đây
+    //TODO:
     @ElementCollection
     private HashMap<PackagingUnit, Double> unitPrice;
 

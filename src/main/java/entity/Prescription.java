@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,15 +15,18 @@ public class Prescription {
     @Id
     @Column(name = "prescription_id")
     @EqualsAndHashCode.Include
-    private String prescriptionId;
-
     private String prescriptionID;
 
+    @Column(name = "create_date")
     private LocalDate createdDate;
 
     private String diagnosis;
 
+    @Column(name = "medical_facility")
     private String medicalFacility;
+
+    @OneToMany(mappedBy = "prescription")
+    private List<Order> orders;
 
     public Prescription() {
     }

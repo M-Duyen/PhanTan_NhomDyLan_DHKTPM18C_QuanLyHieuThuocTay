@@ -39,7 +39,7 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 

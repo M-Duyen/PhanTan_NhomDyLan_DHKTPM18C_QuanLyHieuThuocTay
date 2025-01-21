@@ -1,26 +1,28 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
+import java.util.List;
+
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
 @Table(name = "vendors")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Vendor {
-    //TODO:
     @Id
-    @EqualsAndHashCode.Include
     @Column(name = "vendor_id", nullable = false)
+    @EqualsAndHashCode.Include
     private String vendorID;
 
+    @Column(name = "vendor_name")
     private String vendorName;
 
     private String country;
+
+    @OneToMany(mappedBy = "vendor")
+    private List<Product> products;
 
     public Vendor() {
     }
@@ -30,9 +32,9 @@ public class Vendor {
     }
 
     public Vendor(String vendorID, String vendorName, String country) {
-       setVendorID(vendorID);
-       setVendorName(vendorName);
-       setCountry(country);
+        setVendorID(vendorID);
+        setVendorName(vendorName);
+        setCountry(country);
     }
 
     public void setVendorID(String vendorID) {
