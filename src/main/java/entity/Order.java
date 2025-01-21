@@ -32,11 +32,11 @@ public class Order {
     @Column(name = "discount")
     private double discount;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

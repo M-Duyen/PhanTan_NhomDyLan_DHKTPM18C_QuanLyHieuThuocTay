@@ -1,57 +1,24 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 
 @Entity
-@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Data
 @Table(name = "promotion_types")
 public class PromotionType {
-
     @Id
+    @Column(name = "promotion_type_id", nullable = false, columnDefinition = "char(4)")
     @EqualsAndHashCode.Include
-    @Column(name = "promotion_type_id")
     private String promotionTypeID;
 
+    @Column(name = "promotion_type_name", nullable = false)
     private String promotionTypeName;
 
-    public PromotionType() {
-    }
-
-    public PromotionType(String promotionTypeID) {
-        this.promotionTypeID = promotionTypeID;
-    }
-
-    public PromotionType(String promotionTypeID, String promotionTypeName) {
-        this.promotionTypeID = promotionTypeID;
-        this.promotionTypeName = promotionTypeName;
-    }
-
-    public String getPromotionTypeID() {
-        return promotionTypeID;
-    }
-
-    public void setPromotionTypeID(String promotionTypeID) {
-        if(promotionTypeID == null || promotionTypeID.trim().isEmpty()){
-            throw new IllegalArgumentException("Mã loại khuyến mãi không được rỗng");
-        }
-        this.promotionTypeID = promotionTypeID;
-    }
-
-    public String getPromotionTypeName() {
-        return promotionTypeName;
-    }
-
-    public void setPromotionTypeName(String promotionTypeName) {
-        if(promotionTypeName == null || promotionTypeName.trim().isEmpty()){
-            throw new IllegalArgumentException("Tên loại khuyến mãi không được rỗng");
-        }
-        this.promotionTypeName = promotionTypeName;
-    }
+    @OneToMany(mappedBy = "promotionType")
+    private List<Promotion> promotion;
 }

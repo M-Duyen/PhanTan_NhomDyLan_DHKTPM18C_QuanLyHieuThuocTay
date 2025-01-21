@@ -1,9 +1,6 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +11,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "employees")
 public class Employee {
-    //TODO:
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "employee_id")
@@ -38,6 +34,9 @@ public class Employee {
     private boolean status;
 
     private String degree;
+
+    @OneToOne(mappedBy = "employee")
+    private Account account;
 
     public Employee() {
     }

@@ -20,8 +20,8 @@ public enum PackagingUnit {
         return packagingUnit;
     }
 
-    public static entity.PackagingUnit fromString(String value) {
-        for (entity.PackagingUnit unit : entity.PackagingUnit.values()) {
+    public static PackagingUnit fromString(String value) {
+        for (PackagingUnit unit : PackagingUnit.values()) {
             if (unit.getPackagingUnit().equalsIgnoreCase(value)) {
                 return unit;
             }
@@ -29,7 +29,7 @@ public enum PackagingUnit {
         throw new IllegalArgumentException("LỖI: ĐƠN VỊ KHÔNG TỒN TẠI " + value);
     }
 
-    public String convertUnit(entity.PackagingUnit enumUnit) {
+    public String convertUnit(PackagingUnit enumUnit) {
         String name = "";
         if(enumUnit.equals(PILL)) {
             name = "Viên";

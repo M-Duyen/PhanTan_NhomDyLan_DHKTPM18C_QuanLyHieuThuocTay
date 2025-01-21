@@ -1,8 +1,7 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "functional_foods")
-public class FunctionalFood extends Product{
+public class FunctionalFood extends Product {
 
     @Column(name = "main_nutrients", columnDefinition = "nvarchar(20)")
     private String mainNutrients;

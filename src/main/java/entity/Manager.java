@@ -1,23 +1,20 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
-@Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
 @Table(name = "managers")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Manager {
     @Id
+    @Column (name = "manager_id", nullable = false, columnDefinition = "char(5)")
     @EqualsAndHashCode.Include
-    @Column(name = "manager_id", nullable = false, unique = true)
     private String managerID;
 
     @Column(name = "manager_name")
@@ -29,12 +26,8 @@ public class Manager {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    public Manager() {
-    }
-
-    public Manager(String managerID) {
-        setManagerID(managerID);
-    }
+    @OneToMany(mappedBy = "manager")
+    private List<Account> account;
 
     public Manager(String managerID, String managerName, LocalDate birthDate, String phoneNumber) {
         setManagerID(managerID);

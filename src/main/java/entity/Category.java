@@ -8,9 +8,8 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "categorys")
+@Table(name = "categories")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class Category {
     @Id
     @Column(name = "category_id", nullable = false)
