@@ -12,7 +12,7 @@ public class OrderDetail {
     @Id
     @EqualsAndHashCode.Include
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name="order_id")
     private Order order;
 
     @Id
@@ -21,7 +21,6 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Id
     @EqualsAndHashCode.Include
     @Enumerated(EnumType.STRING)
     private PackagingUnit unit;
@@ -29,11 +28,10 @@ public class OrderDetail {
     @Column(name = "order_quantity", nullable = false)
     private int orderQuantity;
 
-
     @Transient
     public double getLineTotal() {
         if (product != null) {
-            return orderQuantity * product.getUnitPrice(unit);
+            return orderQuantity * product.getSellPrice(unit);
         }
         return 0;
     }

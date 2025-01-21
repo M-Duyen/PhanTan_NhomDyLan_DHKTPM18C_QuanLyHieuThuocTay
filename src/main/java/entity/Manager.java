@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,7 +13,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Manager {
     @Id
-    @Column (name = "manager_id", nullable = false)
+    @Column (name = "manager_id", nullable = false, columnDefinition = "char(5)")
     @EqualsAndHashCode.Include
     private String managerID;
 
@@ -27,9 +26,8 @@ public class Manager {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
-    private List<Account> accounts;
-
+    @OneToMany(mappedBy = "manager")
+    private List<Account> account;
 
 
 

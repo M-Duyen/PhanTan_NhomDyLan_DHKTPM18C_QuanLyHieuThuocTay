@@ -42,11 +42,8 @@ public class Order {
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 
-    @OneToMany
-    @JoinColumn(name = "order")
-    private ArrayList<OrderDetail> listOrderDetail;
-
-
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> listOrderDetail;
 
     @Transient
     public double getTotalDue() {

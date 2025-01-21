@@ -13,7 +13,6 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "customers")
 public class Customer {
-    //TODO:
     @Unique
     @EqualsAndHashCode.Include
     @Column(name = "customer_id", nullable = false, columnDefinition = "char(10)")

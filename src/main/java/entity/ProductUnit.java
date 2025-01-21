@@ -7,9 +7,7 @@ import lombok.Data;
 
 @Embeddable
 @Data
-@Table(name = "product_units")
 public class ProductUnit {
-    @Column(columnDefinition = "money")
     private double sellPrice;
     @Column(columnDefinition = "int")
     private int inStock;

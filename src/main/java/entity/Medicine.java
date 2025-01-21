@@ -17,5 +17,4 @@ public class Medicine extends Product {
     @JoinColumn(name = "administrationID")
     private AdministrationRoute administrationRoute;
 
-
 }
