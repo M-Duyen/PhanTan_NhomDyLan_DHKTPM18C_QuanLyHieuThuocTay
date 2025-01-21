@@ -35,4 +35,13 @@ public class OrderDetail {
         }
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                ", product=" + product +
+                ", unit=" + unit +
+                ", orderQuantity=" + orderQuantity +
+                '}';
+    }
 }

@@ -55,4 +55,18 @@ public class Order {
         }
         return totalDue * (1 - discount);
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderID='" + orderID + '\'' +
+                ", orderDate=" + orderDate +
+                ", shipToAddress='" + shipToAddress + '\'' +
+                ", paymentMethod=" + paymentMethod +
+                ", discount=" + discount +
+                ", employee=" + employee +
+                ", customer=" + customer +
+                ", prescription=" + prescription +
+                '}';
+    }
 }

@@ -107,7 +107,7 @@ public class Order_DAO {
         Order_DAO dao = new Order_DAO();
 
         dao.insertOrder();
-        System.out.println(dao.getAll());
+        System.out.println("Result: " + dao.getAll());
     }
 
 
