@@ -3,7 +3,6 @@ package entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -13,14 +12,13 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "promotions")
 public class Promotion extends PromotionType {
     //TODO:
-    @Id
-    @EqualsAndHashCode.Include
-    @Column(name = "promotion_id", nullable = false)
-    private String promotionID;
+//    @Id
+//    @Column(name = "promotion_id", nullable = false)
+//    private String promotionID;
 
+    @EqualsAndHashCode.Include
     @Column(name = "promotion_name")
     private String promotionName;
 
@@ -42,28 +40,26 @@ public class Promotion extends PromotionType {
     public Promotion() {
     }
 
+//    public Promotion(String promotionID) {
+//        setPromotionID(promotionID);
+//    }
 
-    public Promotion(String promotionID) {
-        setPromotionID(promotionID);
-    }
-
-
-    public Promotion(String promotionID, String promotionName, LocalDate startDate, LocalDate endDate, double discount, boolean stats, PromotionType promotionType) {
-        this.promotionID = promotionID;
-        this.promotionName = promotionName;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.discount = discount;
-        this.stats = stats;
+    public Promotion(/*String promotionID, */String promotionName, LocalDate startDate, LocalDate endDate, double discount, boolean stats, PromotionType promotionType) {
+        //setPromotionID(promotionID);
+        setPromotionName(promotionName);
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setDiscount(discount);
+        setStats(stats);
         this.promotionType = promotionType;
     }
 
-    public void setPromotionID(String promotionID) {
-        if (promotionID == null || promotionID.trim().isEmpty()) {
-            throw new IllegalArgumentException("Mã khuyến mãi không được rỗng");
-        }
-        this.promotionID = promotionID;
-    }
+//    public void setPromotionID(String promotionID) {
+//        if (promotionID == null || promotionID.trim().isEmpty()) {
+//            throw new IllegalArgumentException("Mã khuyến mãi không được rỗng");
+//        }
+//        this.promotionID = promotionID;
+//    }
 
     public void setPromotionName(String promotionName) {
         if (promotionName == null || promotionName.trim().isEmpty()) {
@@ -92,7 +88,7 @@ public class Promotion extends PromotionType {
     @Override
     public String toString() {
         return "Promotion{" +
-                "promotionID='" + promotionID + '\'' +
+                //"promotionID='" + promotionID + '\'' +
                 ", promotionName='" + promotionName + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +

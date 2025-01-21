@@ -80,13 +80,6 @@ public class OrderUtil {
         return customer;
     }
 
-    private static Employee createSampleEmployee(Faker faker) {
-        Employee employee = new Employee();
-        employee.setEmployeeID("EP" + faker.number().digits(3));
-        employee.setEmployeeName(faker.name().fullName());
-        return employee;
-    }
-
     private static List<Product> createSampleProduct(Faker faker) {
         List<Product> productList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -110,4 +103,10 @@ public class OrderUtil {
         return productList;
     }
 
+    public static Employee createSampleEmployee(Faker faker) {
+        Employee employee = new Employee();
+        employee.setEmployeeID("EP" + faker.number().digits(3));
+        employee.setEmployeeName(faker.name().fullName());
+        return employee;
+    }
 }

@@ -140,6 +140,7 @@ public class Product {
         unitPrice.put(unit, price);
         unitStock.put(unit, inStock);
     }
+
     // Getter cho danh sách đơn vị đóng gói
     public List<PackagingUnit> getPackagingUnitsList() {
         return new ArrayList<>(unitPrice.keySet());

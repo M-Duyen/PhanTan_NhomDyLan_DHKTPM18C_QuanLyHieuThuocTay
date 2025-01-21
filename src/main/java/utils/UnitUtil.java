@@ -1,4 +1,4 @@
-package dao;
+package utils;
 
 import entity.Unit;
 import jakarta.persistence.EntityManager;
@@ -8,10 +8,10 @@ import net.datafaker.Faker;
 
 import java.util.List;
 
-public class Unit_DAO {
+public class UnitUtil {
     private final EntityManager em;
 
-    public Unit_DAO() {
+    public UnitUtil() {
         em = Persistence.createEntityManagerFactory("SHH-mariaDB").createEntityManager();
     }
 
@@ -43,10 +43,10 @@ public class Unit_DAO {
     }
 
     public static void main(String[] args) {
-        Unit_DAO dao = new Unit_DAO();
-        Unit unit = dao.createSapmleUnit();
-        System.out.println(dao.insertUnit(unit));
+        UnitUtil util = new UnitUtil();
+        Unit unit = util.createSapmleUnit();
+        System.out.println(util.insertUnit(unit));
 
-        dao.getAll().forEach(System.out::println);
+        util.getAll().forEach(System.out::println);
     }
 }

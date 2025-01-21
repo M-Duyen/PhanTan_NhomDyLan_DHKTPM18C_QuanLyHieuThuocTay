@@ -32,7 +32,7 @@ public class OrderDetail {
     @Transient
     public double getLineTotal() {
         if (product != null) {
-            return orderQuantity * product.getUnitPrice(unit);
+            return orderQuantity * product.getPriceByUnit(unit);
         }
         return 0;
     }

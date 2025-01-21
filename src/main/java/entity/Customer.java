@@ -41,9 +41,9 @@ public class Customer {
         this.brithDate = brithDate;
     }
 
-    public double getPoint() {
-        return new Customer_DAO().getCustomerPoint(getPhoneNumber());
-    }
+//    public double getPoint() {
+//        return new Customer_DAO().getCustomerPoint(getPhoneNumber());
+//    }
 
     public void setPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {

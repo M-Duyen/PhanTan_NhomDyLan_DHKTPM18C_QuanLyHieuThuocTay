@@ -1,6 +1,6 @@
 package dao;
 
-import database.ConnectDB;
+//import database.ConnectDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ public class Login_DAO {
 
     public Login_DAO() {
         // Initialize con in the constructor
-        con = ConnectDB.getConnection();
+        //con = ConnectDB.getConnection();
 
     }
 
@@ -82,7 +82,7 @@ public class Login_DAO {
     }
 
     public static void main(String[] args) {
-        ConnectDB.getInstance().connect();
+        //ConnectDB.getInstance().connect();
         Login_DAO test = new Login_DAO(); // Create an instance of Test
 //        System.out.println(test.dangNhapTen("MyDUYEN"));
         String tenDN = "EP1501";

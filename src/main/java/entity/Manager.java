@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,13 +16,17 @@ import java.util.Objects;
 @Table(name = "managers")
 public class Manager {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "manager_id", nullable = false, unique = true)
     private String managerID;
 
+    @Column(name = "manager_name")
     private String managerName;
 
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     public Manager() {
