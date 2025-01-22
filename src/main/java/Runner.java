@@ -64,7 +64,7 @@ public class Runner {
 
     private static Manager generateManager() {
         Manager manager = new Manager();
-        manager.setManagerID(faker.idNumber().valid());
+        manager.setManagerID(faker.idNumber().valid().substring(0,5));
         manager.setManagerName(faker.name().fullName());
         manager.setBirthDate(faker.date().birthdayLocalDate());
         manager.setPhoneNumber(faker.phoneNumber().cellPhone());

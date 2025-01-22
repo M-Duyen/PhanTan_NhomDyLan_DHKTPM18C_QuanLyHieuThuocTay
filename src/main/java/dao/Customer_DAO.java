@@ -4,6 +4,7 @@ import entity.Customer;
 import entity.Employee;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import net.datafaker.Faker;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +12,12 @@ import java.util.List;
 public class Customer_DAO extends AbstractCRUD<Customer, String> {
     public Customer_DAO(EntityManager em) {
         super(em, Customer.class);
+    }
+    public static Customer createSampleCustomer(Faker faker) {
+        Customer customer = new Customer();
+        customer.setPhoneNumber(faker.phoneNumber().cellPhone().substring(0, 10));
+        customer.setCustomerID("CM" + faker.number().digits(3));
+        return customer;
     }
 
     public static void main(String[] args) {
