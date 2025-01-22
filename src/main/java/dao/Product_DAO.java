@@ -143,7 +143,11 @@ public class Product_DAO {
                 product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
                 product.setCategory(category);
                 product.setVendor(vendor);
-                product.setUnitNote(faker.lorem().sentence());
+                String unitNote = faker.lorem().sentence();
+                if (unitNote.length() > 60) {
+                    unitNote = unitNote.substring(0, 60);
+                }
+                product.setUnitNote(unitNote);
 
                 HashMap<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
                 PackagingUnit unit = PackagingUnit.BOX;

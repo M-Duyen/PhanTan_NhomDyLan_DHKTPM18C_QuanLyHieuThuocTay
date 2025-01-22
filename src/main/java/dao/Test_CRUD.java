@@ -11,7 +11,6 @@ import java.time.LocalDate;
 public class Test_CRUD {
     private static EntityManager em;
 
-
     public static void main(String[] args) {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
 
@@ -63,8 +62,7 @@ public class Test_CRUD {
 //        System.out.println(manager_dao.read("MN_Test"));
 
 //        account_dao.delete("1234567890");
-        employee_dao.delete("EMP_Test_1");
-        manager_dao.delete("MN_Test");
+
 
 
 

@@ -50,8 +50,6 @@ public class Runner {
                     Account account = generateAccount(manager, employee);
                     em.persist(account);
 
-
-
                 }
                 Customer customer = generateCustomer();
                 em.persist(customer);
@@ -120,7 +118,11 @@ public class Runner {
 
     private static Account generateAccount(Manager manager, Employee emp) {
         Account account = new Account();
-        account.setAccountID(faker.idNumber().valid());
+        String accountId = faker.idNumber().valid();
+        if (accountId.length() > 6) { // Giả sử cột account_id có VARCHAR(10)
+            accountId = accountId.substring(0, 6); // Cắt chuỗi để vừa với cột
+        }
+        account.setAccountID(accountId);
         account.setPassword(faker.internet().password());
         account.setManager(manager);
         account.setEmployee(emp);

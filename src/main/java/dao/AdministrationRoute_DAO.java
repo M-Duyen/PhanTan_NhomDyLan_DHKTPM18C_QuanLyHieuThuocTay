@@ -64,7 +64,7 @@ public class AdministrationRoute_DAO {
     public static void main(String[] args) {
         AdministrationRoute_DAO dao = new AdministrationRoute_DAO();
 //        Test get all
-//        dao.getAll().forEach(ar -> System.out.println(ar.toString()));
+        dao.getAll().forEach(ar -> System.out.println(ar.toString()));
 
 //        Test create
 //        AdministrationRoute ar = new AdministrationRoute();
