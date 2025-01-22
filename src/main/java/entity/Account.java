@@ -28,5 +28,8 @@ public class Account {
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
-
+    @ElementCollection
+    @CollectionTable(name = "account_notifications",
+            joinColumns = @JoinColumn(name = "account_id"))
+    List<Notification> notifications;
 }
