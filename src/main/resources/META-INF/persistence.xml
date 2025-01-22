@@ -1,39 +1,42 @@
-<persistence xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd" version="3.0">
-    <persistence-unit name="default"> </persistence-unit>
-    <persistence-unit name="SHH-mariaDB">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+    <persistence-unit name="mariadb">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>entity.Account</class>
-        <class>entity.Promotion</class>
-        <class>entity.PromotionType</class>
-
-        <class>entity.Vendor</class>
-        <class>entity.Manager</class>
-
-        <class>entity.Category</class>
-        <class>entity.Product</class>
-        <class>entity.FunctionalFood</class>
-        <class>entity.MedicalSupplies</class>
-        <class>entity.Medicine</class>
-
         <class>entity.AdministrationRoute</class>
-
+        <class>entity.Category</class>
         <class>entity.Customer</class>
         <class>entity.Employee</class>
-
-        <class>entity.Prescription</class>
+        <class>entity.FunctionalFood</class>
+        <class>entity.Manager</class>
+        <class>entity.MedicalSupplies</class>
+        <class>entity.Medicine</class>
         <class>entity.Order</class>
         <class>entity.OrderDetail</class>
-
+        <class>entity.Product</class>
         <class>entity.ProductUnit</class>
+        <class>entity.Promotion</class>
+        <class>entity.PromotionType</class>
         <class>entity.Unit</class>
+        <class>entity.Prescription</class>
+        <class>entity.Vendor</class>
         <properties>
-            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/pharmacy_management"/>
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="sapassword"/>
-            <property name="jakarta.persistence.jdbc.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="jakarta.persistence.jdbc.driver"
+                      value="org.mariadb.jdbc.Driver" />
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:mariadb://localhost:3306/pharmacy_management" />
+            <property name="jakarta.persistence.jdbc.user" value="root" />
+            <property name="jakarta.persistence.jdbc.password"
+                      value="123456789" />
+            <property name="jakarta.persistence.jdbc.dialect"
+                      value="org.hibernate.dialect.MariaDBDialect" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
         </properties>
+
     </persistence-unit>
 </persistence>

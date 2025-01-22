@@ -6,8 +6,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
-
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
