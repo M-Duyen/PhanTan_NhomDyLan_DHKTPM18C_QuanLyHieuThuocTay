@@ -7,8 +7,10 @@ import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Product_DAO {
     private EntityManager em;
@@ -82,6 +84,33 @@ public class Product_DAO {
             e.printStackTrace();
             return false;
         }
+    }
+    public static List<Product> createSampleProduct(Faker faker) {
+        List<Product> productList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Product product = new Product();
+
+            product.setProductID("P" + faker.number().digits(4));
+            product.setProductName(faker.commerce().productName());
+            product.setPurchasePrice(faker.number().randomDouble(2, 5, 100));
+            product.setTaxPercentage(faker.number().randomDouble(2, 0, 15));
+            product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(1, 365)));
+
+            Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
+            int unitCount = faker.number().numberBetween(1, 5);
+            for (int j = 0; j < unitCount; j++) {
+                PackagingUnit unit = PackagingUnit.values()[faker.number().numberBetween(0, PackagingUnit.values().length)];
+                System.out.println("Unit: " + unit);
+                ProductUnit productUnit = new ProductUnit();
+                productUnit.setSellPrice(faker.number().randomDouble(2, 10, 500));
+                productUnit.setInStock(faker.number().numberBetween(10, 1000));
+
+                unitDetails.put(unit, productUnit);
+            }
+            product.setUnitDetails(unitDetails);
+            productList.add(product);
+        }
+        return productList;
     }
 
     public static void main(String[] args) {

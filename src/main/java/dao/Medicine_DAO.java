@@ -1,14 +1,9 @@
 package dao;
 
-import entity.*;
+import entity.Medicine;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import net.datafaker.Faker;
-import org.hibernate.cfg.PersistenceStandardEntityResolver;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 
 public class Medicine_DAO {
