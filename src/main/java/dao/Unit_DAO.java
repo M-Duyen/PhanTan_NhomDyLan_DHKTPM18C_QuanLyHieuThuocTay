@@ -15,7 +15,7 @@ public class Unit_DAO {
     private final EntityManager em;
 
     public Unit_DAO() {
-        em = Persistence.createEntityManagerFactory("SHH-mariaDB").createEntityManager();
+        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
     public List getAll() {

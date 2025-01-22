@@ -9,7 +9,6 @@ import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Data
 @Table(name = "products")
 @Data
 public class Product {
@@ -50,8 +49,7 @@ public class Product {
 
 
     @ElementCollection
-    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    )
+    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();

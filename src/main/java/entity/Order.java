@@ -59,14 +59,14 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "orderID='" + orderID + '\'' +
-                ", orderDate=" + orderDate +
-                ", shipToAddress='" + shipToAddress + '\'' +
-                ", paymentMethod=" + paymentMethod +
-                ", discount=" + discount +
-                ", employee=" + employee +
+                "prescription=" + prescription +
                 ", customer=" + customer +
-                ", prescription=" + prescription +
+                ", employee=" + employee +
+                ", discount=" + discount +
+                ", paymentMethod=" + paymentMethod +
+                ", shipToAddress='" + shipToAddress + '\'' +
+                ", orderDate=" + orderDate +
+                ", orderID='" + orderID + '\'' +
                 '}';
     }
 }

@@ -39,6 +39,7 @@ public class OrderDetail {
     @Override
     public String toString() {
         return "OrderDetail{" +
+                "order=" + order +
                 ", product=" + product +
                 ", unit=" + unit +
                 ", orderQuantity=" + orderQuantity +

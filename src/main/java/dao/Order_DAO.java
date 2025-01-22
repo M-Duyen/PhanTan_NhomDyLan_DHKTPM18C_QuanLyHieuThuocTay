@@ -15,7 +15,7 @@ public class Order_DAO {
     private final EntityManager em;
 
     public Order_DAO() {
-        em = Persistence.createEntityManagerFactory("SHH-mariaDB").createEntityManager();
+        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
     public List<Order> getAll() {
@@ -62,6 +62,7 @@ public class Order_DAO {
             ArrayList<OrderDetail> orderDetailList = new ArrayList<>();
 
             order.setOrderID("OR" + faker.number().digits(5));
+            System.out.println(order.getOrderID());
             order.setOrderDate(LocalDateTime.now().minusDays(faker.number().numberBetween(1, 30)));
             order.setShipToAddress(faker.address().fullAddress());
             order.setPaymentMethod(faker.options().option(PaymentMethod.class));

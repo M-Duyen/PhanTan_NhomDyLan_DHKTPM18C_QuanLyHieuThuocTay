@@ -1,5 +1,5 @@
 SELECT * FROM administration_routes;
-SELECT * FROM categorys;
+SELECT * FROM pharmacy_management.categories;
 SELECT * FROM prescriptions;
 SELECT * FROM vendors;
 
