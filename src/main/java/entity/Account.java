@@ -3,6 +3,7 @@ package entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -17,12 +18,15 @@ public class Account {
     private String accountID;
     private String password;
 
-    @ManyToOne
+    @ToString.Exclude
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
+    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
-    @OneToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
 
 }

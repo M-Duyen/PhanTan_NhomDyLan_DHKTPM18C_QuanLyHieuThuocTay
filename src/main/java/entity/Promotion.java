@@ -3,12 +3,11 @@ package entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
 @Table(name = "promotions")
 public class Promotion {
+    //TODO:
     @Id
     @Column(name = "promotion_id", nullable = false)
     private String promotionId;
@@ -20,8 +19,4 @@ public class Promotion {
     @JoinColumn(name = "promotion_type_id")
     private PromotionType promotionType;
 
-//    private LocalDate startDate;
-//    private LocalDate endDate;
-//    private double discount;
-//    private boolean stats;
 }
