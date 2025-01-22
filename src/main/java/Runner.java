@@ -46,11 +46,11 @@ public class Runner {
 //            e.printStackTrace();
 //            tr.rollback();
 //        }
-
-        //Dữ liệu mẫu product
+        //test datafaker
         Faker faker = new Faker();
         EntityTransaction tr = em.getTransaction();
         tr.begin();
+
         try {
             for (int i = 0; i < 10; i++) {
                 Category category = new Category();
@@ -84,14 +84,35 @@ public class Runner {
                 product.setUnitDetails(unitDetails);
 
                 em.persist(product);
+
+                Medicine medicine = new Medicine();
+                medicine.setProductID("PM" + faker.number().digits(8));
+                medicine.setProductName(faker.medical().toString());
+                medicine.setRegistrationNumber("REG" + faker.number().digits(6));
+                medicine.setPurchasePrice(faker.number().randomDouble(2, 200, 2000));
+                medicine.setTaxPercentage(faker.number().randomDouble(2, 10, 20));
+                medicine.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(60, 720)));
+                medicine.setCategory(category);
+                medicine.setVendor(vendor);
+                medicine.setUnitNote(faker.lorem().sentence());
+                medicine.setActiveIngredient(faker.lorem().word());
+                medicine.setConversionUnit(faker.medical().toString());
+                medicine.setUnitDetails(unitDetails);
+
+                AdministrationRoute route = new AdministrationRoute();
+                route.setAdministrationRouteID("AR" + faker.number().digits(4));
+                route.setAdministrationRouteName(faker.lorem().word());
+                em.persist(route);
+
+                medicine.setAdministrationRoute(route);
+
+                em.persist(medicine);
             }
+
             tr.commit();
         } catch (Exception e) {
             e.printStackTrace();
             tr.rollback();
-        } finally {
-            em.close();
         }
-
     }
 }
