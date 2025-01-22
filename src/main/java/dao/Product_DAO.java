@@ -1,96 +1,135 @@
 package dao;
 
-import entity.PackagingUnit;
-import entity.Product;
+import entity.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
 public class Product_DAO {
-   public Product_DAO() {
+    private EntityManager em;
+
+    public Product_DAO() {
+        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
-    public static Product_DAO getInstance(){
-        return new Product_DAO();
+
+    public List<Product> getAll() {
+        return em.createQuery("SELECT p FROM Product p", Product.class).getResultList();
     }
 
-    /**
-     * Chuyển mã sản phẩm sang mã vạch
-     *
-     * @param barcode
-     * @return
-     */
-    public String convertBarcode_ToProductID(String barcode){
-        String productID = barcode.substring(1);
-        String temp = String.valueOf(barcode.charAt(0));
-        switch (temp){
-            case "7":
-                return "PF" + productID;
-            case "8":
-                return "PM" + productID;
-            case "9":
-                return "PS" + productID;
+    public boolean create(Product product) {
+        try {
+            em.getTransaction().begin();
+            em.persist(product);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return null;
     }
 
-    /**
-     * Xử lý cắt tên từ 0 đến ( cho unitNote
-     *
-     * @param input
-     * @return
-     */
-    public String extractUnitName(String input) {
-        if (input == null || !input.contains("(")) {
-            return null;
-        }
-
-        return input.substring(0, input.indexOf("(")).trim();
-    }
-
-    /**
-     * Lấy index của phần tử trong array
-     *
-     * @param parts
-     * @param element
-     * @return
-     */
-    public int getIndexPart_UnitNote(String[] parts, String element) {
-        for(int i = 0; i < parts.length; i++) {
-            if(element.equals(extractUnitName(parts[i]))) {
-                return i;
+    public boolean createMultiple(List<Product> products) {
+        try {
+            em.getTransaction().begin();
+            for (Product product : products) {
+                em.persist(product);
             }
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return  -1;
     }
 
-    public static List<Product> createSampleProduct(Faker faker) {
-        List<Product> productList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Product product = new Product();
-            product.setProductID("P" + faker.number().digits(4));
-            product.setProductName(faker.commerce().productName());
-            product.setPurchasePrice(faker.number().randomDouble(2, 5, 100));
-            product.setTaxPercentage(faker.number().randomDouble(2, 0, 15));
-            product.setEndDate(LocalDateTime.now().plusDays(1).toLocalDate());
+    public Product read(String id) {
+        return em.find(Product.class, id);
+    }
 
-            HashMap<PackagingUnit, Double> unitPrice = new HashMap<>();
-            HashMap<PackagingUnit, Integer> unitStock = new HashMap<>();
-            for (PackagingUnit unit : PackagingUnit.values()) {
-                unitPrice.put(unit, faker.number().randomDouble(2, 1000, 200000));
-                unitStock.put(unit, faker.number().numberBetween(50, 500));
-            }
-            productList.add(product);
+    public boolean update(Product product) {
+        try {
+            em.getTransaction().begin();
+            em.merge(product);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
         }
-        return productList;
+    }
+
+    public boolean delete(String id) {
+        try {
+            Product product = em.find(Product.class, id);
+            if (product != null) {
+                em.getTransaction().begin();
+                em.remove(product);
+                em.getTransaction().commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void main(String[] args) {
+//        Product_DAO productDAO = new Product_DAO();
+//
+//Dữ liệu mẫu product
+        Faker faker = new Faker();
+        EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+        EntityTransaction tr = em.getTransaction();
+        tr.begin();
+        try {
+            for (int i = 0; i < 10; i++) {
+                Category category = new Category();
+                category.setCategoryID("C" + faker.number().digits(5));
+                category.setCategoryName(faker.commerce().department());
+                em.persist(category);
 
-        //product_dao.updateProductInStock_WithTransaction("PM121224000003", 10, unitEnum2, false, con);
+                Vendor vendor = new Vendor();
+                vendor.setVendorID("V" + faker.number().digits(5));
+                vendor.setVendorName(faker.company().name());
+                vendor.setCountry(faker.address().country());
+                em.persist(vendor);
+
+                Product product = new Product();
+                product.setProductID("P" + faker.number().digits(8));
+                product.setProductName(faker.commerce().productName());
+                product.setRegistrationNumber("REG" + faker.number().digits(6));
+                product.setPurchasePrice(faker.number().randomDouble(2, 100, 1000));
+                product.setTaxPercentage(faker.number().randomDouble(2, 5, 15));
+                product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
+                product.setCategory(category);
+                product.setVendor(vendor);
+                product.setUnitNote(faker.lorem().sentence());
+
+                HashMap<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
+                PackagingUnit unit = PackagingUnit.BOX;
+                ProductUnit productUnit = new ProductUnit();
+                productUnit.setSellPrice(faker.number().randomDouble(2, 150, 500));
+                productUnit.setInStock(faker.number().numberBetween(10, 100));
+                unitDetails.put(unit, productUnit);
+                product.setUnitDetails(unitDetails);
+
+                em.persist(product);
+            }
+            tr.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tr.rollback();
+        }
     }
 }
-

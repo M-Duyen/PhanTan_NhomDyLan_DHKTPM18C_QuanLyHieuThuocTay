@@ -9,6 +9,7 @@ import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Data
 @Table(name = "products")
 @Data
 public class Product {
