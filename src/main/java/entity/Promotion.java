@@ -3,6 +3,8 @@ package entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @Table(name = "promotions")
@@ -18,8 +20,11 @@ public class Promotion {
     @JoinColumn(name = "promotion_type_id")
     private PromotionType promotionType;
 
-//    private LocalDate startDate;
-//    private LocalDate endDate;
-//    private double discount;
-//    private boolean stats;
+    @Column(name = "start_date", columnDefinition = "date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date", columnDefinition = "date")
+    private LocalDate endDate;
+    private double discount;
+    private boolean stats;
 }

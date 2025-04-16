@@ -27,6 +27,8 @@ public class Customer {
     private String customerName;
     private boolean gender;
 
+    private double point;
+
     @Column(name = "email", unique = true)
     private String email ;
     private String addr;

@@ -9,4 +9,6 @@ SELECT * FROM customers;
 
 
 
-SELECT * FROM products
+SELECT * FROM products;
+
+DROP DATABASE pharmacy_management;

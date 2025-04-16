@@ -32,6 +32,11 @@ public class Product {
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
 
+    @Column(name = "quantity_in_stock", columnDefinition = "int")
+    private int quantityInStock;
+
+
+
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;

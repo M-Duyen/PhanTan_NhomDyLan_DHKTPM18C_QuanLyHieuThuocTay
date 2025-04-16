@@ -4,22 +4,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "administration_routes")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AdministrationRoute {
-
-    public AdministrationRoute() {
-    }
-
-    public AdministrationRoute(String administrationRouteID, String administrationRouteName) {
-        this.administrationRouteID = administrationRouteID;
-        this.administrationRouteName = administrationRouteName;
-    }
 
     @Id
     @Column(name = "administration_route_id")
