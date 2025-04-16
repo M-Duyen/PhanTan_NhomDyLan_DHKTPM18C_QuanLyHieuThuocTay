@@ -30,7 +30,9 @@ public class Order {
     @Column(name = "discount")
     private double discount;
 
-    @OneToOne
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 

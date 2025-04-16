@@ -1,21 +1,19 @@
 package dao;
 
-import entity.PackagingUnit;
-import entity.Product;
-import entity.ProductUnit;
+import entity.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Product_DAO {
-    private static EntityManager em;
+    private EntityManager em;
 
     public Product_DAO() {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
@@ -87,7 +85,6 @@ public class Product_DAO {
             return false;
         }
     }
-
     public static List<Product> createSampleProduct(Faker faker) {
         List<Product> productList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -116,28 +113,56 @@ public class Product_DAO {
         return productList;
     }
 
-
     public static void main(String[] args) {
 //        Product_DAO productDAO = new Product_DAO();
 //
-//        Product product = new Product();
-//        product.setProductID("PM001");
-//        product.setProductName("Paracetamol");
-//        product.setRegistrationNumber("REG12345");
-//        product.setPurchasePrice(500.0);
-//        product.setTaxPercentage(10.0);
-//        product.setEndDate(LocalDate.of(2025, 12, 31));
-//
-//         productDAO.create(product);
-//
-//         System.out.println(productDAO.read("PM001"));
-//
-//         Product existingProduct = productDAO.read("PM001");
-//         existingProduct.setPurchasePrice(550.0);
-//         productDAO.update(existingProduct);
-//
-//         productDAO.delete("PM001");
-//
-//         productDAO.getAll().forEach(System.out::println);
+//Dữ liệu mẫu product
+        Faker faker = new Faker();
+        EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+        EntityTransaction tr = em.getTransaction();
+        tr.begin();
+        try {
+            for (int i = 0; i < 10; i++) {
+                Category category = new Category();
+                category.setCategoryID("C" + faker.number().digits(5));
+                category.setCategoryName(faker.commerce().department());
+                em.persist(category);
+
+                Vendor vendor = new Vendor();
+                vendor.setVendorID("V" + faker.number().digits(5));
+                vendor.setVendorName(faker.company().name());
+                vendor.setCountry(faker.address().country());
+                em.persist(vendor);
+
+                Product product = new Product();
+                product.setProductID("P" + faker.number().digits(8));
+                product.setProductName(faker.commerce().productName());
+                product.setRegistrationNumber("REG" + faker.number().digits(6));
+                product.setPurchasePrice(faker.number().randomDouble(2, 100, 1000));
+                product.setTaxPercentage(faker.number().randomDouble(2, 5, 15));
+                product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
+                product.setCategory(category); // Set the category
+                product.setVendor(vendor);
+                String unitNote = faker.lorem().sentence();
+                if (unitNote.length() > 60) {
+                    unitNote = unitNote.substring(0, 60);
+                }
+                product.setUnitNote(unitNote);
+
+                HashMap<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
+                PackagingUnit unit = PackagingUnit.BOX;
+                ProductUnit productUnit = new ProductUnit();
+                productUnit.setSellPrice(faker.number().randomDouble(2, 150, 500));
+                productUnit.setInStock(faker.number().numberBetween(10, 100));
+                unitDetails.put(unit, productUnit);
+                product.setUnitDetails(unitDetails);
+
+                em.persist(product);
+            }
+            tr.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tr.rollback();
+        }
     }
 }
