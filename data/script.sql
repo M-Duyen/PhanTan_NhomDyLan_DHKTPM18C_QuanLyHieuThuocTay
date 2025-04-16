@@ -1,5 +1,5 @@
 SELECT * FROM administration_routes;
-SELECT * FROM categorys;
+SELECT * FROM categories;
 SELECT * FROM prescriptions;
 SELECT * FROM vendors;
 SELECT * FROM accounts;

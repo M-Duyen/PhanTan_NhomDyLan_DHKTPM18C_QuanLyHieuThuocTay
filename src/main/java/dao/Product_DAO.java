@@ -141,9 +141,13 @@ public class Product_DAO {
                 product.setPurchasePrice(faker.number().randomDouble(2, 100, 1000));
                 product.setTaxPercentage(faker.number().randomDouble(2, 5, 15));
                 product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
-                product.setCategory(category);
+                product.setCategory(category); // Set the category
                 product.setVendor(vendor);
-                product.setUnitNote(faker.lorem().sentence());
+                String unitNote = faker.lorem().sentence();
+                if (unitNote.length() > 60) {
+                    unitNote = unitNote.substring(0, 60);
+                }
+                product.setUnitNote(unitNote);
 
                 HashMap<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
                 PackagingUnit unit = PackagingUnit.BOX;
