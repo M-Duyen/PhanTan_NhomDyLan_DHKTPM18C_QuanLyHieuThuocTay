@@ -9,15 +9,11 @@ import jakarta.persistence.Persistence;
 import java.time.LocalDate;
 
 public class Test_CRUD {
-    private static EntityManager em;
-
 
     public static void main(String[] args) {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
-
-        Account_DAO account_dao = new Account_DAO(em);
-        Employee_DAO employee_dao = new Employee_DAO(em);
-        Manager_DAO manager_dao = new Manager_DAO(em);
+        Account_DAO account_dao = new Account_DAO(Account.class);
+        Employee_DAO employee_dao = new Employee_DAO(Employee.class);
+        Manager_DAO manager_dao = new Manager_DAO(Manager.class);
 
         Account account = new Account();
         account.setAccountID("1234567890");

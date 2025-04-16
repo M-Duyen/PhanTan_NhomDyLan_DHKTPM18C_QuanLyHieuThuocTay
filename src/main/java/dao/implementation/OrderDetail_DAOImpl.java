@@ -1,4 +1,4 @@
-package dao;
+package dao.implementation;
 
 import entity.OrderDetail;
 import jakarta.persistence.EntityManager;
@@ -7,15 +7,13 @@ import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
-public class OrderDetail_DAO {
-    private final EntityManager em;
-
-    public OrderDetail_DAO() {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+public class OrderDetail_DAOImpl extends GenericDAOImpl<OrderDetail, String>{
+    public OrderDetail_DAOImpl(Class<OrderDetail> clazz) {
+        super(clazz);
     }
 
-    public List getAll() {
-        return em.createQuery("SELECT od FROM OrderDetail od").getResultList();
+    public OrderDetail_DAOImpl(EntityManager em, Class<OrderDetail> clazz) {
+        super(em, clazz);
     }
 
     public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
@@ -47,7 +45,7 @@ public class OrderDetail_DAO {
     }
 
     public static void main(String[] args) {
-        OrderDetail_DAO dao = new OrderDetail_DAO();
+        OrderDetail_DAOImpl dao = new OrderDetail_DAOImpl(OrderDetail.class);
         dao.getAll().forEach(System.out::println);
     }
 }

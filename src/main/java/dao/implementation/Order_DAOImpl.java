@@ -1,9 +1,9 @@
-package dao;
+package dao.implementation;
 
+import dao.*;
 import entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
@@ -11,43 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Order_DAO {
-    private final EntityManager em;
-
-    public Order_DAO() {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+public class Order_DAOImpl extends GenericDAOImpl<Order, String> {
+    public Order_DAOImpl(Class<Order> clazz) {
+        super(clazz);
     }
 
-    public List<Order> getAll() {
-        return em.createQuery("from Order order", Order.class).getResultList();
-    }
-
-    public boolean insert(Order order) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.persist(order);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean update(Order order) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(order);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
+    public Order_DAOImpl(EntityManager em, Class<Order> clazz) {
+        super(em, clazz);
     }
 
     public boolean insertOrder() {
@@ -98,14 +68,14 @@ public class Order_DAO {
             em.persist(customer);
             em.persist(prescription);
             em.persist(order);
-            new OrderDetail_DAO().insertOrderDetail(orderDetailList);
+            new OrderDetail_DAOImpl().insertOrderDetail(orderDetailList);
             tr.commit();
         }
         return true;
     }
 
     public static void main(String[] args) {
-        Order_DAO dao = new Order_DAO();
+        Order_DAOImpl dao = new Order_DAOImpl(Order.class);
 
         dao.insertOrder();
         System.out.println("Result: " + dao.getAll());
