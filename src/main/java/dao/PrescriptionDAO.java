@@ -2,21 +2,19 @@ package dao;
 
 import entity.Prescription;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
-public class Prescription_DAO extends GenericDAO<Prescription, String> {
+public class PrescriptionDAO extends GenericDAO<Prescription, String> {
     private EntityManager em;
 
-    public Prescription_DAO(Class<Prescription> clazz) {
+    public PrescriptionDAO(Class<Prescription> clazz) {
         super(clazz);
     }
 
-    public Prescription_DAO(EntityManager em, Class<Prescription> clazz) {
+    public PrescriptionDAO(EntityManager em, Class<Prescription> clazz) {
         super(em, clazz);
     }
 
