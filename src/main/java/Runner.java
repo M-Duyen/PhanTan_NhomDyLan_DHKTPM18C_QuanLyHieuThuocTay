@@ -1,11 +1,10 @@
-import entity.*;
+import entity.Account;
+import entity.Customer;
+import entity.Employee;
+import entity.Manager;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
-
-import java.time.LocalDate;
-import java.util.HashMap;
 
 public class Runner {
     private static EntityManager em;
@@ -13,47 +12,49 @@ public class Runner {
 
     public static void main(String[] args) {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
-        EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        try {
-            for (int i = 0; i < 10; i++) {
-                AdministrationRoute administrationRoute = new AdministrationRoute();
-                administrationRoute.setAdministrationRouteID("AD-" + faker.idNumber().invalid());
-                administrationRoute.setAdministrationRouteName(faker.medical().hospitalName());
-                em.persist(administrationRoute);
-
-                Category category = new Category();
-                category.setCategoryID("C-" + faker.idNumber().invalid());
-                category.setCategoryName(faker.food().spice());
-                em.persist(category);
-
-                Prescription prescription = new Prescription();
-                prescription.setPrescriptionID("P-" + faker.idNumber().invalid());
-                prescription.setCreatedDate(faker.date().birthdayLocalDate().atStartOfDay());
-                prescription.setDiagnosis(faker.medical().symptoms());
-                prescription.setMedicalFacility(faker.medical().hospitalName());
-                em.persist(prescription);
-
-                Vendor vendor = new Vendor();
-                vendor.setVendorID("V-" + faker.idNumber().invalid());
-                vendor.setVendorName(faker.company().name());
-                vendor.setCountry(faker.address().country());
-                em.persist(vendor);
-                Manager manager = generateManager();
-                em.persist(manager);
-
-                for (int j = 0; j < 5; j++) {
-
-                    Employee employee = generateEmployee();
-                    em.persist(employee);
-
-                    Account account = generateAccount(manager, employee);
-                    em.persist(account);
-
-                }
-                Customer customer = generateCustomer();
-                em.persist(customer);
-
+//        EntityTransaction tr = em.getTransaction();
+//        tr.begin();
+//        try {
+//            for (int i = 0; i < 10; i++) {
+//                AdministrationRoute administrationRoute = new AdministrationRoute();
+//                administrationRoute.setAdministrationRouteID("AD-" + faker.idNumber().invalid());
+//                administrationRoute.setAdministrationRouteName(faker.medical().hospitalName());
+//                em.persist(administrationRoute);
+//
+//                Category category = new Category();
+//                category.setCategoryID("C-" + faker.idNumber().invalid());
+//                category.setCategoryName(faker.food().spice());
+//                em.persist(category);
+//
+//                Prescription prescription = new Prescription();
+//                prescription.setPrescriptionID("P-" + faker.idNumber().invalid());
+//                prescription.setCreatedDate(faker.date().birthdayLocalDate().atStartOfDay());
+//                prescription.setDiagnosis(faker.medical().symptoms());
+//                prescription.setMedicalFacility(faker.medical().hospitalName());
+//                em.persist(prescription);
+//
+//                Vendor vendor = new Vendor();
+//                vendor.setVendorID("V-" + faker.idNumber().invalid());
+//                vendor.setVendorName(faker.company().name());
+//                vendor.setCountry(faker.address().country());
+//                em.persist(vendor);
+//                Manager manager = generateManager();
+//                em.persist(manager);
+//
+//                for (int j = 0; j < 5; j++) {
+//
+//                    Employee employee = generateEmployee();
+//                    em.persist(employee);
+//
+//                    Account account = generateAccount(manager, employee);
+//                    em.persist(account);
+//
+//
+//
+//                }
+//                Customer customer = generateCustomer();
+//                em.persist(customer);
+//
 //                Product product = new Product();
 //                product.setProductID("P" + faker.number().digits(8));
 //                product.setProductName(faker.commerce().productName());
@@ -63,7 +64,11 @@ public class Runner {
 //                product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
 //                product.setCategory(category);
 //                product.setVendor(vendor);
-//                product.setUnitNote(faker.lorem().sentence());
+//                String unitNote = faker.lorem().sentence();
+//                if (unitNote.length() > 60) {
+//                    unitNote = unitNote.substring(0, 60);
+//                }
+//                product.setUnitNote(unitNote);
 //
 //                HashMap<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 //                PackagingUnit unit = PackagingUnit.BOX;
@@ -86,7 +91,7 @@ public class Runner {
 //                medicine.setVendor(vendor);
 //                medicine.setUnitNote(faker.lorem().sentence());
 //                medicine.setActiveIngredient(faker.lorem().word());
-//                medicine.setConversionUnit(faker.medical().toString());
+//                medicine.setConversionUnit(faker.medical().toString().substring(0,10));
 //                medicine.setUnitDetails(unitDetails);
 //
 //                AdministrationRoute route = new AdministrationRoute();
@@ -97,14 +102,14 @@ public class Runner {
 //                medicine.setAdministrationRoute(route);
 //
 //                em.persist(medicine);
-
-
-            }
-            tr.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            tr.rollback();
-        }
+//
+//
+//            }
+//            tr.commit();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            tr.rollback();
+//        }
     }
 
     private static Manager generateManager() {
@@ -118,11 +123,7 @@ public class Runner {
 
     private static Account generateAccount(Manager manager, Employee emp) {
         Account account = new Account();
-        String accountId = faker.idNumber().valid();
-        if (accountId.length() > 6) { // Giả sử cột account_id có VARCHAR(10)
-            accountId = accountId.substring(0, 6); // Cắt chuỗi để vừa với cột
-        }
-        account.setAccountID(accountId);
+        account.setAccountID(faker.idNumber().valid());
         account.setPassword(faker.internet().password());
         account.setManager(manager);
         account.setEmployee(emp);
