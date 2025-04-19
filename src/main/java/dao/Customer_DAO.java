@@ -1,18 +1,21 @@
 package dao;
 
+import dao.implementation.GenericDAOImpl;
 import entity.Customer;
-import entity.Employee;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
-import java.util.List;
 
-public class Customer_DAO extends AbstractCRUD<Customer, String> {
-    public Customer_DAO(EntityManager em) {
-        super(em, Customer.class);
+public class Customer_DAO extends GenericDAOImpl<Customer, String> {
+    public Customer_DAO(Class<Customer> clazz) {
+        super(clazz);
     }
+
+    public Customer_DAO(EntityManager em, Class<Customer> clazz) {
+        super(em, clazz);
+    }
+
     public static Customer createSampleCustomer(Faker faker) {
         Customer customer = new Customer();
         customer.setPhoneNumber(faker.phoneNumber().cellPhone().substring(0, 10));
@@ -21,9 +24,7 @@ public class Customer_DAO extends AbstractCRUD<Customer, String> {
     }
 
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
-
-        Customer_DAO dao = new Customer_DAO(em);
+        Customer_DAO dao = new Customer_DAO(Customer.class);
         Customer customer = new Customer();
         customer.setCustomerID("CUSER_test");
         customer.setCustomerName("Test Customer");

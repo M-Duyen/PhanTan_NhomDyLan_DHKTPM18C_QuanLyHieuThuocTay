@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "orders")
 public class Order {
@@ -56,5 +57,91 @@ public class Order {
             }
         }
         return totalDue * (1 - discount);
+    }
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getShipToAddress() {
+        return shipToAddress;
+    }
+
+    public void setShipToAddress(String shipToAddress) {
+        this.shipToAddress = shipToAddress;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Prescription getPrescription() {
+        return prescription;
+    }
+
+    public void setPrescription(Prescription prescription) {
+        this.prescription = prescription;
+    }
+
+    public List<OrderDetail> getListOrderDetail() {
+        return listOrderDetail;
+    }
+
+    public void setListOrderDetail(List<OrderDetail> listOrderDetail) {
+        this.listOrderDetail = listOrderDetail;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "prescription=" + prescription +
+                ", customer=" + customer +
+                ", employee=" + employee +
+                ", discount=" + discount +
+                ", paymentMethod=" + paymentMethod +
+                ", shipToAddress='" + shipToAddress + '\'' +
+                ", orderDate=" + orderDate +
+                ", orderID='" + orderID + '\'' +
+                '}';
     }
 }

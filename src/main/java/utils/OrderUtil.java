@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class OrderUtil {
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("SHH-mariaDB")
+        EntityManager em = Persistence.createEntityManagerFactory("mariadb")
                 .createEntityManager();
 
         EntityTransaction tr = em.getTransaction();

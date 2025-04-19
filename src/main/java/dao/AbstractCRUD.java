@@ -1,10 +1,11 @@
 package dao;
 
+import service.impl.GenericService;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
-public abstract class AbstractCRUD <T, ID> implements CRUD<T, ID> {
+public abstract class AbstractCRUD <T, ID> implements GenericService<T, ID> {
     protected EntityManager em;
     private final Class<T> entityClass;
 
@@ -19,16 +20,16 @@ public abstract class AbstractCRUD <T, ID> implements CRUD<T, ID> {
     }
 
     @Override
-    public T create(T t){
+    public boolean create(T t){
         try {
             em.getTransaction().begin();
             em.persist(t);
             em.getTransaction().commit();
-            return t;
+            return true;
         } catch (Exception e){
             em.getTransaction().rollback();
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 
@@ -38,16 +39,16 @@ public abstract class AbstractCRUD <T, ID> implements CRUD<T, ID> {
     }
 
     @Override
-    public T update(T t){
+    public boolean update(T t){
         try {
             em.getTransaction().begin();
             em.merge(t);
             em.getTransaction().commit();
-            return t;
+            return true;
         } catch (Exception e){
             em.getTransaction().rollback();
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 

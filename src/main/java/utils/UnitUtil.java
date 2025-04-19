@@ -13,7 +13,7 @@ public class UnitUtil {
 //    private final EntityManager em;
 //
 //    public UnitUtil() {
-//        em = Persistence.createEntityManagerFactory("SHH-mariaDB").createEntityManager();
+//        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
 //    }
 //
 //    public List getAll() {
