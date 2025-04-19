@@ -1,26 +1,27 @@
 package dao;
 
-//import database.ConnectDB;
+import entity.Account;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 
-
-public class Login_DAO {
+public class Login_DAO{
     private Connection con; // Removed static modifier
     private String username;
     private String password;
     private String ten;
+    private final EntityManager em;
 
     public Login_DAO() {
-        // Initialize con in the constructor
-        //con = ConnectDB.getConnection();
-
+        this.em = JPAUtil.getEntityManager();
     }
 
     /**
@@ -30,23 +31,14 @@ public class Login_DAO {
      * @return
      */
     public String containUserName(String userName) {
+        String jpql = "select ac.accountID " +
+                "from Account ac " +
+                "where ac.accountID=:username";
 
-        try {
-            String sql = "SELECT * FROM dbo.Account WHERE accountID = ?";
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, userName);
+        return em.createQuery(jpql, String.class)
+                .setParameter("username", userName)
+                .getSingleResult();
 
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                username = rs.getString("accountID");
-
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return username;
     }
 
     /**
@@ -56,30 +48,24 @@ public class Login_DAO {
      * @param pass
      * @return
      */
-    public ArrayList<String> login(String userName, String pass) {
-        ArrayList<String> list = new ArrayList<>();
-        try {
+    public List<String> login(String userName, String pass) {
+        String jpql = "SELECT a.accountID, a.password FROM Account a WHERE a.accountID = :userName AND a.password = :pass";
 
-            PreparedStatement pstmt = null;
-            pstmt = con.prepareStatement("SELECT * FROM Account WHERE accountID = ? AND password = ?");
-            pstmt.setString(1, userName);
-            pstmt.setString(2, pass);
+        List<Object[]> results = em.createQuery(jpql, Object[].class)
+                .setParameter("userName", userName)
+                .setParameter("pass", pass)
+                .getResultList();
 
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                ten = rs.getString("accountID");
-                password = rs.getString("password");
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<String> list = new ArrayList<>();
+        if (!results.isEmpty()) {
+            Object[] row = results.get(0);
+            list.add((String) row[0]); // accountID
+            list.add((String) row[1]); // password
         }
-        list.add(ten);
-        list.add(password);
-        return list;
 
+        return list;
     }
+
 
     public static void main(String[] args) {
         //ConnectDB.getInstance().connect();
@@ -87,9 +73,9 @@ public class Login_DAO {
 //        System.out.println(test.dangNhapTen("MyDUYEN"));
         String tenDN = "EP1501";
         String MKDN = "EP1501@";
-        ArrayList<String> kq =  test.login(tenDN, MKDN);
+        List<String> kq =  test.login(tenDN, MKDN);
         System.out.println(kq);
-        System.out.println(test.containUserName(tenDN));
+//        System.out.println(test.containUserName(tenDN));
 
     }
 }
