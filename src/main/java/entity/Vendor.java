@@ -3,6 +3,7 @@ package entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "vendors")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = "products")
 public class Vendor {
 
     @Id

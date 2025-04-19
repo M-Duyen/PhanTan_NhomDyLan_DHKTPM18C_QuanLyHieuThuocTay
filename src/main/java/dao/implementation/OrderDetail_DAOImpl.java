@@ -1,13 +1,14 @@
 package dao.implementation;
 
+import entity.Order;
 import entity.OrderDetail;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
 public class OrderDetail_DAOImpl extends GenericDAOImpl<OrderDetail, String>{
+
     public OrderDetail_DAOImpl(Class<OrderDetail> clazz) {
         super(clazz);
     }

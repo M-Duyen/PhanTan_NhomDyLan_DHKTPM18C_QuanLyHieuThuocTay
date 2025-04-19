@@ -1,6 +1,6 @@
 package dao;
 
-import entity.MedicalSupplies;
+import entity.MedicalSupply;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
@@ -8,7 +8,6 @@ import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MedicalSupplies_DAO {
     private EntityManager em;
@@ -17,15 +16,15 @@ public class MedicalSupplies_DAO {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
-    public List<MedicalSupplies> getAll() {
-        return em.createQuery("SELECT ms FROM MedicalSupplies ms", MedicalSupplies.class).getResultList();
+    public List<MedicalSupply> getAll() {
+        return em.createQuery("SELECT ms FROM MedicalSupply ms", MedicalSupply.class).getResultList();
     }
 
-    public MedicalSupplies getById(String id) {
-        return em.find(MedicalSupplies.class, id);
+    public MedicalSupply getById(String id) {
+        return em.find(MedicalSupply.class, id);
     }
 
-    public boolean create(MedicalSupplies medicalSupplies) {
+    public boolean create(MedicalSupply medicalSupplies) {
         EntityTransaction tr = em.getTransaction();
         try {
             tr.begin();
@@ -39,7 +38,7 @@ public class MedicalSupplies_DAO {
         }
     }
 
-    public boolean update(MedicalSupplies medicalSupplies) {
+    public boolean update(MedicalSupply medicalSupplies) {
         EntityTransaction tr = em.getTransaction();
         try {
             tr.begin();
@@ -57,7 +56,7 @@ public class MedicalSupplies_DAO {
         EntityTransaction tr = em.getTransaction();
         try {
             tr.begin();
-            MedicalSupplies medicalSupplies = em.find(MedicalSupplies.class, id);
+            MedicalSupply medicalSupplies = em.find(MedicalSupply.class, id);
             if (medicalSupplies != null) {
                 em.remove(medicalSupplies);
             }
@@ -75,7 +74,7 @@ public class MedicalSupplies_DAO {
             Faker faker = new Faker();
 
             for (int i = 0; i < 10; i++) {
-                MedicalSupplies ms = new MedicalSupplies();
+                MedicalSupply ms = new MedicalSupply();
                 ms.setProductID("MS" + faker.number().digits(5));
                 ms.setProductName(faker.commerce().productName());
                 ms.setRegistrationNumber(faker.number().digits(6));
@@ -88,11 +87,11 @@ public class MedicalSupplies_DAO {
                 boolean isCreated = dao.create(ms);
                 System.out.println("Đã thêm: " + isCreated);
             }
-            List<MedicalSupplies> supplies = dao.getAll();
+            List<MedicalSupply> supplies = dao.getAll();
             supplies.forEach(s -> System.out.println(s.toString()));
 
             if (!supplies.isEmpty()) {
-                MedicalSupplies ms = supplies.get(0);
+                MedicalSupply ms = supplies.get(0);
                 System.out.println(ms);
             }
     }
