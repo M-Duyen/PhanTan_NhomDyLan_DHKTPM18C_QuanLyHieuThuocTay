@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
@@ -202,5 +203,10 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
             tr.commit();
         }
         return true;
+    }
+
+    @Override
+    public List<Order> searchByMultipleCriteria(Class<Order> clazz, Map<String, Object> criteria) {
+        return order;
     }
 }

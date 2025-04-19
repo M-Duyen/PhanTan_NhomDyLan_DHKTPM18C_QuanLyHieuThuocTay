@@ -1,11 +1,11 @@
-package dao.implementation;
+package dao;
 
 import entity.Product;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
-public class ProductDAOImpl extends GenericDAOImpl<Product, String> {
+public class ProductDAOImpl extends GenericDAO<Product, String> {
     private static ProductDAOImpl dao;
 
     public ProductDAOImpl(Class<Product> clazz) {
