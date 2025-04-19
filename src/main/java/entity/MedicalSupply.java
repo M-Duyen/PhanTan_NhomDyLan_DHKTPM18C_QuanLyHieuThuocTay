@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "medical_supplies")
-public class MedicalSupplies extends Product {
+public class MedicalSupply extends Product {
 
     @Column(name = "medicalSupply_type",columnDefinition = "nvarchar(20)")
     private String medicalSupplyType;
