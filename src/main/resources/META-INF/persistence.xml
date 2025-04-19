@@ -3,7 +3,8 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
              version="3.2">
-    <persistence-unit name="default"> </persistence-unit>
+    <jakarta:persistence-unit name="default">
+    </jakarta:persistence-unit>
     <persistence-unit name="mariadb">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>entity.Account</class>
@@ -13,7 +14,7 @@
         <class>entity.Employee</class>
         <class>entity.FunctionalFood</class>
         <class>entity.Manager</class>
-        <class>entity.MedicalSupplies</class>
+        <class>entity.MedicalSupply</class>
         <class>entity.Medicine</class>
         <class>entity.Order</class>
         <class>entity.OrderDetail</class>
