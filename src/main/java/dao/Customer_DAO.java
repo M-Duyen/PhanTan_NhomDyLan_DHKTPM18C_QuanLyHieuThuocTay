@@ -1,13 +1,12 @@
 package dao;
 
-import dao.implementation.GenericDAOImpl;
 import entity.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
 
-public class Customer_DAO extends GenericDAOImpl<Customer, String> {
+public class Customer_DAO extends GenericDAO<Customer, String> {
     public Customer_DAO(Class<Customer> clazz) {
         super(clazz);
     }

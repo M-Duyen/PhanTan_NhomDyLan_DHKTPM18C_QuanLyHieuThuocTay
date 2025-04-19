@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class Prescription_DAO {
+public class Prescription_DAO extends GenericDAO<Prescription, String> {
     private EntityManager em;
 
     public Prescription_DAO() {

@@ -1,4 +1,4 @@
-package dao.implementation;
+package dao;
 
 import dao.EntitySearchConfig;
 import entity.Product;
@@ -16,16 +16,16 @@ import utils.JPAUtil;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public abstract class GenericDAOImpl<T, ID> {
+public abstract class GenericDAO<T, ID> {
     protected EntityManager em;
     private Class<T> clazz;
 
-    public GenericDAOImpl(Class<T> clazz) {
+    public GenericDAO(Class<T> clazz) {
         this.clazz = clazz;
         this.em = JPAUtil.getEntityManager();
     }
 
-    public GenericDAOImpl(EntityManager em, Class<T> clazz) {
+    public GenericDAO(EntityManager em, Class<T> clazz) {
         this.em = em;
         this.clazz = clazz;
     }
