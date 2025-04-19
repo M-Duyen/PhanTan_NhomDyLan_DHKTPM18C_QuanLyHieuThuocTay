@@ -7,23 +7,26 @@ import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Product_DAO {
+public class Product_DAO extends GenericDAO<Product, String> implements service.ProductService{
     private EntityManager em;
 
-    public Product_DAO() {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+    public Product_DAO(Class<Product> clazz) {
+        super(clazz);
     }
 
+    public Product_DAO(EntityManager em, Class<Product> clazz) {
+        super(em, clazz);
+    }
 
+    @Override
     public List<Product> getAll() {
         return em.createQuery("SELECT p FROM Product p", Product.class).getResultList();
     }
 
+    @Override
     public boolean create(Product product) {
         try {
             em.getTransaction().begin();
@@ -37,6 +40,7 @@ public class Product_DAO {
         }
     }
 
+    @Override
     public boolean createMultiple(List<Product> products) {
         try {
             em.getTransaction().begin();
@@ -52,10 +56,12 @@ public class Product_DAO {
         }
     }
 
-    public Product read(String id) {
+    @Override
+    public Product findById(String id) {
         return em.find(Product.class, id);
     }
 
+    @Override
     public boolean update(Product product) {
         try {
             em.getTransaction().begin();
@@ -69,6 +75,7 @@ public class Product_DAO {
         }
     }
 
+    @Override
     public boolean delete(String id) {
         try {
             Product product = em.find(Product.class, id);
@@ -84,33 +91,6 @@ public class Product_DAO {
             e.printStackTrace();
             return false;
         }
-    }
-    public static List<Product> createSampleProduct(Faker faker) {
-        List<Product> productList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Product product = new Product();
-
-            product.setProductID("P" + faker.number().digits(4));
-            product.setProductName(faker.commerce().productName());
-            product.setPurchasePrice(faker.number().randomDouble(2, 5, 100));
-            product.setTaxPercentage(faker.number().randomDouble(2, 0, 15));
-            product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(1, 365)));
-
-            Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
-            int unitCount = faker.number().numberBetween(1, 5);
-            for (int j = 0; j < unitCount; j++) {
-                PackagingUnit unit = PackagingUnit.values()[faker.number().numberBetween(0, PackagingUnit.values().length)];
-                System.out.println("Unit: " + unit);
-                ProductUnit productUnit = new ProductUnit();
-                productUnit.setSellPrice(faker.number().randomDouble(2, 10, 500));
-                productUnit.setInStock(faker.number().numberBetween(10, 1000));
-
-                unitDetails.put(unit, productUnit);
-            }
-            product.setUnitDetails(unitDetails);
-            productList.add(product);
-        }
-        return productList;
     }
 
     public static void main(String[] args) {
@@ -141,9 +121,13 @@ public class Product_DAO {
                 product.setPurchasePrice(faker.number().randomDouble(2, 100, 1000));
                 product.setTaxPercentage(faker.number().randomDouble(2, 5, 15));
                 product.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
-                product.setCategory(category);
+                product.setCategory(category); // Set the category
                 product.setVendor(vendor);
-                product.setUnitNote("Note");
+                String unitNote = faker.lorem().sentence();
+                if (unitNote.length() > 60) {
+                    unitNote = unitNote.substring(0, 60);
+                }
+                product.setUnitNote(unitNote);
 
                 HashMap<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
                 PackagingUnit unit = PackagingUnit.BOX;

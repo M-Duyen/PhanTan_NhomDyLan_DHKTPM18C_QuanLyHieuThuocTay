@@ -17,12 +17,12 @@ import java.util.Random;
 
 public class OrderUtil {
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("SHH-mariaDB")
+        EntityManager em = Persistence.createEntityManagerFactory("mariadb")
                 .createEntityManager();
 
         EntityTransaction tr = em.getTransaction();
         Faker faker = new Faker();
-        List<Product> productList = Product_DAO.createSampleProduct(faker);
+        //List<Product> productList = new Product_DAO().createSampleProduct(faker);
         List<Order> orderList = new ArrayList<Order>();
         Random rand = new Random();
 
@@ -47,7 +47,7 @@ public class OrderUtil {
 
             int numOfDetails = faker.number().numberBetween(1, 5);
             for (int j = 0; j < numOfDetails; j++) {
-                Product product = productList.get(rand.nextInt(productList.size()));
+                Product product = null; //productList.get(rand.nextInt(productList.size()));
                 PackagingUnit unit = faker.options().option(PackagingUnit.class);
 
                 OrderDetail orderDetail = new OrderDetail();

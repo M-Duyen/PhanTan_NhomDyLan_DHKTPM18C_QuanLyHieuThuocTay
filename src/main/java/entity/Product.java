@@ -32,6 +32,9 @@ public class Product {
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
 
+    @Column(name = "quantity_in_stock", columnDefinition = "int")
+    private int quantityInStock;
+
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
@@ -49,8 +52,7 @@ public class Product {
 
 
     @ElementCollection
-    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    )
+    @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();

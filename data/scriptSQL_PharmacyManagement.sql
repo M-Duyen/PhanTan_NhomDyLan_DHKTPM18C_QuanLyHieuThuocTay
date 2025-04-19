@@ -241,8 +241,8 @@ END;
 
 --3. INSERT DATA
 ------------------- THÊM DỮ LIỆU ---------------------------
---Thêm dữ liệu đường dùng
-INSERT INTO AdministrationRoute ([administrationID] ,[administraionName])
+# --Thêm dữ liệu đường dùng
+INSERT INTO AdministrationRoute (administrationID ,administraionName)
 VALUES ('1.01', N'Uống'),
 ('1.02', N'Ngậm'),
 ('1.03', N'Nhai'),
@@ -305,14 +305,14 @@ VALUES ('1.01', N'Uống'),
 ('9.15', N'Bột đông khô để pha hỗn dịch'),
 ('9.16', N'Phức hợp lipid'),
 ('9.17', N'Liposome'),
-('9.18', N'Polymeric micelle')
+('9.18', N'Polymeric micelle');
 
---Thêm dữ liệu promotionType
-INSERT INTO PromotionType (promoTypeID, promoTypeName) 
+# --Thêm dữ liệu promotionType
+INSERT INTO PromotionType(promoTypeID, promoTypeName)
 VALUES('PR01', N'Khuyến mãi từ nhà cung cấp'),
 ('PR02', N'Khuyến mãi theo tháng'),
 ('PR03', N'Khuyến mãi theo hạn dùng'),
-('PR00', N'Khuyến mãi ngoài')
+('PR00', N'Khuyến mãi ngoài');
 
 
 --Thêm dữ liệu Promotion 

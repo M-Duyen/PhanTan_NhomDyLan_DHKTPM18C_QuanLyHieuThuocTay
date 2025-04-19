@@ -36,4 +36,46 @@ public class OrderDetail {
         }
         return 0;
     }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public PackagingUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(PackagingUnit unit) {
+        this.unit = unit;
+    }
+
+    public int getOrderQuantity() {
+        return orderQuantity;
+    }
+
+    public void setOrderQuantity(int orderQuantity) {
+        this.orderQuantity = orderQuantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                "order=" + order +
+                ", product=" + product +
+                ", unit=" + unit +
+                ", orderQuantity=" + orderQuantity +
+                '}';
+    }
 }

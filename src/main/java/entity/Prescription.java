@@ -26,5 +26,13 @@ public class Prescription {
     @OneToMany(mappedBy = "prescription")
     private List<Order> orders;
 
-
+    @Override
+    public String toString() {
+        return "Prescription{" +
+                "medicalFacility='" + medicalFacility + '\'' +
+                ", diagnosis='" + diagnosis + '\'' +
+                ", createdDate=" + createdDate +
+                ", prescriptionID='" + prescriptionID + '\'' +
+                '}';
+    }
 }
