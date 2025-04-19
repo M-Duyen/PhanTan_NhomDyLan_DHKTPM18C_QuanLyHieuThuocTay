@@ -8,6 +8,7 @@ import service.OrderDetailService;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class OrderDetailServiceImpl extends GenericServiceImpl<OrderDetail, String> implements OrderDetailService {
@@ -51,5 +52,10 @@ public class OrderDetailServiceImpl extends GenericServiceImpl<OrderDetail, Stri
     @Override
     public Map<String, Double> getUnitPricesByOrderID(String orderID) {
         return orderDetailDAO.getUnitPricesByOrderID(orderID);
+    }
+
+    @Override
+    public List<?> searchByMultipleCriteria(String entityName, String keyword) {
+        return List.of();
     }
 }

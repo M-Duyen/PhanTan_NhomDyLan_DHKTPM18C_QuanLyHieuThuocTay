@@ -6,6 +6,7 @@ import jakarta.persistence.EntityTransaction;
 import model.ModelDataRS;
 import net.datafaker.Faker;
 import service.OrderService;
+import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
-    private EntityManager em;
 
     public OrderDAO(Class<Order> clazz) {
         super(clazz);
@@ -88,9 +88,29 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
     }
 
     @Override
-    public ArrayList<Order> filterOrderByEmpID(String empID) {
-        return null;
+    public List<Order> filterOrderByEmpID(String empID) {
+       String jpql = "select o " +
+               "from Order o " +
+               "where o.employee.id = :empID ";
+
+       return em.createQuery(jpql, Order.class)
+               .getResultList();
     }
+    public List<LocalDate> getAllDateHaveEmpID(String empID) {
+        String jpql = "SELECT o.orderDate FROM Order o WHERE o.employee.id = :empID GROUP BY o.orderDate";
+
+        List<LocalDateTime> dateTimes = em.createQuery(jpql, LocalDateTime.class)
+                .setParameter("empID", empID)
+                .getResultList();
+
+        // Convert to LocalDate
+        return dateTimes.stream()
+                .map(LocalDateTime::toLocalDate)
+                .distinct()
+                .toList();
+    }
+
+
 
     @Override
     public double calculateTotalAllOrder(String empID) {
@@ -203,4 +223,13 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         }
         return true;
     }
+
+    public static void main(String[] args) {
+        OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
+        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
+    }
+
+
+
+
 }

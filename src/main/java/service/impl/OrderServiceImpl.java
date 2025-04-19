@@ -61,7 +61,7 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public ArrayList<Order> filterOrderByEmpID(String empID) {
+    public List<Order> filterOrderByEmpID(String empID) {
         return null;
     }
 
@@ -118,5 +118,10 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     @Override
     public Order findById(String s) {
         return null;
+    }
+
+    @Override
+    public List<?> searchByMultipleCriteria(String entityName, String keyword) {
+        return List.of();
     }
 }

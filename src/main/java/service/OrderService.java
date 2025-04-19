@@ -18,7 +18,7 @@ public interface OrderService extends GenericService<Order, String>{
     double getRevenueByCriteria(String criteria);
     double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate);
     ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate);
-    ArrayList<Order> filterOrderByEmpID(String empID);
+    List<Order> filterOrderByEmpID(String empID);
     double calculateTotalAllOrder(String empID);
     double getTotalDue(String orderID);
     ArrayList<ModelDataRS> getModelDataRSByYear(int year);

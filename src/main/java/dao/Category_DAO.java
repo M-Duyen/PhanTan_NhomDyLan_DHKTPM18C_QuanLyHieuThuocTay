@@ -14,9 +14,6 @@ public class Category_DAO {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
-
-
-
     public static void main(String[] args) {
         Category_DAO category_dao = new Category_DAO();
 
