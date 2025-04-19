@@ -1,11 +1,10 @@
 package dao;
 
-import dao.implementation.GenericDAOImpl;
 import entity.Employee;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 
-public class Employee_DAO extends GenericDAOImpl<Employee, String> {
+public class Employee_DAO extends GenericDAO<Employee, String> {
     public Employee_DAO(Class<Employee> clazz) {
         super(clazz);
     }

@@ -1,6 +1,6 @@
 package dao;
 
-import service.impl.GenericService;
+import service.GenericService;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class AbstractCRUD <T, ID> implements GenericService<T, ID> {
     }
 
     @Override
-    public T read(ID id){
+    public T findById(ID id){
         return em.find(entityClass, id);
     }
 
@@ -55,7 +55,7 @@ public abstract class AbstractCRUD <T, ID> implements GenericService<T, ID> {
     @Override
     public boolean delete(ID id){
         try {
-            T t = read(id);
+            T t = findById(id);
             em.getTransaction().begin();
             em.remove(t);
             em.getTransaction().commit();

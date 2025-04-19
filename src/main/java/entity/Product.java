@@ -35,8 +35,6 @@ public class Product {
     @Column(name = "quantity_in_stock", columnDefinition = "int")
     private int quantityInStock;
 
-
-
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
