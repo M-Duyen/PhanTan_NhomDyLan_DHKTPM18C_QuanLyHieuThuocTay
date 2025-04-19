@@ -1,10 +1,9 @@
 package dao;
 
-import dao.implementation.GenericDAOImpl;
 import entity.Account;
 import jakarta.persistence.EntityManager;
 
-public class Account_DAO extends GenericDAOImpl<Account, String> {
+public class Account_DAO extends GenericDAO<Account, String> {
     public Account_DAO(Class<Account> clazz) {
         super(clazz);
     }
