@@ -5,11 +5,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
+import ui.model.ModelDataRS;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Order_DAO {
     private final EntityManager em;
@@ -22,92 +22,160 @@ public class Order_DAO {
         return em.createQuery("from Order order", Order.class).getResultList();
     }
 
-    public boolean insert(Order order) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.persist(order);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
+
+
+    /**
+     * Thống kê theo năm (trục tung là doanh thu, trục hoành là tháng)
+     *
+     * @param year
+     * @return
+     */
+    public ArrayList<ModelDataRS> getModelDataRSByYear(int year) {
+        List<Object[]> results = em.createQuery(
+                "SELECT DISTINCT MONTH(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
+                        "WHERE YEAR(o.orderDate) = :year", Object[].class
+        ).setParameter("year", year).getResultList();
+        Map<Integer, List<Order>> orderMapByMouth = new HashMap<>();
+
+        results.forEach(row -> {
+            int month = (Integer) row[0];
+            Order order = (Order)row[1];
+            orderMapByMouth.computeIfAbsent(month, k -> new ArrayList<>()).add(order);
+        });
+        ArrayList<ModelDataRS> modelDataRS = new ArrayList<>();
+        orderMapByMouth.forEach((month, order) -> {
+            double[] pricesTemp = new double[3];
+
+            order.forEach( o -> {
+                o.getListOrderDetail().forEach(detail -> {
+                   char type = detail.getProduct().getProductID().charAt(1);
+                   switch (type) {
+                        case 'M' -> pricesTemp[0] += detail.getLineTotal();
+                        case 'S' -> pricesTemp[1] += detail.getLineTotal();
+                        case 'F' -> pricesTemp[2] += detail.getLineTotal();
+                   }
+                });
+            });
+            double total = pricesTemp[0] + pricesTemp[1] + pricesTemp[2];
+            modelDataRS.add(new ModelDataRS(
+                    "Tháng" + month,
+                    total,
+                    pricesTemp[0],
+                    pricesTemp[1],
+                    pricesTemp[2]
+            ));
+        });
+        return modelDataRS;
     }
 
-    public boolean update(Order order) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(order);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
+    /**
+     * Thống kê theo tháng, trục tung là doanh thu, trục hoành là các ngày trong tháng đó
+     *
+     * @param month
+     * @param year
+     * @return
+     */
+    public ArrayList<ModelDataRS> getModelDataRSByYearByMonth(int month, int year) {
+        List<Object[]> results = em.createQuery(
+                        "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
+                                "WHERE YEAR(o.orderDate) = :year AND MONTH(o.orderDate) = :month", Object[].class
+                ).setParameter("year", year)
+                .setParameter("month", month)
+                .getResultList();
+
+        Map<Integer, List<Order>> orderMapByDay = new HashMap<>();
+
+        results.forEach(row -> {
+            int day = (Integer) row[0];
+            Order order = (Order) row[1];
+            orderMapByDay.computeIfAbsent(day, k -> new ArrayList<>()).add(order);
+        });
+
+        ArrayList<ModelDataRS> modelDataRS = new ArrayList<>();
+        orderMapByDay.forEach((day, orders) -> {
+            double[] pricesTemp = new double[3];
+
+            orders.forEach(order -> {
+                order.getListOrderDetail().forEach(detail -> {
+                    char type = detail.getProduct().getProductID().charAt(1);
+                    switch (type) {
+                        case 'M' -> pricesTemp[0] += detail.getLineTotal();
+                        case 'S' -> pricesTemp[1] += detail.getLineTotal();
+                        case 'F' -> pricesTemp[2] += detail.getLineTotal();
+                    }
+                });
+            });
+
+            double total = pricesTemp[0] + pricesTemp[1] + pricesTemp[2];
+            modelDataRS.add(new ModelDataRS(
+                    "Ngày " + day,
+                    total,
+                    pricesTemp[0],
+                    pricesTemp[1],
+                    pricesTemp[2]
+            ));
+        });
+
+        return modelDataRS;
     }
 
-    public boolean insertOrder() {
-        EntityTransaction tr = em.getTransaction();
-        Faker faker = new Faker();
-        List<Product> productList = Product_DAO.createSampleProduct(faker);
-        List<Order> orderList = new ArrayList<Order>();
-        Random rand = new Random();
 
-        for (int i = 0; i < 10; i++) {
-            Order order = new Order();
-            ArrayList<OrderDetail> orderDetailList = new ArrayList<>();
+    /**
+     * Thống kê theo tháng, trục tung là doanh thu, trục hoành là các ngày trong tháng đó
+     *
+     * @param start
+     * @param end
+     * @return
+     */
 
-            order.setOrderID("OR" + faker.number().digits(5));
-            order.setOrderDate(LocalDateTime.now().minusDays(faker.number().numberBetween(1, 30)));
-            order.setShipToAddress(faker.address().fullAddress());
-            order.setPaymentMethod(faker.options().option(PaymentMethod.class));
-            order.setDiscount(faker.number().randomDouble(2, 0, 20) / 100);
+    //TODO: Kiểm tra điều kiện bên giao diện cho chỉ pheps 30 ngày
+    //TODO: Bổ sung hàm định dạng lại chuỗi LocalDate
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
+        List<Object[]> results = em.createQuery(
+                        "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
+                                "WHERE o.orderDate >= :start AND o.orderDate <= :end", Object[].class
+                ).setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
 
-            Employee employee = Employee_DAO.createSampleEmployee(faker);
-            order.setEmployee(employee);
+        Map<LocalDate, List<Order>> orderMapByDay = new HashMap<>();
 
-            Customer customer = Customer_DAO.createSampleCustomer(faker);
-            order.setCustomer(customer);
+        results.forEach(row -> {
+            LocalDate day = (LocalDate) row[0];
+            Order order = (Order) row[1];
+            orderMapByDay.computeIfAbsent(day, k -> new ArrayList<>()).add(order);
+        });
 
-            Prescription prescription = Prescription_DAO.createSamplePrescription(faker);
-            order.setPrescription(prescription);
+        ArrayList<ModelDataRS> modelDataRS = new ArrayList<>();
+        orderMapByDay.forEach((day, orders) -> {
+            double[] pricesTemp = new double[3];
 
-            int numOfDetails = faker.number().numberBetween(1, 5);
-            for (int j = 0; j < numOfDetails; j++) {
-                Product product = productList.get(rand.nextInt(productList.size()));
-                PackagingUnit unit = faker.options().option(PackagingUnit.class);
+            orders.forEach(order -> {
+                order.getListOrderDetail().forEach(detail -> {
+                    char type = detail.getProduct().getProductID().charAt(1);
+                    switch (type) {
+                        case 'M' -> pricesTemp[0] += detail.getLineTotal();
+                        case 'S' -> pricesTemp[1] += detail.getLineTotal();
+                        case 'F' -> pricesTemp[2] += detail.getLineTotal();
+                    }
+                });
+            });
 
-                OrderDetail orderDetail = new OrderDetail();
-                orderDetail.setOrder(order);
-                orderDetail.setProduct(product);
-                orderDetail.setUnit(unit);
-                orderDetail.setOrderQuantity(faker.number().numberBetween(1, 10));
-                orderDetailList.add(orderDetail);
-            }
+            double total = pricesTemp[0] + pricesTemp[1] + pricesTemp[2];
+            modelDataRS.add(new ModelDataRS(
+                    "Ngày " + day.toString(), //TODO: Xử lý format ngày
+                    total,
+                    pricesTemp[0],
+                    pricesTemp[1],
+                    pricesTemp[2]
+            ));
+        });
 
-            order.setListOrderDetail(orderDetailList);
-            orderList.add(order);
-
-            tr.begin();
-            em.persist(employee);
-            em.persist(customer);
-            em.persist(prescription);
-            em.persist(order);
-            new OrderDetail_DAO().insertOrderDetail(orderDetailList);
-            tr.commit();
-        }
-        return true;
+        return modelDataRS;
     }
 
     public static void main(String[] args) {
-        Order_DAO dao = new Order_DAO();
 
-        dao.insertOrder();
-        System.out.println(dao.getAll());
     }
 
 
