@@ -1,6 +1,6 @@
 package dao;
 
-import entity.Prescription;
+import model.Prescription;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 

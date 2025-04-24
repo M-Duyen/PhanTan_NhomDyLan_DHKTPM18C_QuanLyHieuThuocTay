@@ -1,4 +1,4 @@
-package entity;
+package model;
 
 //import ui.main.HomePage;
 //import ui.main.Login_GUI;

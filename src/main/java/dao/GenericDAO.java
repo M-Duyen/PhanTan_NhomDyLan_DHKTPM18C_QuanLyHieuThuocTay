@@ -1,6 +1,6 @@
 package dao;
 
-import entity.Product;
+import model.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;

@@ -1,4 +1,4 @@
-package entity;
+package model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity

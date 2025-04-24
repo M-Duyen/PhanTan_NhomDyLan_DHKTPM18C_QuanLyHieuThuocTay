@@ -1,4 +1,4 @@
-package entity;
+package model;
 
 public enum PaymentMethod {
     CASH("CASH"), BANK_TRANSFER("BANK TRANSFER"), CREDIT_CARD("CREDIT CARD");

@@ -1,7 +1,7 @@
 package dao;
 
 
-import entity.Vendor;
+import model.Vendor;
 import jakarta.persistence.EntityManager;
 import service.VendorService;
 
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class VendorDAO extends GenericDAO<Vendor, String> implements VendorService {
-    private EntityManager em;
     public VendorDAO(EntityManager em, Class<Vendor> entityClass) {
         super(em, entityClass);
     }
@@ -115,11 +114,12 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         vendor.setCountry("Canada");
         vendor_dao.create(vendor);
 
-        System.out.println(vendor_dao.findById(newID));
+//        System.out.println(vendor_dao.findById(newID));
 //        vendor.setCountry("USA");
 //        vendor_dao.update(vendor);
 
 //        vendor_dao.delete("V-123");
+        vendor_dao.getAll().forEach(System.out::println);
 
 
     }

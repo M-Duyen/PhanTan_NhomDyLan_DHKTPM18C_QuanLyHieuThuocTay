@@ -1,6 +1,6 @@
 package dao;
 
-import entity.OrderDetail;
+import model.OrderDetail;
 import jakarta.persistence.EntityManager;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;

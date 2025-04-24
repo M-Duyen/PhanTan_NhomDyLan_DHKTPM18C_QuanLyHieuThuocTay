@@ -1,16 +1,11 @@
 package dao;
 
-import entity.Employee;
+import model.Employee;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
 import net.datafaker.Faker;
 import service.EmployeeService;
 import utils.JPAUtil;
 
-import java.rmi.RemoteException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class EmployeeDAO extends GenericDAO<Employee, String> implements EmployeeService {

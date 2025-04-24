@@ -1,6 +1,6 @@
 package service;
 
-import entity.Vendor;
+import model.Vendor;
 
 import java.rmi.RemoteException;
 

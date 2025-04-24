@@ -1,6 +1,6 @@
 package dao;
 
-import entity.FunctionalFood;
+import model.FunctionalFood;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 

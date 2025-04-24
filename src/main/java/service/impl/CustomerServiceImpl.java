@@ -2,11 +2,10 @@ package service.impl;
 
 import dao.CustomerDAO;
 import dao.GenericDAO;
-import entity.Customer;
+import model.Customer;
 import service.CustomerService;
 
 import java.rmi.RemoteException;
-import java.sql.Connection;
 import java.util.Map;
 
 public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> implements CustomerService {
@@ -24,22 +23,22 @@ public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> im
 
     @Override
     public String createCustomerID() throws RemoteException {
-        return "";
+        return customerDAO.createCustomerID();
     }
 
     @Override
     public double getCustomerPoint(String phone) throws RemoteException {
-        return 0;
+        return customerDAO.getCustomerPoint(phone);
     }
 
     @Override
     public boolean updateCustPoint_Decrease(String phone, double point) throws RemoteException {
-        return false;
+        return customerDAO.updateCustPoint_Decrease(phone, point);
     }
 
     @Override
     public boolean updateCustPoint_Increase(String phone, double point) throws RemoteException {
-        return false;
+        return customerDAO.updateCustPoint_Increase(phone, point);
     }
 
     @Override

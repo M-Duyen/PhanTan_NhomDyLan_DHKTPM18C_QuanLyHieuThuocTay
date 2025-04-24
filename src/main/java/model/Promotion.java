@@ -1,8 +1,7 @@
-package entity;
+package model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
 
 import java.time.LocalDate;
 

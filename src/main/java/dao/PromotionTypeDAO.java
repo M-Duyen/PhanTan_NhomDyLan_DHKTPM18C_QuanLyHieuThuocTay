@@ -1,17 +1,23 @@
 package dao;
 
 
-import entity.Promotion;
+import model.PromotionType;
 import jakarta.persistence.EntityManager;
 
-public class PromotionTypeDAO extends GenericDAO<Promotion, String> {
+public class PromotionTypeDAO extends GenericDAO<PromotionType, String> {
 
 
-    public PromotionTypeDAO(Class<Promotion> clazz) {
+    public PromotionTypeDAO(Class<PromotionType> clazz) {
         super(clazz);
     }
 
-    public PromotionTypeDAO(EntityManager em, Class<Promotion> clazz) {
+    public PromotionTypeDAO(EntityManager em, Class<PromotionType> clazz) {
         super(em, clazz);
+    }
+
+    public static void main(String[] args) {
+        PromotionTypeDAO dao = new PromotionTypeDAO(PromotionType.class);
+        dao.getAll().forEach(System.out::println);
+
     }
 }

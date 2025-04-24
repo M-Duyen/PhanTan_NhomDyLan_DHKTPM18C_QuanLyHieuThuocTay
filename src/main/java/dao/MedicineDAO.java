@@ -1,6 +1,6 @@
 package dao;
 
-import entity.Medicine;
+import model.Medicine;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 

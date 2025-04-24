@@ -1,6 +1,6 @@
 package service;
 
-import entity.Employee;
+import model.Employee;
 
 import java.rmi.RemoteException;
 

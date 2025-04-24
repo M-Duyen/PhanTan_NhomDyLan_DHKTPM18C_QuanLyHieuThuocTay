@@ -1,9 +1,8 @@
 package service;
 
-import entity.Customer;
+import model.Customer;
 
 import java.rmi.RemoteException;
-import java.sql.Connection;
 import java.util.Map;
 
 public interface CustomerService extends GenericService<Customer, String> {
