@@ -4,10 +4,8 @@ import model.Employee;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 import service.EmployeeService;
-import utils.JPAUtil;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class EmployeeDAO extends GenericDAO<Employee, String> implements EmployeeService {
