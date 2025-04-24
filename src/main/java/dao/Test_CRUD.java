@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class Test_CRUD {
     private static EntityManager em;
 
+
     public static void main(String[] args) {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
 

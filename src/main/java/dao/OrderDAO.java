@@ -2,17 +2,13 @@ package dao;
 
 import entity.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import model.ModelDataRS;
-import net.datafaker.Faker;
+import ui.model.ModelDataRS;
 import service.OrderService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
     private EntityManager em;
@@ -39,14 +35,25 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         return false;
     }
 
+    /**
+     * Lọc hóa đơn theo mã hóa đơn
+     *
+     * @param orderID
+     * @return
+     */
     @Override
-    public Order getOrderByOrderId(String orderId) {
+    public Order getOrderByOrderId(String orderID) {
         String query = "SELECT o FROM Order o WHERE o.orderID = :orderID";
         return em.createQuery(query, Order.class)
-                .setParameter("orderID", orderId)
+                .setParameter("orderID", orderID)
                 .getSingleResult();
     }
 
+    /**
+     * Tạo mã tự động cho hóa đơn
+     *
+     * @return
+     */
     @Override
     public String createOrderID(String emplId) {
         String datePart = DateTimeFormatter.ofPattern("ddMMyy").format(LocalDate.now());
@@ -67,36 +74,81 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         return prefix + String.format("%03d", newId);
     }
 
+    /**
+     * Tìm kiếm hóa đơn theo tiêu chí bất kì
+     * định dạng ngày khi nhập (yyyy-MM-dd)
+     *
+     * @param criterious
+     * @return
+     */
     @Override
     public ArrayList<Order> getOrderByCriterious(String criterious) {
         return null;
     }
 
+    /**
+     * Tính doanh thu theo 1 tiêu chí bất kì
+     *
+     * @param criteria
+     * @return
+     */
     @Override
     public double getRevenueByCriteria(String criteria) {
         return 0;
     }
 
+    /**
+     * Tính doanh thu trong 1 khoảng thời gian bất kì
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
     public double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return 0;
     }
 
+    /**
+     * Lọc hóa đơn được tạo trong 1 khoảng thời gian bất kì
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
     public ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return null;
     }
 
+    /**
+     * Lọc danh sách hóa đơn theo ngày hiện tại của nhân viên
+     *
+     * @param empID
+     * @return
+     */
     @Override
     public ArrayList<Order> filterOrderByEmpID(String empID) {
         return null;
     }
 
+    /**
+     * Tính doanh thu theo ngày hiện tại của nhân viên
+     *
+     * @param empID
+     * @return
+     */
     @Override
     public double calculateTotalAllOrder(String empID) {
         return 0;
     }
 
+    /**
+     * Lấy totalDue của hóa đơn
+     *
+     * @param orderID
+     * @return
+     */
     @Override
     public double getTotalDue(String orderID) {
         String query = "SELECT o FROM Order o WHERE o.orderID = :orderID";
@@ -106,41 +158,202 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
                 .getTotalDue();
     }
 
+    /**
+     * Thống kê theo năm (trục tung là doanh thu, trục hoành là tháng)
+     *
+     * @param year
+     * @return
+     */
     @Override
     public ArrayList<ModelDataRS> getModelDataRSByYear(int year) {
-        return null;
+        List<Object[]> results = em.createQuery(
+                "SELECT DISTINCT MONTH(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
+                        "WHERE YEAR(o.orderDate) = :year", Object[].class
+        ).setParameter("year", year).getResultList();
+        Map<Integer, List<Order>> orderMapByMouth = new HashMap<>();
+
+        results.forEach(row -> {
+            int month = (Integer) row[0];
+            Order order = (Order)row[1];
+            orderMapByMouth.computeIfAbsent(month, k -> new ArrayList<>()).add(order);
+        });
+        ArrayList<ModelDataRS> modelDataRS = new ArrayList<>();
+        orderMapByMouth.forEach((month, order) -> {
+            double[] pricesTemp = new double[3];
+
+            order.forEach( o -> {
+                o.getListOrderDetail().forEach(detail -> {
+                    char type = detail.getProduct().getProductID().charAt(1);
+                    switch (type) {
+                        case 'M' -> pricesTemp[0] += detail.getLineTotal();
+                        case 'S' -> pricesTemp[1] += detail.getLineTotal();
+                        case 'F' -> pricesTemp[2] += detail.getLineTotal();
+                    }
+                });
+            });
+            double total = pricesTemp[0] + pricesTemp[1] + pricesTemp[2];
+            modelDataRS.add(new ModelDataRS(
+                    "Tháng" + month,
+                    total,
+                    pricesTemp[0],
+                    pricesTemp[1],
+                    pricesTemp[2]
+            ));
+        });
+        return modelDataRS;
     }
 
+    /**
+     * Thống kê theo tháng, trục tung là doanh thu, trục hoành là các ngày trong tháng đó
+     *
+     * @param month
+     * @param year
+     * @return
+     */
     @Override
     public ArrayList<ModelDataRS> getModelDataRSByYearByMonth(int month, int year) {
-        return null;
+        List<Object[]> results = em.createQuery(
+                        "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
+                                "WHERE YEAR(o.orderDate) = :year AND MONTH(o.orderDate) = :month", Object[].class
+                ).setParameter("year", year)
+                .setParameter("month", month)
+                .getResultList();
+
+        Map<Integer, List<Order>> orderMapByDay = new HashMap<>();
+
+        results.forEach(row -> {
+            int day = (Integer) row[0];
+            Order order = (Order) row[1];
+            orderMapByDay.computeIfAbsent(day, k -> new ArrayList<>()).add(order);
+        });
+
+        ArrayList<ModelDataRS> modelDataRS = new ArrayList<>();
+        orderMapByDay.forEach((day, orders) -> {
+            double[] pricesTemp = new double[3];
+
+            orders.forEach(order -> {
+                order.getListOrderDetail().forEach(detail -> {
+                    char type = detail.getProduct().getProductID().charAt(1);
+                    switch (type) {
+                        case 'M' -> pricesTemp[0] += detail.getLineTotal();
+                        case 'S' -> pricesTemp[1] += detail.getLineTotal();
+                        case 'F' -> pricesTemp[2] += detail.getLineTotal();
+                    }
+                });
+            });
+
+            double total = pricesTemp[0] + pricesTemp[1] + pricesTemp[2];
+            modelDataRS.add(new ModelDataRS(
+                    "Ngày " + day,
+                    total,
+                    pricesTemp[0],
+                    pricesTemp[1],
+                    pricesTemp[2]
+            ));
+        });
+        return modelDataRS;
     }
 
+    /**
+     * Thống kê theo tháng, trục tung là doanh thu, trục hoành là các ngày trong tháng đó
+     * TODO: Kiểm tra điều kiện bên giao diện cho chỉ pheps 30 ngày
+     * TODO: Bổ sung hàm định dạng lại chuỗi LocalDate
+     *
+     * @param start
+     * @param end
+     * @return
+     */
     @Override
     public ArrayList<ModelDataRS> getModelDataRSByYearByTime(String start, String end) {
-        return null;
+        List<Object[]> results = em.createQuery(
+                        "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
+                                "WHERE o.orderDate >= :start AND o.orderDate <= :end", Object[].class
+                ).setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+
+        Map<LocalDate, List<Order>> orderMapByDay = new HashMap<>();
+
+        results.forEach(row -> {
+            LocalDate day = (LocalDate) row[0];
+            Order order = (Order) row[1];
+            orderMapByDay.computeIfAbsent(day, k -> new ArrayList<>()).add(order);
+        });
+
+        ArrayList<ModelDataRS> modelDataRS = new ArrayList<>();
+        orderMapByDay.forEach((day, orders) -> {
+            double[] pricesTemp = new double[3];
+
+            orders.forEach(order -> {
+                order.getListOrderDetail().forEach(detail -> {
+                    char type = detail.getProduct().getProductID().charAt(1);
+                    switch (type) {
+                        case 'M' -> pricesTemp[0] += detail.getLineTotal();
+                        case 'S' -> pricesTemp[1] += detail.getLineTotal();
+                        case 'F' -> pricesTemp[2] += detail.getLineTotal();
+                    }
+                });
+            });
+
+            double total = pricesTemp[0] + pricesTemp[1] + pricesTemp[2];
+            modelDataRS.add(new ModelDataRS(
+                    "Ngày " + day.toString(), //TODO: Xử lý format ngày
+                    total,
+                    pricesTemp[0],
+                    pricesTemp[1],
+                    pricesTemp[2]
+            ));
+        });
+        return modelDataRS;
     }
 
+    /**
+     * Lấy thông tin tổng quan
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
     public ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) {
         return null;
     }
 
+    /**
+     * Lấy tỷ lệ sản phẩm đã bán, tính bằng cách lấy tổng sản phẩm đã bán chia cho tổng của tồn kho với sản phẩm đã bán
+     *
+     * @return
+     */
     @Override
     public double getTotalProductsSold() {
         return 0;
     }
 
+    /**
+     * Lấy tổng doanh thu đã bán
+     *
+     * @return
+     */
     @Override
     public double getRevenueSoldPercentage() {
         return 0;
     }
 
+    /**
+     * Tỷ lợi lợi nhuận, xem công thức ở tài liệu số 6
+     *
+     * @return
+     */
     @Override
     public double getProfit() {
         return 0;
     }
 
+    /**
+     * Kiểm tra hóa đơn có tồn tại hay không
+     * @param orderID
+     * @return
+     */
     @Override
     public boolean orderIsExists(String orderID) {
         String query = "SELECT o FROM Order o WHERE o.orderID = :orderID";
@@ -148,59 +361,5 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
                 .setParameter("orderID", orderID)
                 .getSingleResult();
         return order != null;
-    }
-
-    public boolean insertOrder() {
-        EntityTransaction tr = em.getTransaction();
-        Faker faker = new Faker();
-        //List<Product> productList = new Product_DAO(Product.class).createSampleProduct(faker);
-        List<Order> orderList = new ArrayList<Order>();
-        Random rand = new Random();
-
-        for (int i = 0; i < 10; i++) {
-            Order order = new Order();
-            ArrayList<OrderDetail> orderDetailList = new ArrayList<>();
-
-            order.setOrderID("OR" + faker.number().digits(5));
-            System.out.println(order.getOrderID());
-            order.setOrderDate(LocalDateTime.now().minusDays(faker.number().numberBetween(1, 30)));
-            order.setShipToAddress(faker.address().fullAddress());
-            order.setPaymentMethod(faker.options().option(PaymentMethod.class));
-            order.setDiscount(faker.number().randomDouble(2, 0, 20) / 100);
-
-            Employee employee = Employee_DAO.createSampleEmployee(faker);
-            order.setEmployee(employee);
-
-            Customer customer = Customer_DAO.createSampleCustomer(faker);
-            order.setCustomer(customer);
-
-            Prescription prescription = Prescription_DAO.createSamplePrescription(faker);
-            order.setPrescription(prescription);
-
-            int numOfDetails = faker.number().numberBetween(1, 5);
-            for (int j = 0; j < numOfDetails; j++) {
-                Product product = null; //productList.get(rand.nextInt(productList.size()));
-                PackagingUnit unit = faker.options().option(PackagingUnit.class);
-
-                OrderDetail orderDetail = new OrderDetail();
-                orderDetail.setOrder(order);
-                orderDetail.setProduct(product);
-                orderDetail.setUnit(unit);
-                orderDetail.setOrderQuantity(faker.number().numberBetween(1, 10));
-                orderDetailList.add(orderDetail);
-            }
-
-            order.setListOrderDetail(orderDetailList);
-            orderList.add(order);
-
-            tr.begin();
-            em.persist(employee);
-            em.persist(customer);
-            em.persist(prescription);
-            em.persist(order);
-            //new OrderDetailDAO(OrderDetail.class).insertOrderDetail(orderDetailList);
-            tr.commit();
-        }
-        return true;
     }
 }

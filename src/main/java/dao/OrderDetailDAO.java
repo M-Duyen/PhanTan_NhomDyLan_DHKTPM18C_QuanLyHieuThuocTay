@@ -2,11 +2,13 @@ package dao;
 
 import entity.OrderDetail;
 import jakarta.persistence.EntityManager;
-import model.ModelDataPS;
-import model.ModelDataPS_Circle;
+import ui.model.ModelDataPS;
+import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
@@ -22,7 +24,13 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
 
     @Override
     public ArrayList<OrderDetail> getOrderDetailList(String orderID) {
-        return null;
+        String query = "SELECT od " +
+                "FROM OrderDetail od INNER JOIN Order o ON o.orderID = od.order.orderID " +
+                "WHERE o.orderID=:orderID";
+        List<OrderDetail> list = em.createQuery(query, OrderDetail.class)
+                .setParameter("orderID", orderID)
+                .getResultList();
+        return new ArrayList<>(list);
     }
 
     @Override
@@ -42,12 +50,57 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
 
     @Override
     public ArrayList<ModelDataPS_Circle> getProductStatics_ByType(String startDate, String endDate) {
-        return null;
+        LocalDateTime startDateTime = LocalDateTime.parse(startDate + "T00:00:00");
+        LocalDateTime endDateTime = LocalDateTime.parse(endDate + "T23:59:59");
+
+        String query = "SELECT SUBSTRING(p.productID, 1, 2), SUM(od.orderQuantity) " +
+                "FROM OrderDetail od " +
+                "   INNER JOIN Order o ON od.order.orderID = o.orderID" +
+                "   INNER JOIN Product p ON p.productID = od.product.productID " +
+                "WHERE o.orderDate >= :startDate AND o.orderDate <= :endDate " +
+                "GROUP BY SUBSTRING(p.productID, 1, 2)";
+
+        List<Object[]> result = em.createQuery(query, Object[].class)
+                .setParameter("startDate", startDateTime)
+                .setParameter("endDate", endDateTime)
+                .getResultList();
+        ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
+        for (Object[] row : result) {
+            String type = (String) row[0];
+            int qty = (int) row[1];
+
+            modelList.add(new ModelDataPS_Circle(type, qty));
+        }
+        return modelList;
     }
 
     @Override
     public ArrayList<ModelDataPS_Circle> getProductStatics_ByCategory(String startDate, String endDate) {
-        return null;
+        LocalDateTime startDateTime = LocalDateTime.parse(startDate + "T00:00:00");
+        LocalDateTime endDateTime = LocalDateTime.parse(endDate + "T23:59:59");
+
+        String query = "SELECT c.categoryName, COUNT(od) " +
+                "FROM OrderDetail od " +
+                "   INNER JOIN Order o ON od.order.orderID = o.orderID" +
+                "   INNER JOIN Product p ON p.productID = od.product.productID " +
+                "   INNER JOIN Category c ON c.categoryID = p.category.categoryID " +
+                "WHERE o.orderDate >= :startDate AND o.orderDate <= :endDate " +
+                "GROUP BY c.categoryName";
+
+        List<Object[]> result = em.createQuery(query, Object[].class)
+                .setParameter("startDate", startDateTime)
+                .setParameter("endDate", endDateTime)
+                .getResultList();
+
+        ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
+        for(Object[] row : result) {
+            String categoryName = (String) row[0];
+            int count = (Integer) row[1];
+
+            modelList.add(new ModelDataPS_Circle(categoryName, count));
+        }
+
+        return modelList;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package model;
+package ui.model;
 
 public class ModelDataRS {
     String month;
@@ -7,6 +7,9 @@ public class ModelDataRS {
     double revenueMedicalS;
     double revenueFunctionalFood;
 
+    public ModelDataRS(String month) {
+        this.month = month;
+    }
     public ModelDataRS(String month, double all, double revenueMedicine, double revenueMedicalS, double revenueFunctionalFood) {
         this.month = month;
         this.all = all;
