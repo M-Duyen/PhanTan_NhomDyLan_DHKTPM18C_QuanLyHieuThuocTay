@@ -157,10 +157,10 @@ VALUES ('OR3009241501001', CAST('2024-09-30 10:30:00' AS DATETIME), N'Vười L�
 
 -- Thêm dữ liệu Product
 INSERT INTO pharmacy_management.products(product_id, product_name, quantity_in_stock, tax_percentage, promotion_id, vendor_id, category_id,
-                     registration_number, purchase_price, end_date)
-VALUES ('PM021024000001', 'MORIHEPAMIN', 50, 0.05, null, 'VDVN001', 'CA014', '10040.KD.13.1', 190000, '2026-12-12'),
+                     registration_number, purchase_price, end_date, unitNote)
+VALUES ('PM021024000001', 'MORIHEPAMIN', 50, 0.05, null, 'VDVN001', 'CA014', '10040.KD.13.1', 190000, '2026-12-12', 'BOX(293), BLISTER_PACK(10), PILL(6)'),
        ('PM021024000002', 'Optimox Sterile eye Drops', 20, 0.05, null, 'VDVN002', 'CA017', '10045.KD.13.1', 39000,
-        '2025-12-12'),
+        '2025-12-12', 'BOX(293), BLISTER_PACK(10), PILL(6)'),
        ('PS021024000003', N'Băng gạc', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.2', 2000, '2026-12-01'),
        ('PF021024000004', N'Beroglobin', 150, 0.1, null, 'VDVN001', 'CA020', '10045.KD.13.3', 333000, '2027-01-01'),
        ('PS021024000005', N'Kim tiêm', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.4', 2000, '2025-11-20'),

@@ -7,6 +7,7 @@ import service.EmployeeService;
 
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EmployeeDAO extends GenericDAO<Employee, String> implements EmployeeService {
     public EmployeeDAO(Class<Employee> clazz) {
@@ -31,7 +32,10 @@ public class EmployeeDAO extends GenericDAO<Employee, String> implements Employe
      */
     @Override
     public Employee getListEmployeeByAccountID(String username) {
-        return null;
+        String query = "SELECT e FROM Employee e WHERE e.account.accountID =:username";
+        return em.createQuery(query, Employee.class)
+                .setParameter("username", username)
+                .getSingleResult();
     }
 
     /**
@@ -68,7 +72,14 @@ public class EmployeeDAO extends GenericDAO<Employee, String> implements Employe
      */
     @Override
     public Map<String, Employee> getAllEmployeesAsMap() {
-        return null;
+        String query = "SELECT e.employeeID, e FROM Employee e ";
+        return em.createQuery(query, Object[].class)
+                .getResultList()
+                .stream()
+                .collect(Collectors.toMap(
+                        record -> (String) record[0],
+                        record -> (Employee) record[1]
+                ));
     }
 
 }
