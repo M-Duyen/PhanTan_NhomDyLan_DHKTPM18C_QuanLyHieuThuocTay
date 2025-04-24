@@ -1,9 +1,9 @@
 package service.impl;
 
 import dao.OrderDetailDAO;
-import entity.OrderDetail;
-import model.ModelDataPS;
-import model.ModelDataPS_Circle;
+import model.OrderDetail;
+import ui.model.ModelDataPS;
+import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
 
 import java.rmi.RemoteException;

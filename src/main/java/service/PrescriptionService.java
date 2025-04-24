@@ -1,6 +1,6 @@
 package service;
 
-import entity.Prescription;
+import model.Prescription;
 
 public interface PrescriptionService extends GenericService<Prescription, String>{
 }

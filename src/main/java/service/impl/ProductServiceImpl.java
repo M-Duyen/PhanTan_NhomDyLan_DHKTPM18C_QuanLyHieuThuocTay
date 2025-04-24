@@ -1,7 +1,7 @@
 package service.impl;
 
 import dao.ProductDAO;
-import entity.Product;
+import model.Product;
 import service.ProductService;
 
 import java.rmi.RemoteException;

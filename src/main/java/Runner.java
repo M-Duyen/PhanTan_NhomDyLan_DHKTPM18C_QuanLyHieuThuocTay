@@ -1,8 +1,3 @@
-import dao.OrderDAO;
-import entity.Account;
-import entity.Customer;
-import entity.Employee;
-import entity.Manager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import net.datafaker.Faker;

@@ -1,9 +1,9 @@
 package dao;
 
-import entity.*;
+import model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import model.ModelDataRS;
+import ui.model.ModelDataRS;
 import net.datafaker.Faker;
 import service.OrderService;
 import utils.JPAUtil;
@@ -188,13 +188,13 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
             order.setPaymentMethod(faker.options().option(PaymentMethod.class));
             order.setDiscount(faker.number().randomDouble(2, 0, 20) / 100);
 
-            Employee employee = Employee_DAO.createSampleEmployee(faker);
+            Employee employee = EmployeeDAO.createSampleEmployee(faker);
             order.setEmployee(employee);
 
-            Customer customer = Customer_DAO.createSampleCustomer(faker);
+            Customer customer = CustomerDAO.createSampleCustomer(faker);
             order.setCustomer(customer);
 
-            Prescription prescription = Prescription_DAO.createSamplePrescription(faker);
+            Prescription prescription = PrescriptionDAO.createSamplePrescription(faker);
             order.setPrescription(prescription);
 
             int numOfDetails = faker.number().numberBetween(1, 5);

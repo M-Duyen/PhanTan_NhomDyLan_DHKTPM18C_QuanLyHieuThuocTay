@@ -1,7 +1,6 @@
 package dao;
 
-import dao.GenericDAO;
-import entity.Product;
+import model.Product;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;

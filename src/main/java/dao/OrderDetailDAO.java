@@ -1,9 +1,9 @@
 package dao;
 
-import entity.OrderDetail;
+import model.OrderDetail;
 import jakarta.persistence.EntityManager;
-import model.ModelDataPS;
-import model.ModelDataPS_Circle;
+import ui.model.ModelDataPS;
+import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
 
 import java.util.ArrayList;
