@@ -6,11 +6,13 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "medical_supplies")
-public class MedicalSupply extends Product {
+public class MedicalSupply extends Product implements Serializable {
 
     @Column(name = "medicalSupply_type",columnDefinition = "nvarchar(20)")
     private String medicalSupplyType;

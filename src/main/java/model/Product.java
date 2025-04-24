@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 @Entity
@@ -11,7 +12,7 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
-public class Product {
+public class Product implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")

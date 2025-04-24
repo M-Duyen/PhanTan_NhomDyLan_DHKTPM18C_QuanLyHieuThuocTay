@@ -3,6 +3,7 @@ package model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "order_id", nullable = false)
