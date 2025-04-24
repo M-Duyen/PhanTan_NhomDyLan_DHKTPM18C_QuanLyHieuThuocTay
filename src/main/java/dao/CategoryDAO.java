@@ -4,12 +4,20 @@ package dao;
 import model.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import model.Customer;
 import service.CategoryService;
 
 import java.util.ArrayList;
 
 public class CategoryDAO extends GenericDAO<Category,String> implements CategoryService {
-    private EntityManager em;
+
+
+    public CategoryDAO(Class<Category> clazz) {
+        super(clazz);
+    }
+    public CategoryDAO(EntityManager em, Class<Category> clazz){
+        super(em, clazz);
+    }
 
     public CategoryDAO(EntityManager em) {
         super(em, Category.class);
