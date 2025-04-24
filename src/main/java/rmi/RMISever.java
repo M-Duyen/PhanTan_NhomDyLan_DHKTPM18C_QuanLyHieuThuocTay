@@ -12,7 +12,7 @@ import java.rmi.registry.LocateRegistry;
 public class RMISever {
     public static void main(String[] args) throws Exception{
         Context context = new InitialContext();
-        LocateRegistry.createRegistry(72811);
+        LocateRegistry.createRegistry(7281);
         //Tạo Java Object
         CustomerDAO customerDAO = new CustomerDAO(Customer.class);
 
@@ -21,7 +21,7 @@ public class RMISever {
         CustomerService customerService = new CustomerServiceImpl(customerDAO);
 
         //bind
-        context.bind("rmi://localhost:72811/customerService", customerService);
-
+        context.bind("rmi://localhost:7281/customerService", customerService);
+        System.out.println("Server Started!");
     }
 }
