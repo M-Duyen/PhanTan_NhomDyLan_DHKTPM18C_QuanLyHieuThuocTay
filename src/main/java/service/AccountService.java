@@ -2,6 +2,7 @@ package service;
 
 import model.Account;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface AccountService extends GenericService<Account, String> {

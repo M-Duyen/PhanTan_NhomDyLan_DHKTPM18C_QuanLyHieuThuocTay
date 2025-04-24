@@ -35,9 +35,6 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
         }
     }
 
-
-
-
     /**
      * Cập nhật pass khi quên pass
      *

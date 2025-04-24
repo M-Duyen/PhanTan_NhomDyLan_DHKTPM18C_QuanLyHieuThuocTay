@@ -4,8 +4,11 @@ package dao;
 import model.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import service.CategoryService;
 
-public class CategoryDAO extends GenericDAO<Category,String> {
+import java.util.ArrayList;
+
+public class CategoryDAO extends GenericDAO<Category,String> implements CategoryService {
     private EntityManager em;
 
     public CategoryDAO(EntityManager em) {
@@ -17,5 +20,4 @@ public class CategoryDAO extends GenericDAO<Category,String> {
         CategoryDAO category_dao = new CategoryDAO(em);
 
     }
-
 }

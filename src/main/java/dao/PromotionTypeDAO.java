@@ -3,9 +3,9 @@ package dao;
 
 import model.PromotionType;
 import jakarta.persistence.EntityManager;
+import service.PromotionTypeService;
 
-public class PromotionTypeDAO extends GenericDAO<PromotionType, String> {
-
+public class PromotionTypeDAO extends GenericDAO<PromotionType, String> implements PromotionTypeService {
 
     public PromotionTypeDAO(Class<PromotionType> clazz) {
         super(clazz);
@@ -15,9 +15,4 @@ public class PromotionTypeDAO extends GenericDAO<PromotionType, String> {
         super(em, clazz);
     }
 
-    public static void main(String[] args) {
-        PromotionTypeDAO dao = new PromotionTypeDAO(PromotionType.class);
-        dao.getAll().forEach(System.out::println);
-
-    }
 }
