@@ -1,7 +1,7 @@
 package service.impl;
 
 import dao.PrescriptionDAO;
-import entity.Prescription;
+import model.Prescription;
 import service.PrescriptionService;
 
 import java.rmi.RemoteException;

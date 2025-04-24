@@ -1,7 +1,7 @@
 package service;
 
-import entity.Order;
-import entity.OrderDetail;
+import model.Order;
+import model.OrderDetail;
 import ui.model.ModelDataRS;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public interface OrderService extends GenericService<Order, String>{
     double getTotalDue(String orderID);
     ArrayList<ModelDataRS> getModelDataRSByYear(int year);
     ArrayList<ModelDataRS> getModelDataRSByYearByMonth(int month, int year);
-    ArrayList<ModelDataRS> getModelDataRSByYearByTime(String start, String end);
+    ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end);
     ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate);
     double getTotalProductsSold();
     double getRevenueSoldPercentage();

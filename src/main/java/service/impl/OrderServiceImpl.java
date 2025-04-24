@@ -1,7 +1,7 @@
 package service.impl;
 
 import dao.*;
-import entity.*;
+import model.*;
 import ui.model.ModelDataRS;
 import service.OrderService;
 
@@ -85,7 +85,7 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(String start, String end) {
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
         return orderDAO.getModelDataRSByYearByTime(start, end);
     }
 

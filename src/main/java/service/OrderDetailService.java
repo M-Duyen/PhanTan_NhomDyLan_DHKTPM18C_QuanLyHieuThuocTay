@@ -1,6 +1,6 @@
 package service;
 
-import entity.OrderDetail;
+import model.OrderDetail;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 

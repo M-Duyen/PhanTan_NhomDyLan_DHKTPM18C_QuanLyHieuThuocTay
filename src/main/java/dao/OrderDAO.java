@@ -1,24 +1,29 @@
 package dao;
 
-import entity.*;
+import model.*;
 import jakarta.persistence.EntityManager;
 import ui.model.ModelDataRS;
 import service.OrderService;
+import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
     private EntityManager em;
 
     public OrderDAO(Class<Order> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public OrderDAO(EntityManager em, Class<Order> clazz) {
         super(em, clazz);
+        this.em = em;
     }
 
     @Override
@@ -258,13 +263,13 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * Thống kê theo tháng, trục tung là doanh thu, trục hoành là các ngày trong tháng đó
      * TODO: Kiểm tra điều kiện bên giao diện cho chỉ pheps 30 ngày
      * TODO: Bổ sung hàm định dạng lại chuỗi LocalDate
-     *
+     * TODO: Sửa lại tham số truyền là hai kiểu localdate cho giao diện luôn
      * @param start
      * @param end
      * @return
      */
     @Override
-    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(String start, String end) {
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
         List<Object[]> results = em.createQuery(
                         "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
                                 "WHERE o.orderDate >= :start AND o.orderDate <= :end", Object[].class
@@ -316,7 +321,27 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) {
-        return null;
+        double totalRevenue = 0;
+        int totalQuantitySold = 0;
+
+        List<Order> orders = em.createQuery(
+                        "SELECT o FROM Order o WHERE o.orderDate >= :startDate AND o.orderDate <= :endDate", Order.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+
+        for (Order order : orders) {
+            for (OrderDetail od : order.getListOrderDetail()) {
+                totalRevenue += od.getLineTotal();
+                totalQuantitySold += od.getOrderQuantity();
+            }
+        }
+
+        ArrayList<Double> result = new ArrayList<>();
+        result.add((double) orders.size());
+        result.add(totalRevenue);
+        result.add((double) totalQuantitySold);
+        return result;
     }
 
     /**
@@ -328,7 +353,6 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
     public double getTotalProductsSold() {
         return 0;
     }
-
     /**
      * Lấy tổng doanh thu đã bán
      *
@@ -336,7 +360,26 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public double getRevenueSoldPercentage() {
-        return 0;
+        double totalDue = 0;
+        double totalTonKho = 0;
+        List<Order> orders = em.createQuery(
+                "SELECT o " +
+                        "FROM Order o", Order.class)
+                .getResultList();
+
+        for(Order order : orders) {
+            totalDue += order.getTotalDue();
+        }
+        Double totalTonTemp = em.createQuery(
+                "SELECT SUM(ud.inStock * ud.sellPrice) " +
+                        "FROM Product.unitDetails ud", Double.class
+        ).getSingleResult();
+        totalTonKho = totalTonTemp == null ? 0 : totalTonTemp;
+
+        if(totalTonKho + totalDue == 0){
+            return 0;
+        }
+        return (totalDue / (totalDue + totalTonKho)) * 100;
     }
 
     /**
@@ -346,8 +389,118 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public double getProfit() {
-        return 0;
+        double loiNhuanDaBan = 0;
+        double loiNhuanTon = 0;
+
+        List<OrderDetail> orderDetails = em.createQuery(
+                "SELECT od " +
+                        "FROM  OrderDetail od " +
+                        "JOIN od.product p " +
+                        "WHERE p.unitNote IS NOT NULL", OrderDetail.class
+        ).getResultList();
+
+        for (OrderDetail orderDetail : orderDetails) {
+            Product product = orderDetail.getProduct();
+            String unitNote = product.getUnitNote();
+            String nameUnit = orderDetail.getUnit().getPackagingUnit();
+            double purchasePrice = product.getPurchasePrice();
+            double lineTotal = orderDetail.getLineTotal();
+            int orderQuantity = orderDetail.getOrderQuantity();
+
+            if(unitNote != null) {
+                String[] parts = unitNote.split(",\\s*");
+                for (String part : parts) {
+                    Pattern pattern = Pattern.compile("([A-Z ]+)(?:\\((\\d+)\\))?");
+                    Matcher matcher = pattern.matcher(part);
+                    if (matcher.matches()) {
+                        String enumName = matcher.group(1).trim();
+                        int multiplier = matcher.group(2) != null ? Integer.parseInt(matcher.group(2)) : 1;
+                        if (enumName.equalsIgnoreCase(nameUnit)) {
+                            double cost = (purchasePrice / multiplier) * orderQuantity;
+                            loiNhuanDaBan += lineTotal - cost;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        //Lấy tổng lợi nhuận tồn kho
+        Double tongGiaTriTonKho = em.createQuery(
+                "SELECT SUM(pu.sellPrice * pu.inStock) " +
+                        "FROM Product p " +
+                        "JOIN p.unitDetails pu " +
+                        "WHERE FUNCTION('LEFT', p.unitNote, LOCATE('(', p.unitNote || '(') - 1) = KEY(pu)",
+                Double.class
+        ).getSingleResult();
+
+        if (tongGiaTriTonKho != null) {
+            loiNhuanTon = tongGiaTriTonKho;
+        }
+
+        if ((loiNhuanDaBan + loiNhuanTon) == 0) {
+            return 0.0;
+        }
+
+        return (loiNhuanDaBan / (loiNhuanDaBan + loiNhuanTon)) * 100;
     }
+//    @Override
+//    public double getProfit() {
+//        double loiNhuanDaBan = 0.0;
+//        double loiNhuanTon = 0.0;
+//
+//        // Lấy các OrderDetail có unitNote không null (ý nghĩa: có thông tin quy đổi đơn vị)
+//        List<OrderDetail> orderDetails = em.createQuery(
+//                        "SELECT od FROM OrderDetail od " +
+//                                "JOIN od.product p " +
+//                                "JOIN od.unit u " +
+//                                "WHERE p.unitNote IS NOT NULL", OrderDetail.class)
+//                .getResultList();
+//
+//        for (OrderDetail od : orderDetails) {
+//            Product p = od.getProduct();
+//            String unitNote = p.getUnitNote();
+//            String nameUnit = od.getUnit().getName();
+//            double purchasePrice = p.getPurchasePrice();
+//            double lineTotal = od.getLineTotal();
+//            int orderQuantity = od.getOrderQuantity();
+//
+//            if (unitNote != null) {
+//                String[] parts = unitNote.split(",\\s*");
+//                for (String part : parts) {
+//                    Pattern pattern = Pattern.compile("([A-Z ]+)(?:\\((\\d+)\\))?");
+//                    Matcher matcher = pattern.matcher(part);
+//                    if (matcher.matches()) {
+//                        String enumName = matcher.group(1).trim();
+//                        int multiplier = matcher.group(2) != null ? Integer.parseInt(matcher.group(2)) : 1;
+//                        if (enumName.equalsIgnoreCase(nameUnit)) {
+//                            double cost = (purchasePrice / multiplier) * orderQuantity;
+//                            loiNhuanDaBan += lineTotal - cost;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Lấy tổng lợi nhuận tồn kho (giá trị bán tiềm năng của hàng tồn)
+//        Double tongGiaTriTonKho = em.createQuery(
+//                "SELECT SUM(pu.sellPrice * pu.inStock) " +
+//                        "FROM ProductUnit pu " +
+//                        "JOIN pu.product p " +
+//                        "JOIN pu.unit u " +
+//                        "WHERE FUNCTION('LEFT', p.unitNote, LOCATE('(', p.unitNote || '(') - 1) = u.name",
+//                Double.class).getSingleResult();
+//
+//        if (tongGiaTriTonKho != null) {
+//            loiNhuanTon = tongGiaTriTonKho;
+//        }
+//
+//        if ((loiNhuanDaBan + loiNhuanTon) == 0) {
+//            return 0.0;
+//        }
+//
+//        return (loiNhuanDaBan / (loiNhuanDaBan + loiNhuanTon)) * 100;
+//    }
 
     /**
      * Kiểm tra hóa đơn có tồn tại hay không
@@ -361,5 +514,10 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
                 .setParameter("orderID", orderID)
                 .getSingleResult();
         return order != null;
+    }
+
+    public static void main(String[] args) {
+        OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
+        System.out.println(orderDAO.getProfit());
     }
 }
