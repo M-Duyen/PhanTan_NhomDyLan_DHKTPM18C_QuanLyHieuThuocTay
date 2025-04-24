@@ -74,6 +74,8 @@ public class Product {
         return productID.substring(0, 2).equals("PF");
     }
 
+
+
 }
 
 
@@ -98,7 +100,7 @@ public class Product {
 //        return result;
 //    }
 //
-//    public double setSellPrice(Enum_PackagingUnit unit){
+//    public double setSellPrice(PackagingUnit unit){
 //        double price = unitPrice.get(unit);
 //        double sellPrice = 0;
 //
