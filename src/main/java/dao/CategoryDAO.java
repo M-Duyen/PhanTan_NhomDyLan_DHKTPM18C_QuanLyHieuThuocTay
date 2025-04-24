@@ -4,18 +4,15 @@ package dao;
 import model.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import service.CategoryService;
 
-public class CategoryDAO extends GenericDAO<Category,String> {
-    private EntityManager em;
+public class CategoryDAO extends GenericDAO<Category,String> implements CategoryService {
 
-    public CategoryDAO(EntityManager em) {
-        super(em, Category.class);
+    public CategoryDAO(Class<Category> clazz) {
+        super(clazz);
     }
 
-    public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
-        CategoryDAO category_dao = new CategoryDAO(em);
-
+    public CategoryDAO(EntityManager em, Class<Category> clazz) {
+        super(em, clazz);
     }
-
 }

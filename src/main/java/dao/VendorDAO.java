@@ -93,7 +93,4 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         return newMaNCC;
     }
 
-
-
-
 }

@@ -2,18 +2,15 @@ package dao;
 
 import model.FunctionalFood;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
+import service.FunctionalFoodService;
 
-import java.time.LocalDate;
-import java.util.List;
+public class FunctionalFoodDAO extends GenericDAO<FunctionalFood, String> implements FunctionalFoodService {
 
-public class FunctionalFoodDAO extends GenericDAO<FunctionalFoodDAO, String>{
-
-    public FunctionalFoodDAO(Class<FunctionalFoodDAO> clazz) {
+    public FunctionalFoodDAO(Class<FunctionalFood> clazz) {
         super(clazz);
     }
 
-    public FunctionalFoodDAO(EntityManager em, Class<FunctionalFoodDAO> clazz) {
+    public FunctionalFoodDAO(EntityManager em, Class<FunctionalFood> clazz) {
         super(em, clazz);
     }
 }

@@ -6,6 +6,7 @@ import model.Customer;
 import service.CustomerService;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> implements CustomerService {
@@ -24,6 +25,11 @@ public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> im
     @Override
     public String createCustomerID() throws RemoteException {
         return customerDAO.createCustomerID();
+    }
+
+    @Override
+    public Customer getCustomerByPhone(String phone) throws RemoteException {
+        return customerDAO.getCustomerByPhone(phone);
     }
 
     @Override

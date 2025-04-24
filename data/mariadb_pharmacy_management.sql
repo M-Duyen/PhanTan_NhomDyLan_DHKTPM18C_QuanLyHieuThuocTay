@@ -193,15 +193,3 @@ VALUES ('PILL', 2, 'PM021024000001', 'OR3009241501001'),
 
 
 # DROP DATABASE pharmacy_management
-# -----------THỦ TỤC CẬP NHẬT NGÀY HẾT HẠN CỦA KHUYẾN MÃI ---------------
-DELIMITER //
-
-CREATE PROCEDURE UpdatePromotionStatus()
-BEGIN
-    UPDATE promotions
-    SET stats = 0
-    WHERE end_date < CURDATE() - INTERVAL 1 DAY
-      AND stats = 1;
-END //
-
-DELIMITER ;
