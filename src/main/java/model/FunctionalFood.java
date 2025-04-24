@@ -6,11 +6,13 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "functional_foods")
-public class FunctionalFood extends Product {
+public class FunctionalFood extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")
     private String mainNutrients;

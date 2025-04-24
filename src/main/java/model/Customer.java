@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.checkerframework.common.aliasing.qual.Unique;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "customers")
-public class Customer {
+public class Customer implements Serializable {
     @Unique
     @EqualsAndHashCode.Include
     @Column(name = "customer_id", nullable = false, columnDefinition = "char(10)")

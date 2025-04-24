@@ -9,13 +9,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
 @Table(name = "administration_routes")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class AdministrationRoute {
+public class AdministrationRoute implements Serializable {
 
     @Id
     @Column(name = "administration_route_id")

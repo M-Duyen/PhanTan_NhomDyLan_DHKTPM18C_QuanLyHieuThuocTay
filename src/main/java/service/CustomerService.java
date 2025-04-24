@@ -2,6 +2,7 @@ package service;
 
 import model.Customer;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;

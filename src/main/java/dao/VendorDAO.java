@@ -1,11 +1,10 @@
 package dao;
 
 
-import model.Vendor;
 import jakarta.persistence.EntityManager;
+import model.Vendor;
 import service.VendorService;
 
-import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -33,7 +32,7 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
     }
 
     /**
-     *  Lấy mã quốc gia theo quốc gia
+     * Lấy mã quốc gia theo quốc gia
      *
      * @param country
      * @return
@@ -60,7 +59,6 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
      *
      * @param country
      * @return
-     * @throws SQLException
      */
     @Override
     public String createVendorID(String country) {
