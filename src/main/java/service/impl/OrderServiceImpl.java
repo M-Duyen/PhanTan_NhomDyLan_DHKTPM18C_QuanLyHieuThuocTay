@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderServiceImpl extends GenericServiceImpl<Order, String> implements OrderService {
     private OrderDAO orderDAO;
 
-    public OrderServiceImpl(PromotionDAO genericDAO) throws RemoteException {
+    public OrderServiceImpl(GenericDAO<Order, String> genericDAO) throws RemoteException {
         super(genericDAO);
     }
 

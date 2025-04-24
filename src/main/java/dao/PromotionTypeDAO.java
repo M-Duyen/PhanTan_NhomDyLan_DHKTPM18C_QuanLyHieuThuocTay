@@ -15,4 +15,5 @@ public class PromotionTypeDAO extends GenericDAO<PromotionType, String> implemen
         super(em, clazz);
     }
 
+
 }

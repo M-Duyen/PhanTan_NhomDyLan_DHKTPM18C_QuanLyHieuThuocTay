@@ -10,5 +10,5 @@ public interface PromotionService extends GenericService<Promotion, String> {
 
     String createPromotionID(String startDate, String endDate) throws RemoteException;
 
-    void updatePromotionStatus() throws RemoteException;
+    boolean updatePromotionStatus() throws RemoteException;
 }
