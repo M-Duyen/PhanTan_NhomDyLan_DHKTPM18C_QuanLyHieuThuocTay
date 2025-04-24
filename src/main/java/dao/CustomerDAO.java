@@ -1,11 +1,10 @@
 package dao;
 
-import entity.Customer;
+import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 import service.CustomerService;
 
-import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;

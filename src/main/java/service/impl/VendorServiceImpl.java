@@ -2,7 +2,7 @@ package service.impl;
 
 import dao.GenericDAO;
 import dao.VendorDAO;
-import entity.Vendor;
+import model.Vendor;
 import service.VendorService;
 
 import java.rmi.RemoteException;

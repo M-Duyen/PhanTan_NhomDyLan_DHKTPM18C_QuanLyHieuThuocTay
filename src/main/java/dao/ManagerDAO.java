@@ -1,6 +1,6 @@
 package dao;
 
-import entity.Manager;
+import model.Manager;
 import jakarta.persistence.EntityManager;
 
 public class ManagerDAO extends GenericDAO<Manager, String> {

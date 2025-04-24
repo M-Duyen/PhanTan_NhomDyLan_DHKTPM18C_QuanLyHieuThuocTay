@@ -1,8 +1,8 @@
 package dao;
 
-import entity.Account;
-import entity.Employee;
-import entity.Manager;
+import model.Account;
+import model.Employee;
+import model.Manager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 

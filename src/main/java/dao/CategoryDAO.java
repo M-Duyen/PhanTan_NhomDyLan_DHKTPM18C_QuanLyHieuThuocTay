@@ -1,7 +1,7 @@
 package dao;
 
 
-import entity.Category;
+import model.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 
