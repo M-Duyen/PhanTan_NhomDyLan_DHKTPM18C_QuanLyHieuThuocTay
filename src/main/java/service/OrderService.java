@@ -13,9 +13,7 @@ import java.util.List;
 public interface OrderService extends GenericService<Order, String> {
     List<OrderDetail> getOrderDetailsByOrderId(String orderId) throws RemoteException;
     boolean insertOrderDetail(List<OrderDetail> list) throws RemoteException;
-    Order getOrderByOrderId(String orderId) throws RemoteException;
     String createOrderID(String emplId) throws RemoteException;
-    ArrayList<Order> getOrderByCriterious(String criterious) throws RemoteException;
     double getRevenueByCriteria(String criteria) throws RemoteException;
     double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException;
     ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException;

@@ -30,18 +30,8 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public Order getOrderByOrderId(String orderId) {
-        return orderDAO.getOrderByOrderId(orderId);
-    }
-
-    @Override
     public String createOrderID(String emplId) {
         return orderDAO.createOrderID(emplId);
-    }
-
-    @Override
-    public ArrayList<Order> getOrderByCriterious(String criterious) {
-        return orderDAO.getOrderByCriterious(criterious);
     }
 
     @Override
