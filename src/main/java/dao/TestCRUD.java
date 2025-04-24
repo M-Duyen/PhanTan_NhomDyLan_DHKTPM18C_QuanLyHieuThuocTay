@@ -8,16 +8,16 @@ import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
 
-public class Test_CRUD {
+public class TestCRUD {
     private static EntityManager em;
 
 
     public static void main(String[] args) {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
 
-        Account_DAO account_dao = new Account_DAO(em);
-        Employee_DAO employee_dao = new Employee_DAO(em);
-        Manager_DAO manager_dao = new Manager_DAO(em);
+        AccountDAO account_dao = new AccountDAO(Account.class);
+        EmployeeDAO employee_dao = new EmployeeDAO(Employee.class);
+        ManagerDAO manager_dao = new ManagerDAO(Manager.class);
 
         Account account = new Account();
         account.setAccountID("1234567890");

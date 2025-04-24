@@ -1,16 +1,13 @@
 package dao;
 
-import entity.AdministrationRoute;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 
-import java.util.List;
 
-
-public class AdministrationRoute_DAO {
+public class AdministrationRouteDAO {
     private EntityManager em;
 
-    public AdministrationRoute_DAO() {
+    public AdministrationRouteDAO() {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 

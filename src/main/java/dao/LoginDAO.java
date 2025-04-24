@@ -1,26 +1,21 @@
 package dao;
 
-import entity.Account;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import utils.JPAUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Login_DAO{
+public class LoginDAO {
     private Connection con; // Removed static modifier
     private String username;
     private String password;
     private String ten;
     private final EntityManager em;
 
-    public Login_DAO() {
+    public LoginDAO() {
         this.em = JPAUtil.getEntityManager();
     }
 
@@ -69,7 +64,7 @@ public class Login_DAO{
 
     public static void main(String[] args) {
         //ConnectDB.getInstance().connect();
-        Login_DAO test = new Login_DAO(); // Create an instance of Test
+        LoginDAO test = new LoginDAO(); // Create an instance of Test
 //        System.out.println(test.dangNhapTen("MyDUYEN"));
         String tenDN = "EP1501";
         String MKDN = "EP1501@";

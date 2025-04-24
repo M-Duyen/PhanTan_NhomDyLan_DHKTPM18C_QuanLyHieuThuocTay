@@ -7,10 +7,10 @@ import jakarta.persistence.Persistence;
 import java.time.LocalDate;
 import java.util.List;
 
-public class FunctionalFood_DAO {
+public class FunctionalFoodDAO {
     private EntityManager em;
 
-    public FunctionalFood_DAO() {
+    public FunctionalFoodDAO() {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
@@ -66,7 +66,7 @@ public class FunctionalFood_DAO {
     }
 
     public static void main(String[] args) {
-        FunctionalFood_DAO functionalFoodDAO = new FunctionalFood_DAO();
+        FunctionalFoodDAO functionalFoodDAO = new FunctionalFoodDAO();
 
         FunctionalFood ff1 = new FunctionalFood();
         ff1.setProductID("FF001");

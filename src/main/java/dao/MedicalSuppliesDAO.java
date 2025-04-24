@@ -9,10 +9,10 @@ import net.datafaker.Faker;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class MedicalSupplies_DAO {
+public class MedicalSuppliesDAO {
     private EntityManager em;
 
-    public MedicalSupplies_DAO() {
+    public MedicalSuppliesDAO() {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
 
@@ -70,7 +70,7 @@ public class MedicalSupplies_DAO {
     }
 
     public static void main(String[] args) {
-            MedicalSupplies_DAO dao = new MedicalSupplies_DAO();
+            MedicalSuppliesDAO dao = new MedicalSuppliesDAO();
             Faker faker = new Faker();
 
             for (int i = 0; i < 10; i++) {

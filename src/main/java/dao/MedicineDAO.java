@@ -6,9 +6,9 @@ import jakarta.persistence.Persistence;
 
 import java.util.List;
 
-public class Medicine_DAO {
+public class MedicineDAO {
     private EntityManager em;
-    public Medicine_DAO() {
+    public MedicineDAO() {
         em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
     }
     public List<Medicine> getAll(){
