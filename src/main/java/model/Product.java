@@ -33,7 +33,7 @@ public class Product {
     private LocalDate endDate;
 
     @Column(name = "quantity_in_stock", columnDefinition = "int")
-    private int quantityInStock;
+    private Integer quantityInStock;
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")

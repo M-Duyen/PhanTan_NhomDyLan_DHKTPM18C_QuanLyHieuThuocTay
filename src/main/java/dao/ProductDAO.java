@@ -208,6 +208,11 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return -1;
     }
 
+    public static void main(String[] args) {
+        ProductDAO dao = new ProductDAO(Product.class);
+        dao.getAll().forEach(System.out::println);
+    }
+
 
 
 
