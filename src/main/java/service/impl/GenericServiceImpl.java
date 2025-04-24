@@ -1,19 +1,19 @@
 package service.impl;
 
 import dao.GenericDAO;
+import dao.PromotionDAO;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.GenericService;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-import java.util.Map;
 
 public abstract class GenericServiceImpl<T, ID> extends UnicastRemoteObject implements GenericService<T, ID>{
 
     protected GenericDAO<T, ID> genericDAO;
 
-    public GenericServiceImpl(GenericDAO<T, ID> genericDAO) throws RemoteException {
+    public GenericServiceImpl(GenericDAO<T,ID> genericDAO) throws RemoteException {
         this.genericDAO = genericDAO;
     }
 

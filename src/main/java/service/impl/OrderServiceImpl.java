@@ -14,10 +14,10 @@ import java.util.List;
 public class OrderServiceImpl extends GenericServiceImpl<Order, String> implements OrderService {
     private OrderDAO orderDAO;
 
-    public OrderServiceImpl(OrderDAO orderDAO) throws RemoteException {
-        super(orderDAO);
-        this.orderDAO = orderDAO;
+    public OrderServiceImpl(PromotionDAO genericDAO) throws RemoteException {
+        super(genericDAO);
     }
+
 
     @Override
     public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
