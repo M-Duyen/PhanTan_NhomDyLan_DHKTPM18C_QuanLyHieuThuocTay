@@ -351,7 +351,55 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public double getTotalProductsSold() {
-        return 0;
+        String query1 = "SELECT p.unitNote FROM Product p WHERE p.unitNote IS NOT NULL";
+        List<String> unitNotes = em.createQuery(query1, String.class).getResultList();
+
+        int totalInStock = 0;
+        for (String unitNote : unitNotes) {
+            Pattern pattern = Pattern.compile("\\((\\d+)\\)");
+            Matcher matcher = pattern.matcher(unitNote);
+            while (matcher.find()) {
+                totalInStock += Integer.parseInt(matcher.group(1));
+            }
+        }
+
+        String query2 = "SELECT p.unitNote, od.unit, SUM(od.orderQuantity) " +
+                "FROM OrderDetail od INNER JOIN Product p ON p.productID = od.product.productID " +
+                "WHERE p.unitNote IS NOT NULL " +
+                "GROUP BY p.productID, od.unit, p.unitNote";
+
+        List<Object[]> results = em.createQuery(query2, Object[].class).getResultList();
+
+        double totalSold = 0.0;
+        for (Object[] row : results) {
+            String unitNote = (String) row[0];
+            PackagingUnit soldUnit = (PackagingUnit) row[1];
+            int quantitySold = ((Number) row[2]).intValue();
+
+            String[] parts = unitNote.split(",\\s*");
+            boolean isFirstUnit = true;
+            for (String part : parts) {
+                Pattern pattern = Pattern.compile("([A-Z_]+)\\((\\d+)\\)");
+                Matcher matcher = pattern.matcher(part);
+
+                if (matcher.find()) {
+                    String enumName = matcher.group(1).trim();
+                    int multiplier = Integer.parseInt(matcher.group(2));
+                    if (isFirstUnit) {
+                        isFirstUnit = false;
+                        continue;
+                    }
+
+                    if (enumName.equals(soldUnit.name())) {
+                        totalSold += (double) quantitySold / multiplier;
+                        break;
+                    } else {
+                        totalSold += (double) quantitySold / multiplier;
+                    }
+                }
+            }
+        }
+        return totalInStock == 0 ? 0 : (totalSold / totalInStock) * 100;
     }
     /**
      * Lấy tổng doanh thu đã bán
