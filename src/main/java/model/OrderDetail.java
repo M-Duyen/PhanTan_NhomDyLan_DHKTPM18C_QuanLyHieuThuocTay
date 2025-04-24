@@ -21,12 +21,14 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Id
     @EqualsAndHashCode.Include
     @Enumerated(EnumType.STRING)
     private PackagingUnit unit;
 
     @Column(name = "order_quantity", nullable = false)
     private int orderQuantity;
+
 
     @Transient
     public double getLineTotal() {

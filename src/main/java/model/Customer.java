@@ -38,16 +38,16 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Order> order;
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "brithDate=" + brithDate +
-                ", addr='" + addr + '\'' +
-                ", email='" + email + '\'' +
-                ", gender=" + gender +
-                ", customerName='" + customerName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", customerID='" + customerID + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Customer{" +
+//                "brithDate=" + brithDate +
+//                ", addr='" + addr + '\'' +
+//                ", email='" + email + '\'' +
+//                ", gender=" + gender +
+//                ", customerName='" + customerName + '\'' +
+//                ", phoneNumber='" + phoneNumber + '\'' +
+//                ", customerID='" + customerID + '\'' +
+//                '}';
+//    }
 }

@@ -1,12 +1,13 @@
 package dao;
 
-import model.Product;
+import model.*;
 import jakarta.persistence.EntityManager;
+import service.ProductService;
 
 import java.util.List;
 
-public class ProductDAO extends GenericDAO<Product, String> {
-    private static ProductDAO dao;
+public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
+    private EntityManager em;
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
@@ -15,6 +16,8 @@ public class ProductDAO extends GenericDAO<Product, String> {
     public ProductDAO(EntityManager em, Class<Product> clazz) {
         super(em, clazz);
     }
+
+    @Override
     public boolean createMultiple(List<Product> products) {
         try {
             em.getTransaction().begin();
@@ -29,20 +32,4 @@ public class ProductDAO extends GenericDAO<Product, String> {
             return false;
         }
     }
-
-    public static void main(String[] args) {
-        dao = new ProductDAO(Product.class);
-        Product product = new Product();
-//        dao.searchByMultipleCriteria()
-       List<Product> products = (List<Product>) dao.searchByMultipleCriteria("Product", "kd");
-       if (products.size() > 0) {
-           products.forEach(System.out::println);
-       }else {
-           System.out.println("Not found");
-       }
-
-    }
-
-
-
 }

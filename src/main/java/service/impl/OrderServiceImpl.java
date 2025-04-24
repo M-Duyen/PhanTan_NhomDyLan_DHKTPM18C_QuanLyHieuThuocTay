@@ -34,7 +34,6 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
         return orderDAO.getOrderByOrderId(orderId);
     }
 
-    //OR 301024 0302 002
     @Override
     public String createOrderID(String emplId) {
         return orderDAO.createOrderID(emplId);
@@ -42,32 +41,32 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
 
     @Override
     public ArrayList<Order> getOrderByCriterious(String criterious) {
-        return null;
+        return orderDAO.getOrderByCriterious(criterious);
     }
 
     @Override
     public double getRevenueByCriteria(String criteria) {
-        return 0;
+        return orderDAO.getRevenueByCriteria(criteria);
     }
 
     @Override
     public double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return 0;
+        return orderDAO.getRevenueByDateRange(startDate, endDate);
     }
 
     @Override
     public ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return null;
+        return orderDAO.getOrdersByDateRange(startDate, endDate);
     }
 
     @Override
-    public List<Order> filterOrderByEmpID(String empID) {
-        return null;
+    public ArrayList<Order> filterOrderByEmpID(String empID) {
+        return orderDAO.filterOrderByEmpID(empID);
     }
 
     @Override
     public double calculateTotalAllOrder(String empID) {
-        return 0;
+        return orderDAO.calculateTotalAllOrder(empID);
     }
 
     @Override
@@ -77,51 +76,41 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
 
     @Override
     public ArrayList<ModelDataRS> getModelDataRSByYear(int year) {
-        return null;
+        return orderDAO.getModelDataRSByYear(year);
     }
 
     @Override
     public ArrayList<ModelDataRS> getModelDataRSByYearByMonth(int month, int year) {
-        return null;
+        return orderDAO.getModelDataRSByYearByMonth(month, year);
     }
 
     @Override
-    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(String start, String end) {
-        return null;
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
+        return orderDAO.getModelDataRSByYearByTime(start, end);
     }
 
     @Override
     public ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) {
-        return null;
+        return orderDAO.getOverviewStatistical(startDate, endDate);
     }
 
     @Override
     public double getTotalProductsSold() {
-        return 0;
+        return orderDAO.getTotalProductsSold();
     }
 
     @Override
     public double getRevenueSoldPercentage() {
-        return 0;
+        return orderDAO.getRevenueSoldPercentage();
     }
 
     @Override
     public double getProfit() {
-        return 0;
+        return orderDAO.getProfit();
     }
 
     @Override
     public boolean orderIsExists(String orderID) {
         return orderDAO.orderIsExists(orderID);
-    }
-
-    @Override
-    public Order findById(String s) {
-        return null;
-    }
-
-    @Override
-    public List<?> searchByMultipleCriteria(String entityName, String keyword) {
-        return List.of();
     }
 }

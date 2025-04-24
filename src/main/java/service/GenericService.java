@@ -1,6 +1,5 @@
 package service;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -12,7 +11,5 @@ public interface GenericService<T, ID> {
     T findById(ID id);
     boolean update(T t);
     boolean delete(ID id);
-    @GetMapping("/search-entity")
-    public List<?> searchByMultipleCriteria(@RequestParam String entityName, @RequestParam String keyword);
-
+    List<?> searchByMultipleCriteria(@RequestParam String entityName, @RequestParam String keyword);
 }

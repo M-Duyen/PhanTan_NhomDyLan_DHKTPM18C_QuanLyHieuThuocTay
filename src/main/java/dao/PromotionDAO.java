@@ -2,83 +2,24 @@ package dao;
 
 import model.Promotion;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
-import net.datafaker.Faker;
 
-import java.util.List;
-
-public class PromotionDAO {
-    private final EntityManager em;
-
-    public PromotionDAO() {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+public class PromotionDAO extends GenericDAO<Promotion, String> {
+    public PromotionDAO(EntityManager em, Class<Promotion> entityClass) {
+        super(em, entityClass);
     }
 
-    public List getAllPromotion() {
-        return em.createQuery("SELECT p FROM Promotion p").getResultList();
-    }
-
-    public boolean insertPromotion(Promotion promotion) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.persist(promotion);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean updatePromotion(Promotion promotion) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(promotion);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean deletePromotion(Promotion promotion) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(promotion);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public Promotion getPromotionById(int id) {
-        return em.find(Promotion.class, id);
-    }
-
-    public Promotion createSamplePromotion(Faker faker) {
-        Promotion promotion = new Promotion();
-        promotion.setPromotionId(faker.commerce().promotionCode()/*.substring(0, 1)*/);
-        promotion.setPromotionName(faker.commerce().productName());
-        return promotion;
+    public PromotionDAO(Class<Promotion> clazz) {
+        super(clazz);
     }
 
     public static void main(String[] args) {
-        PromotionDAO dao = new PromotionDAO();
+        PromotionDAO promotionDAO = new PromotionDAO(Promotion.class);
         Faker faker = new Faker();
-        Promotion promotion = dao.createSamplePromotion(faker);
+        Promotion promotion = promotionDAO.createSamplePromotion(faker);
 
-        System.out.println(dao.insertPromotion(promotion));
+        System.out.println(promotionDAO.create(promotion));
         System.out.println("Result: ");
-        dao.getAllPromotion().forEach(System.out::println);
+
+        promotionDAO.getAll().forEach(System.out::println);
     }
 }

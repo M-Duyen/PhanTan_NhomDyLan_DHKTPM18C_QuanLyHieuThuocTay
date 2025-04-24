@@ -1,73 +1,119 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
+
 import model.Vendor;
+import jakarta.persistence.EntityManager;
+import service.VendorService;
 
+import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.List;
+import java.util.regex.Pattern;
 
-public class VendorDAO {
-    private EntityManager em;
-
-    public VendorDAO() {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+public class VendorDAO extends GenericDAO<Vendor, String> implements VendorService {
+    public VendorDAO(EntityManager em, Class<Vendor> entityClass) {
+        super(em, entityClass);
     }
 
-    public List<Vendor> getAll() {
-        return em.createQuery("SELECT v FROM Vendor v").getResultList();
+    public VendorDAO(Class<Vendor> clazz) {
+        super(clazz);
     }
-    public boolean create(Vendor vendor) {
-        try {
-            em.getTransaction().begin();
-            em.persist(vendor);
-            em.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            e.printStackTrace();
-            return false;
+
+    /**
+     * Chuyển đầu vào thành ký tự không dấu
+     *
+     * @param country
+     * @return
+     */
+    @Override
+    public String removeAccent(String country) {
+        String normalized = Normalizer.normalize(country, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").replaceAll("đ", "d").replaceAll("Đ", "D");
+    }
+
+    /**
+     *  Lấy mã quốc gia theo quốc gia
+     *
+     * @param country
+     * @return
+     */
+    @Override
+    public String getCountryID(String country) {
+        String countryNot = removeAccent(country);
+        String[] words = countryNot.split(" ");
+        StringBuilder countryCode = new StringBuilder();
+
+        if (words.length > 0) {
+            if (words.length == 1) {
+                countryCode.append(words[0].substring(0, Math.min(2, words[0].length())));
+            } else {
+                countryCode.append(words[0].charAt(0));
+                countryCode.append(words[1].charAt(0));
+            }
         }
+        return countryCode.toString().toUpperCase();
     }
-    public Vendor read(String id) {
-        return em.find(Vendor.class, id);
+
+    /**
+     * Tạo mã tự động cho nhà cung cấp
+     *
+     * @param country
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public String createVendorID(String country) {
+        String newMaNCC = null;
+
+        String countryCode = getCountryID(country);
+        String prefix = "VD" + countryCode;
+
+        String jpql = "SELECT v.vendorID FROM Vendor v WHERE v.vendorID LIKE :prefix";
+
+        List<String> vendorIDs = em.createQuery(jpql, String.class)
+                .setParameter("prefix", prefix + "%")
+                .getResultList();
+
+        // Lấy max số thứ tự (VDVN001 -> 1)
+        int currentMax = vendorIDs.stream()
+                .map(id -> id.substring(4)) // Lấy phần số
+                .mapToInt(numStr -> {
+                    try {
+                        return Integer.parseInt(numStr);
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                })
+                .max()
+                .orElse(0);
+
+        int nextNumber = currentMax + 1;
+        newMaNCC = prefix + String.format("%03d", nextNumber);
+        return newMaNCC;
     }
-    public boolean update(Vendor vendor) {
-        try {
-            em.getTransaction().begin();
-            em.merge(vendor);
-            em.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            e.printStackTrace();
-            return false;
-        }
-    }
-    public boolean delete(String id) {
-        try {
-            Vendor vendor = em.find(Vendor.class, id);
-            em.getTransaction().begin();
-            em.remove(vendor);
-            em.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            e.printStackTrace();
-            return false;
-        }
-    }
+
 
     public static void main(String[] args) {
-        VendorDAO vendor_dao = new VendorDAO();
+
+        VendorDAO vendor_dao = new VendorDAO(Vendor.class);
 //        vendor_dao.getAll().forEach(System.out::println);
 
-//        Vendor vendor = new Vendor("V-123", "ABC", "VietNam");
-//        vendor_dao.create(vendor);
+        Vendor vendor = new Vendor();
+        String newID = vendor_dao.createVendorID("Canada");
+        vendor.setVendorID(newID);
+        vendor.setVendorName("Hồ Quang Nhân");
+        vendor.setCountry("Canada");
+        vendor_dao.create(vendor);
 
-//        System.out.println(vendor_dao.read("V-123"));
+//        System.out.println(vendor_dao.findById(newID));
 //        vendor.setCountry("USA");
 //        vendor_dao.update(vendor);
 
-        vendor_dao.delete("V-123");
+//        vendor_dao.delete("V-123");
+        vendor_dao.getAll().forEach(System.out::println);
+
+
     }
+
 }

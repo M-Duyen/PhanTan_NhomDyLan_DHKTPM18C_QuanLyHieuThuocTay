@@ -12,7 +12,7 @@ import lombok.*;
 public class Account {
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "account_id", nullable = false)
+    @Column(name = "account_id", nullable = false, columnDefinition = "char(6)")
     private String accountID;
     private String password;
 
@@ -26,5 +26,8 @@ public class Account {
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
-
+    @ElementCollection
+    @CollectionTable(name = "account_notifications",
+            joinColumns = @JoinColumn(name = "account_id"))
+    List<Notification> notifications;
 }

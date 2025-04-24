@@ -2,5 +2,6 @@ package service;
 
 import model.Prescription;
 
-public interface PrescriptionService extends GenericService<Prescription, String>{
+public interface PrescriptionService extends GenericService<Prescription, String> {
+
 }

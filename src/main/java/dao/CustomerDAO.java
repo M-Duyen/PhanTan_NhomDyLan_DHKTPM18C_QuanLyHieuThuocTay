@@ -3,10 +3,13 @@ package dao;
 import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
+import service.CustomerService;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CustomerDAO extends GenericDAO<Customer, String> {
+public class CustomerDAO extends GenericDAO<Customer, String> implements CustomerService {
     public CustomerDAO(Class<Customer> clazz) {
         super(clazz);
     }
@@ -21,11 +24,117 @@ public class CustomerDAO extends GenericDAO<Customer, String> {
         customer.setCustomerID("CM" + faker.number().digits(3));
         return customer;
     }
+    /**
+     * Kiểm tra tồn tại của số điện thoại
+     *
+     * @param phone
+     * @return
+     */
+    @Override
+    public boolean checkPhoneNumber(String phone) {
+        String jpql = "SELECT COUNT(c) FROM Customer c WHERE c.phoneNumber = :phone";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("phone", phone)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    /**
+     * Tạo mã khách hàng tự động
+     *
+     * @return
+     */
+    @Override
+    public String createCustomerID() {
+        String prefix = "C";
+        String date = new java.text.SimpleDateFormat("ddMMyy").format(new java.util.Date());
+        String likePattern = prefix + date + "%";
+
+        String jpql = "SELECT MAX(CAST(SUBSTRING(c.customerID, 8, 3) AS integer)) " +
+                "FROM Customer c WHERE c.customerID LIKE :pattern";
+
+        Integer max = em.createQuery(jpql, Integer.class)
+                .setParameter("pattern", likePattern)
+                .getSingleResult();
+
+        int currentMax = (max != null) ? max : 0;
+        int nextCustomerID = currentMax + 1;
+
+        return prefix + date + String.format("%03d", nextCustomerID);
+    }
+
+
+    /**
+     * Lấy điểm tích lũy của khách hàng
+     *
+     * @param phone
+     * @return
+     */
+    @Override
+    public double getCustomerPoint(String phone) {
+        String jpql = "SELECT c.point FROM Customer c WHERE c.phoneNumber = :phone";
+        Double point = em.createQuery(jpql, Double.class)
+                .setParameter("phone", phone)
+                .getSingleResult();
+        return (point != null) ? point : 0;
+    }
+
+
+/**
+     * Giảm điểm tích lũy khi đổi điểm (có transaction)
+     *
+     * @param phone
+     * @param point
+     * @return
+     */
+@Override
+public boolean updateCustPoint_Decrease(String phone, double point) {
+    String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
+    return em.createQuery(jpql)
+            .setParameter("point", point)
+            .setParameter("phone", phone)
+            .executeUpdate() > 0;
+}
+
+
+    /**
+     * Tăng điểm tích lũy khi mua hàng (có transaction)
+     *
+     * @param phone
+     * @param point
+     * @return
+     */
+    @Override
+    public boolean updateCustPoint_Increase(String phone, double point) {
+        String jpql = "UPDATE Customer c SET c.point = c.point + :point WHERE c.phoneNumber = :phone";
+         return em.createQuery(jpql)
+                .setParameter("point", point)
+                .setParameter("phone", phone)
+                .executeUpdate() > 0;
+    }
+
+    /**
+     * lưu danh sách customer vào map
+     *
+     * @return
+     */
+    @Override
+    public Map<String, Customer> getAllCustomersAsMap() {
+        String jpql = "SELECT c FROM Customer c";
+        Map<String, Customer> customerMap = new HashMap<>();
+
+        em.createQuery(jpql, Customer.class)
+                .getResultList()
+                .forEach(c -> customerMap.put(c.getPhoneNumber(), c));
+
+        return customerMap;
+    }
+
 
     public static void main(String[] args) {
         CustomerDAO dao = new CustomerDAO(Customer.class);
         Customer customer = new Customer();
-        customer.setCustomerID("CUSER_test");
+        customer.setCustomerID(dao.createCustomerID());
         customer.setCustomerName("Test Customer");
         customer.setAddr("Test Address");
         customer.setPhoneNumber("1234567890");
@@ -33,12 +142,16 @@ public class CustomerDAO extends GenericDAO<Customer, String> {
         customer.setGender(true);
 
 //        dao.create(customer);
-//        System.out.println(dao.read("1234567890"));
-//        customer.setCustomerName("Test Customer Updated");
-//        dao.update(customer);
-        dao.delete("1234567890");
-        dao.getAll().forEach(cus -> System.out.println(cus.getCustomerID() + ": " + cus.getCustomerName()));
 
 
+//        dao.getAll().forEach(cus -> System.out.println(cus.getCustomerID() + ": " + cus.getCustomerName()));
+//        dao.updateCustPoint_Increase("1234567890",10);
+//        System.out.println(dao.findById("1234567890"));
+//        System.out.println(dao.getCustomerPoint("1234567890"));
+        dao.getAll().forEach(x-> System.out.println(x));
+//            dao.getAllCustomersAsMap().forEach((k, v) -> {
+//                System.out.println(k +": "+v);
+//            });
+//            dao.delete("1234567890");
     }
 }

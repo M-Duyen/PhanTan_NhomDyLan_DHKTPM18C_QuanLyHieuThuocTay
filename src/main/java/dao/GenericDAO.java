@@ -10,12 +10,13 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.GenericService;
 import utils.JPAUtil;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
-public abstract class GenericDAO<T, ID> {
+public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
     protected EntityManager em;
     private Class<T> clazz;
 
@@ -29,8 +30,10 @@ public abstract class GenericDAO<T, ID> {
         this.clazz = clazz;
     }
 
+
     public List<T> getAll() {
-        return List.of();
+        String jpql = "SELECT t FROM " + clazz.getSimpleName() + " t";
+        return em.createQuery(jpql, clazz).getResultList();
     }
 
     public boolean create(T t) {
@@ -141,8 +144,4 @@ public abstract class GenericDAO<T, ID> {
 
         return search(config.getEntityClass(), criteria);
     }
-
-
-
-
 }
