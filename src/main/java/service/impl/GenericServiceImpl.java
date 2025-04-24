@@ -1,11 +1,13 @@
 package service.impl;
 
 import dao.GenericDAO;
+import org.springframework.web.bind.annotation.RequestParam;
 import service.GenericService;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Map;
 
 public abstract class GenericServiceImpl<T, ID> extends UnicastRemoteObject implements GenericService<T, ID>{
 
@@ -38,5 +40,10 @@ public abstract class GenericServiceImpl<T, ID> extends UnicastRemoteObject impl
     @Override
     public boolean delete(ID id) {
         return genericDAO.delete(id);
+    }
+
+    @Override
+    public List<?> searchByMultipleCriteria(@RequestParam String entityName, @RequestParam String keyword) {
+        return genericDAO.searchByMultipleCriteria(entityName, keyword);
     }
 }

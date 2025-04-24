@@ -1,6 +1,5 @@
 package dao;
 
-import dao.EntitySearchConfig;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -142,8 +141,4 @@ public abstract class GenericDAO<T, ID> {
 
         return search(config.getEntityClass(), criteria);
     }
-
-
-
-
 }
