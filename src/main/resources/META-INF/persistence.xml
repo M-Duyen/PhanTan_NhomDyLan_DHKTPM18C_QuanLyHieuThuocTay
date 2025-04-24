@@ -3,8 +3,6 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
              version="3.2">
-    <jakarta:persistence-unit name="default">
-    </jakarta:persistence-unit>
     <persistence-unit name="mariadb">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>model.Account</class>
@@ -31,7 +29,7 @@
                       value="jdbc:mariadb://localhost:3306/pharmacy_management" />
             <property name="jakarta.persistence.jdbc.user" value="root" />
             <property name="jakarta.persistence.jdbc.password"
-                      value="sapassword" />
+                      value="123456789" />
             <property name="jakarta.persistence.jdbc.dialect"
                       value="org.hibernate.dialect.MariaDBDialect" />
             <property name="hibernate.show_sql" value="true" />

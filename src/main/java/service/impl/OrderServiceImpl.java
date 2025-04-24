@@ -60,8 +60,13 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public ArrayList<Order> filterOrderByEmpID(String empID) {
-        return orderDAO.filterOrderByEmpID(empID);
+    public List<Order> filterOrderByEmpID(String empID, String date) {
+        return orderDAO.filterOrderByEmpID(empID, date);
+    }
+
+    @Override
+    public List<LocalDate> getAllDateHaveEmpID(String empID) throws RemoteException {
+        return orderDAO.getAllDateHaveEmpID(empID);
     }
 
     @Override

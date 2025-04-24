@@ -32,4 +32,9 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
             return false;
         }
     }
+
+    public static void main(String[] args) {
+        ProductDAO dao = new ProductDAO(Product.class);
+        dao.getAll().forEach(System.out::println);
+    }
 }
