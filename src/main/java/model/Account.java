@@ -14,7 +14,7 @@ import java.util.List;
 public class Account {
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "account_id", nullable = false)
+    @Column(name = "account_id", nullable = false, columnDefinition = "char(6)")
     private String accountID;
     private String password;
 
