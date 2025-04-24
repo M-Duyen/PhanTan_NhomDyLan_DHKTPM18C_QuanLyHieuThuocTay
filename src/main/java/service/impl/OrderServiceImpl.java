@@ -1,7 +1,7 @@
 package service.impl;
 
 import dao.*;
-import entity.*;
+import model.*;
 import ui.model.ModelDataRS;
 import service.OrderService;
 

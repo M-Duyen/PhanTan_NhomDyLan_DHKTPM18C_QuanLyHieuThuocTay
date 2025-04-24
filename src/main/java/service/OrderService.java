@@ -1,7 +1,7 @@
 package service;
 
-import entity.Order;
-import entity.OrderDetail;
+import model.Order;
+import model.OrderDetail;
 import ui.model.ModelDataRS;
 
 import java.time.LocalDate;

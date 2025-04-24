@@ -7,23 +7,23 @@
     </jakarta:persistence-unit>
     <persistence-unit name="mariadb">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>entity.Account</class>
-        <class>entity.AdministrationRoute</class>
-        <class>entity.Category</class>
-        <class>entity.Customer</class>
-        <class>entity.Employee</class>
-        <class>entity.FunctionalFood</class>
-        <class>entity.Manager</class>
-        <class>entity.MedicalSupply</class>
-        <class>entity.Medicine</class>
-        <class>entity.Order</class>
-        <class>entity.OrderDetail</class>
-        <class>entity.Product</class>
-        <class>entity.ProductUnit</class>
-        <class>entity.Promotion</class>
-        <class>entity.PromotionType</class>
-        <class>entity.Prescription</class>
-        <class>entity.Vendor</class>
+        <class>model.Account</class>
+        <class>model.AdministrationRoute</class>
+        <class>model.Category</class>
+        <class>model.Customer</class>
+        <class>model.Employee</class>
+        <class>model.FunctionalFood</class>
+        <class>model.Manager</class>
+        <class>model.MedicalSupply</class>
+        <class>model.Medicine</class>
+        <class>model.Order</class>
+        <class>model.OrderDetail</class>
+        <class>model.Product</class>
+        <class>model.ProductUnit</class>
+        <class>model.Promotion</class>
+        <class>model.PromotionType</class>
+        <class>model.Prescription</class>
+        <class>model.Vendor</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
                       value="org.mariadb.jdbc.Driver" />

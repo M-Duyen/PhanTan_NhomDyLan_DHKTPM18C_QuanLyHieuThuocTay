@@ -1,7 +1,7 @@
 package service.impl;
 
 import dao.OrderDetailDAO;
-import entity.OrderDetail;
+import model.OrderDetail;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;

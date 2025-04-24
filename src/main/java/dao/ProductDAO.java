@@ -1,6 +1,6 @@
 package dao;
 
-import entity.*;
+import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
 
