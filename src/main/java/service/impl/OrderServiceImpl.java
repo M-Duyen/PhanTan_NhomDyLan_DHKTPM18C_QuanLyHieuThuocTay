@@ -2,7 +2,7 @@ package service.impl;
 
 import dao.*;
 import entity.*;
-import model.ModelDataRS;
+import ui.model.ModelDataRS;
 import service.OrderService;
 
 import java.rmi.RemoteException;
