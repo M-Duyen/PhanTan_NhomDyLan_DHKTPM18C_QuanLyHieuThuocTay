@@ -6,6 +6,7 @@ import net.datafaker.Faker;
 import service.CustomerService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
         customer.setCustomerID("CM" + faker.number().digits(3));
         return customer;
     }
+
     /**
      * Kiểm tra tồn tại của số điện thoại
      *
@@ -63,6 +65,18 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
         return prefix + date + String.format("%03d", nextCustomerID);
     }
 
+    /**
+     * Lọc khách hàng theo số điện thoại
+     *
+     * @param phone
+     * @return
+     */
+    @Override
+    public Customer getCustomerByPhone(String phone) {
+        String query = "SELECT c FROM Customer c WHERE c.phoneNumber = :phone";
+        return em.createQuery(query, Customer.class).getSingleResult();
+    }
+
 
     /**
      * Lấy điểm tích lũy của khách hàng
@@ -80,21 +94,21 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
     }
 
 
-/**
+    /**
      * Giảm điểm tích lũy khi đổi điểm (có transaction)
      *
      * @param phone
      * @param point
      * @return
      */
-@Override
-public boolean updateCustPoint_Decrease(String phone, double point) {
-    String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
-    return em.createQuery(jpql)
-            .setParameter("point", point)
-            .setParameter("phone", phone)
-            .executeUpdate() > 0;
-}
+    @Override
+    public boolean updateCustPoint_Decrease(String phone, double point) {
+        String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
+        return em.createQuery(jpql)
+                .setParameter("point", point)
+                .setParameter("phone", phone)
+                .executeUpdate() > 0;
+    }
 
 
     /**
@@ -114,7 +128,7 @@ public boolean updateCustPoint_Decrease(String phone, double point) {
     }
 
     /**
-     * lưu danh sách customer vào map
+     * Lưu danh sách customer vào map
      *
      * @return
      */

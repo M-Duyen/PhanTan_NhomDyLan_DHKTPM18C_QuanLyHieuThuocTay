@@ -1,0 +1,16 @@
+package service.impl;
+
+import dao.AdministrationRouteDAO;
+import model.AdministrationRoute;
+import service.AdministrationRouteService;
+
+import java.rmi.RemoteException;
+
+public class AdministrationRouteImpl extends GenericServiceImpl<AdministrationRoute, String> implements AdministrationRouteService {
+    private AdministrationRouteDAO administrationRouteDAO;
+
+    public AdministrationRouteImpl(AdministrationRouteDAO administrationRouteDAO) throws RemoteException {
+        super(administrationRouteDAO);
+        this.administrationRouteDAO = administrationRouteDAO;
+    }
+}

@@ -93,27 +93,4 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         return newMaNCC;
     }
 
-
-    public static void main(String[] args) {
-
-        VendorDAO vendor_dao = new VendorDAO(Vendor.class);
-//        vendor_dao.getAll().forEach(System.out::println);
-
-        Vendor vendor = new Vendor();
-        String newID = vendor_dao.createVendorID("Canada");
-        vendor.setVendorID(newID);
-        vendor.setVendorName("Hồ Quang Nhân");
-        vendor.setCountry("Canada");
-        vendor_dao.create(vendor);
-
-//        System.out.println(vendor_dao.findById(newID));
-//        vendor.setCountry("USA");
-//        vendor_dao.update(vendor);
-
-//        vendor_dao.delete("V-123");
-        vendor_dao.getAll().forEach(System.out::println);
-
-
-    }
-
 }

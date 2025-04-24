@@ -2,17 +2,18 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import model.AdministrationRoute;
+
+import java.util.ArrayList;
 
 
-public class AdministrationRouteDAO {
-    private EntityManager em;
+public class AdministrationRouteDAO extends GenericDAO<AdministrationRoute, String> implements service.AdministrationRouteService {
 
-    public AdministrationRouteDAO() {
-        em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+    public AdministrationRouteDAO(Class<AdministrationRoute> clazz) {
+        super(clazz);
     }
 
-
-
-
-
+    public AdministrationRouteDAO(EntityManager em, Class<AdministrationRoute> clazz) {
+        super(em, clazz);
+    }
 }
