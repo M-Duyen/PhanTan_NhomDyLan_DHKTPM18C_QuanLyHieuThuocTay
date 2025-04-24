@@ -35,19 +35,19 @@ public class RMISever {
         //Tạo Java Remote Object
         CustomerService customerService = new CustomerServiceImpl(customerDAO);
         AccountService accountService = new AccountServiceImpl(accountDAO);
-        AdministrationRouteService administrationRouteService = new AdministrationRouteImpl(administrationrouteDAO);
-        CategoryService categoryService = new CategoryImpl(categoryDAO);
+        AdministrationRouteService administrationRouteService = new AdministrationRouteServiceImpl(administrationrouteDAO);
+        CategoryService categoryService = new CategoryServiceImpl(categoryDAO);
         EmployeeService employeeService = new EmployeeServiceImpl(employeeDAO);
-        FunctionalFoodService functionalFoodService = new FunctionalFoodImpl(foodDAO);
-        ManagerService managerService = new ManagerImpl(managerDAO);
-        MedicalSuppliesService medicalSuppliesService = new MedicalSupplyImpl(medicalSuppliesDAO);
-        MedicineService medicineService = new MedicineImpl(medicineDAO);
+        FunctionalFoodService functionalFoodService = new FunctionalFoodServiceImpl(foodDAO);
+        ManagerService managerService = new ManagerServiceImpl(managerDAO);
+        MedicalSuppliesService medicalSuppliesService = new MedicalSupplyServiceImpl(medicalSuppliesDAO);
+        MedicineService medicineService = new MedicineServiceImpl(medicineDAO);
         OrderService orderService = new OrderServiceImpl(orderDAO);
         OrderDetailService orderDetailService = new OrderDetailServiceImpl(orderDetailDAO);
         PrescriptionService prescriptionService = new PrescriptionServiceImpl(prescriptionDAO);
         ProductService productService = new ProductServiceImpl(productDAO);
-        PromotionService promotionService = new PromotionImpl(promotionDAO);
-        PromotionTypeService promotionTypeService = new PromotionTypeImpl(promotionTypeDAO);
+        PromotionService promotionService = new PromotionServiceImpl(promotionDAO);
+        PromotionTypeService promotionTypeService = new PromotionTypeServiceImpl(promotionTypeDAO);
         VendorService vendorService = new VendorServiceImpl(vendorDAO);
 
         //bind

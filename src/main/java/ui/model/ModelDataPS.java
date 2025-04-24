@@ -1,97 +1,32 @@
 package ui.model;
 
+import lombok.Data;
+import lombok.ToString;
+import model.PackagingUnit;
+
+@Data
+@ToString
 public class ModelDataPS {
+    String productID;
     String productName;
-    String unitDes;
+    PackagingUnit packagingUnit;
     int sold;
     int inStock;
-    double purchasePrice;
-    double sellPrice;
-    double profit;
+    double totalPriceSold;
 
-    public ModelDataPS(String productName, String unitDes, int sold, int inStock, double purchasePrice, double sellPrice) {
+    public ModelDataPS(String productID, String productName, int sold, PackagingUnit packagingUnit) {
+        this.productID = productID;
         this.productName = productName;
-        this.unitDes = unitDes;
+        this.sold = sold;
+        this.packagingUnit = packagingUnit;
+    }
+
+    public ModelDataPS(String productID, String productName, PackagingUnit packagingUnit, int sold, int inStock, double totalPriceSold) {
+        this.productID = productID;
+        this.productName = productName;
+        this.packagingUnit = packagingUnit;
         this.sold = sold;
         this.inStock = inStock;
-        this.purchasePrice = purchasePrice;
-        this.sellPrice = sellPrice;
-        this.profit = profit;
-    }
-
-    public ModelDataPS(String productName, String unitDes, int sold, int inStock) {
-        this.productName = productName;
-        this.unitDes = unitDes;
-        this.sold = sold;
-        this.inStock = inStock;
-    }
-
-    public String getUnitDes() {
-        return unitDes;
-    }
-
-    public void setUnitDes(String unitDes) {
-        this.unitDes = unitDes;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public int getInStock() {
-        return inStock;
-    }
-
-    public void setInStock(int inStock) {
-        this.inStock = inStock;
-    }
-
-    public int getSold() {
-        return sold;
-    }
-
-    public void setSold(int sold) {
-        this.sold = sold;
-    }
-
-    public double getPurchasePrice() {
-        return purchasePrice;
-    }
-
-    public void setPurchasePrice(double purchasePrice) {
-        this.purchasePrice = purchasePrice;
-    }
-
-    public double getSellPrice() {
-        return sellPrice;
-    }
-
-    public void setSellPrice(double sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
-    public double getProfit() {
-        return profit;
-    }
-
-    public void setProfit(double profit) {
-        this.profit = profit;
-    }
-
-    @Override
-    public String toString() {
-        return "ModelDataPS{" +
-                "productName='" + productName + '\'' +
-                ", unitDes='" + unitDes + '\'' +
-                ", sold=" + sold +
-                ", inStock=" + inStock +
-                ", purchasePrice=" + purchasePrice +
-                ", sellPrice=" + sellPrice +
-                ", profit=" + profit +
-                '}';
+        this.totalPriceSold = totalPriceSold;
     }
 }
