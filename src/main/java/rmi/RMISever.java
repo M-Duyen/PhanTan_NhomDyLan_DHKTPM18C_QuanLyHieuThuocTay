@@ -1,0 +1,73 @@
+package rmi;
+
+import dao.*;
+import model.*;
+import service.*;
+import service.impl.*;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.rmi.registry.LocateRegistry;
+
+public class RMISever {
+    public static void main(String[] args) throws Exception{
+        Context context = new InitialContext();
+        LocateRegistry.createRegistry(7281);
+        //Tạo Java Object
+        CustomerDAO customerDAO = new CustomerDAO(Customer.class);
+        AccountDAO accountDAO = new AccountDAO(Account.class);
+        AdministrationRouteDAO administrationrouteDAO = new AdministrationRouteDAO(AdministrationRoute.class);
+        CategoryDAO categoryDAO = new CategoryDAO(Category.class);
+        EmployeeDAO employeeDAO = new EmployeeDAO(Employee.class);
+        FunctionalFoodDAO foodDAO = new FunctionalFoodDAO(FunctionalFood.class);
+        ManagerDAO managerDAO = new ManagerDAO(Manager.class);
+        MedicalSuppliesDAO medicalSuppliesDAO = new MedicalSuppliesDAO(MedicalSupply.class);
+        MedicineDAO medicineDAO = new MedicineDAO(Medicine.class);
+        OrderDAO orderDAO = new OrderDAO(Order.class);
+        OrderDetailDAO orderDetailDAO = new OrderDetailDAO(OrderDetail.class);
+        PrescriptionDAO prescriptionDAO = new PrescriptionDAO(Prescription.class);
+        ProductDAO productDAO = new ProductDAO(Product.class);
+        PromotionDAO promotionDAO = new PromotionDAO(Promotion.class);
+        PromotionTypeDAO promotionTypeDAO = new PromotionTypeDAO(PromotionType.class);
+        VendorDAO vendorDAO = new VendorDAO(Vendor.class);
+
+
+        //Tạo Java Remote Object
+        CustomerService customerService = new CustomerServiceImpl(customerDAO);
+        AccountService accountService = new AccountServiceImpl(accountDAO);
+        AdministrationRouteService administrationRouteService = new AdministrationRouteImpl(administrationrouteDAO);
+        CategoryService categoryService = new CategoryImpl(categoryDAO);
+        EmployeeService employeeService = new EmployeeServiceImpl(employeeDAO);
+        FunctionalFoodService functionalFoodService = new FunctionalFoodImpl(foodDAO);
+        ManagerService managerService = new ManagerImpl(managerDAO);
+        MedicalSuppliesService medicalSuppliesService = new MedicalSupplyImpl(medicalSuppliesDAO);
+        MedicineService medicineService = new MedicineImpl(medicineDAO);
+        OrderService orderService = new OrderServiceImpl(orderDAO);
+        OrderDetailService orderDetailService = new OrderDetailServiceImpl(orderDetailDAO);
+        PrescriptionService prescriptionService = new PrescriptionServiceImpl(prescriptionDAO);
+        ProductService productService = new ProductServiceImpl(productDAO);
+        PromotionService promotionService = new PromotionImpl(promotionDAO);
+        PromotionTypeService promotionTypeService = new PromotionTypeImpl(promotionTypeDAO);
+        VendorService vendorService = new VendorServiceImpl(vendorDAO);
+
+        //bind
+        context.bind("rmi://localhost:7281/customerService", customerService);
+        context.bind("rmi://localhost:7281/accountService", accountService);
+        context.bind("rmi://localhost:7281/administrationRouteService", administrationRouteService);
+        context.bind("rmi://localhost:7281/categoryService", categoryService);
+        context.bind("rmi://localhost:7281/employeeService", employeeService);
+        context.bind("rmi://localhost:7281/functionalFoodService", functionalFoodService);
+        context.bind("rmi://localhost:7281/managerService", managerService);
+        context.bind("rmi://localhost:7281/medicalSuppliesService", medicalSuppliesService);
+        context.bind("rmi://localhost:7281/medicineService", medicineService);
+        context.bind("rmi://localhost:7281/orderService", orderService);
+        context.bind("rmi://localhost:7281/orderDetailService", orderDetailService);
+        context.bind("rmi://localhost:7281/prescriptionService", prescriptionService);
+        context.bind("rmi://localhost:7281/productService", productService);
+        context.bind("rmi://localhost:7281/promotionService", promotionService);
+        context.bind("rmi://localhost:7281/promotionTypeService", promotionTypeService);
+        context.bind("rmi://localhost:7281/vendorService", vendorService);
+
+        System.out.println("Server Started!");
+    }
+}
