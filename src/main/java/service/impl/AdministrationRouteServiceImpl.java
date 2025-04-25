@@ -6,10 +6,10 @@ import service.AdministrationRouteService;
 
 import java.rmi.RemoteException;
 
-public class AdministrationRouteImpl extends GenericServiceImpl<AdministrationRoute, String> implements AdministrationRouteService {
+public class AdministrationRouteServiceImpl extends GenericServiceImpl<AdministrationRoute, String> implements AdministrationRouteService {
     private AdministrationRouteDAO administrationRouteDAO;
 
-    public AdministrationRouteImpl(AdministrationRouteDAO administrationRouteDAO) throws RemoteException {
+    public AdministrationRouteServiceImpl(AdministrationRouteDAO administrationRouteDAO) throws RemoteException {
         super(administrationRouteDAO);
         this.administrationRouteDAO = administrationRouteDAO;
     }

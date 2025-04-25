@@ -2,18 +2,23 @@ package dao;
 
 import model.OrderDetail;
 import jakarta.persistence.EntityManager;
+import model.PackagingUnit;
+import model.Product;
+import model.ProductUnit;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
-   private EntityManager em;
-
     public OrderDetailDAO(Class<OrderDetail> clazz) {
         super(clazz);
     }
@@ -22,34 +27,74 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         super(em, clazz);
     }
 
-    @Override
-    public ArrayList<OrderDetail> getOrderDetailList(String orderID) {
-        String query = "SELECT od " +
-                "FROM OrderDetail od INNER JOIN Order o ON o.orderID = od.order.orderID " +
-                "WHERE o.orderID=:orderID";
-        List<OrderDetail> list = em.createQuery(query, OrderDetail.class)
-                .setParameter("orderID", orderID)
-                .getResultList();
-        return new ArrayList<>(list);
-    }
-
-    @Override
-    public ArrayList<OrderDetail> getOrderDetailListByScri(String orderID) {
-        return null;
-    }
-
+    /**
+     * Thêm đơn hoàn trả
+     *
+     * @param orderID
+     * @param productID
+     * @param orderQuantity
+     * @param gia
+     * @param unitID
+     * @return
+     */
     @Override
     public boolean addOrderReturnDetails(String orderID, String productID, int orderQuantity, double gia, String unitID) {
         return false;
     }
 
+    /**
+     * Thống kê sản phẩm bán chạy biểu đồ cột
+     *
+     * @param start
+     * @param end
+     * @return
+     */
     @Override
     public ArrayList<ModelDataPS> getProductStatistical(String start, String end) {
-        return null;
+        LocalDateTime startDateTime = LocalDate.parse(start).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.parse(end).atTime(23, 59, 59);
+
+        String query = "SELECT od.product.productID, od.unit, od.product.productName, SUM(od.orderQuantity) " +
+                "FROM OrderDetail od " +
+                "WHERE od.order.orderDate >= :startDateTime AND od.order.orderDate <= :endDateTime " +
+                "GROUP BY od.product.productID, od.unit, od.product.productName";
+
+        List<Object[]> resultSold = em.createQuery(query, Object[].class)
+                .setParameter("startDateTime", startDateTime)
+                .setParameter("endDateTime", endDateTime)
+                .getResultList();
+
+        ArrayList<ModelDataPS> modelDataPSList = new ArrayList<>();
+        for (Object[] row : resultSold) {
+            String productID = (String) row[0];
+            PackagingUnit unit = (PackagingUnit) row[1];
+            String productName = (String) row[2];
+            int totalSold = ((Number) row[3]).intValue();
+
+            ModelDataPS data = new ModelDataPS(productID, productName, totalSold, unit);
+
+            Product product = em.find(Product.class, productID);
+            if (product != null && product.getUnitDetails().containsKey(unit)) {
+                ProductUnit productUnit = product.getUnitDetails().get(unit);
+                data.setInStock(productUnit.getInStock());
+                data.setTotalPriceSold(totalSold * productUnit.getSellPrice());
+            }
+
+            modelDataPSList.add(data);
+        }
+        return modelDataPSList;
     }
 
+    /**
+     * Thống kê sản phẩm bán chạy theo ngày, theo loại sản phẩm
+     *
+     * TODO: Fix
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
-    public ArrayList<ModelDataPS_Circle> getProductStatics_ByType(String startDate, String endDate) {
+    public ArrayList<ModelDataPS_Circle> getProductStaticsByType(String startDate, String endDate) {
         LocalDateTime startDateTime = LocalDateTime.parse(startDate + "T00:00:00");
         LocalDateTime endDateTime = LocalDateTime.parse(endDate + "T23:59:59");
 
@@ -74,8 +119,16 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         return modelList;
     }
 
+    /**
+     * Thống kê sản phẩm bán chạy theo ngày, theo danh mục (nhóm thuốc)
+     *  TODO: Fix
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
-    public ArrayList<ModelDataPS_Circle> getProductStatics_ByCategory(String startDate, String endDate) {
+    public ArrayList<ModelDataPS_Circle> getProductStaticsByCategory(String startDate, String endDate) {
         LocalDateTime startDateTime = LocalDateTime.parse(startDate + "T00:00:00");
         LocalDateTime endDateTime = LocalDateTime.parse(endDate + "T23:59:59");
 
@@ -103,8 +156,19 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         return modelList;
     }
 
+    /**
+     * Lọc giá sản phẩm theo hóa đơn
+     *
+     * @param orderID
+     * @return Danh sách giá sản phẩm theo hóa đơn
+     */
     @Override
     public Map<String, Double> getUnitPricesByOrderID(String orderID) {
         return Map.of();
+    }
+
+    public static void main(String[] args) {
+        OrderDetailDAO dao = new OrderDetailDAO(OrderDetail.class);
+        System.out.println(dao.getProductStatistical("2025-01-15", "2025-01-16"));
     }
 }

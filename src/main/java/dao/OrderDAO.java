@@ -41,20 +41,6 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
     }
 
     /**
-     * Lọc hóa đơn theo mã hóa đơn
-     *
-     * @param orderID
-     * @return
-     */
-    @Override
-    public Order getOrderByOrderId(String orderID) {
-        String query = "SELECT o FROM Order o WHERE o.orderID = :orderID";
-        return em.createQuery(query, Order.class)
-                .setParameter("orderID", orderID)
-                .getSingleResult();
-    }
-
-    /**
      * Tạo mã tự động cho hóa đơn
      *
      * @return
@@ -77,18 +63,6 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         }
         int newId = currentId + 1;
         return prefix + String.format("%03d", newId);
-    }
-
-    /**
-     * Tìm kiếm hóa đơn theo tiêu chí bất kì
-     * định dạng ngày khi nhập (yyyy-MM-dd)
-     *
-     * @param criterious
-     * @return
-     */
-    @Override
-    public ArrayList<Order> getOrderByCriterious(String criterious) {
-        return null;
     }
 
     /**

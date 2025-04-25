@@ -1,6 +1,5 @@
 package service.impl;
 
-import dao.GenericDAO;
 import dao.PromotionDAO;
 import model.Promotion;
 import service.PromotionService;
@@ -8,10 +7,10 @@ import service.PromotionService;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class PromotionImpl extends GenericServiceImpl<Promotion, String> implements PromotionService {
+public class PromotionServiceImpl extends GenericServiceImpl<Promotion, String> implements PromotionService {
     private PromotionDAO promotionDAO;
 
-    public PromotionImpl(PromotionDAO promotionDAO) throws RemoteException {
+    public PromotionServiceImpl(PromotionDAO promotionDAO) throws RemoteException {
         super(promotionDAO);
         this.promotionDAO = promotionDAO;
     }

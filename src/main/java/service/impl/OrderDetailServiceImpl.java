@@ -20,16 +20,6 @@ public class OrderDetailServiceImpl extends GenericServiceImpl<OrderDetail, Stri
     }
 
     @Override
-    public ArrayList<OrderDetail> getOrderDetailList(String orderID) {
-        return orderDetailDAO.getOrderDetailList(orderID);
-    }
-
-    @Override
-    public ArrayList<OrderDetail> getOrderDetailListByScri(String orderID) {
-        return orderDetailDAO.getOrderDetailListByScri(orderID);
-    }
-
-    @Override
     public boolean addOrderReturnDetails(String orderID, String productID, int orderQuantity, double gia, String unitID) {
         return orderDetailDAO.addOrderReturnDetails(orderID, productID, orderQuantity, gia, unitID);
     }
@@ -40,13 +30,13 @@ public class OrderDetailServiceImpl extends GenericServiceImpl<OrderDetail, Stri
     }
 
     @Override
-    public ArrayList<ModelDataPS_Circle> getProductStatics_ByType(String startDate, String endDate) {
-        return orderDetailDAO.getProductStatics_ByType(startDate, endDate);
+    public ArrayList<ModelDataPS_Circle> getProductStaticsByType(String startDate, String endDate) {
+        return orderDetailDAO.getProductStaticsByType(startDate, endDate);
     }
 
     @Override
-    public ArrayList<ModelDataPS_Circle> getProductStatics_ByCategory(String startDate, String endDate) {
-        return orderDetailDAO.getProductStatics_ByCategory(startDate, endDate);
+    public ArrayList<ModelDataPS_Circle> getProductStaticsByCategory(String startDate, String endDate) {
+        return orderDetailDAO.getProductStaticsByCategory(startDate, endDate);
     }
 
     @Override
