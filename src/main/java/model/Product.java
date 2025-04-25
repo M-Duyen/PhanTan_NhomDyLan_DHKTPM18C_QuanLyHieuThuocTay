@@ -1,8 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,30 +11,44 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
+@ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product implements Serializable {
     @Id
     @EqualsAndHashCode.Include
+    @ToString.Include
     @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
     private String productID;
 
+    @ToString.Include
     @Column(name = "product_name", columnDefinition = "nvarchar(50)")
     private String productName;
 
+    @ToString.Include
     @Column(name = "registration_number", columnDefinition = "varchar(16)")
     private String registrationNumber;
 
+    @ToString.Include
     @Column(name = "purchase_price")
     private double purchasePrice;
 
+    @ToString.Include
     @Column(name = "tax_percentage", columnDefinition = "float")
     private double taxPercentage;
 
+    @ToString.Include
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
+
+    @Column(name = "quantity_in_stock", columnDefinition = "int")
+    private Integer quantityInStock;
+
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
+
 
     @ManyToOne
     @JoinColumn(name = "vendor_id")
@@ -45,6 +58,7 @@ public class Product implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ToString.Include
     @Column(name ="unit_note", columnDefinition = "varchar(60)")
     private String unitNote;
 
@@ -54,23 +68,6 @@ public class Product implements Serializable {
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
-
-    public Product() {
-
-    }
-
-    public Product(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, LocalDate endDate, Vendor vendor, Category category, String noteUnit) {
-        this.productID = id;
-        this.productName = productName;
-        this.registrationNumber = registrationNumber;
-        this.purchasePrice = purchasePrice;
-        this.taxPercentage = taxPercentage;
-        this.endDate = endDate;
-        this.vendor = vendor;
-        this.category = category;
-        this.unitNote = noteUnit;
-        this.unitDetails = new HashMap<>();
-    }
 
 
     public double getSellPrice(PackagingUnit unit) {
@@ -88,10 +85,10 @@ public class Product implements Serializable {
     public boolean isFunctionalFood() {
         return productID.substring(0, 2).equals("PF");
     }
-
     public void addUnit(PackagingUnit unit, ProductUnit productUnit){
         unitDetails.put(unit, productUnit);
     }
+
 }
 
 
@@ -116,7 +113,7 @@ public class Product implements Serializable {
 //        return result;
 //    }
 //
-//    public double setSellPrice(PackagingUnit unit){
+//    public double setSellPrice(Enum_PackagingUnit unit){
 //        double price = unitPrice.get(unit);
 //        double sellPrice = 0;
 //

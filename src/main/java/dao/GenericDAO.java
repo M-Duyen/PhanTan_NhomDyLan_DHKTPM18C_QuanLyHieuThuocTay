@@ -125,6 +125,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         entitySearchConfigMap.put("product", new EntitySearchConfig(Product.class, Arrays.asList("productID", "productName", "registrationNumber")));
         entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "country", "vendorName")));
         entitySearchConfigMap.put("administration", new EntitySearchConfig(Product.class, List.of("administrationRouteName")));
+        entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "vendorName", "country")));
         entitySearchConfigMap.put("category", new EntitySearchConfig(Product.class, List.of("categoryName")));
         entitySearchConfigMap.put("customer", new EntitySearchConfig(Product.class, List.of("customerID", "customerName", "phoneNumber", "email", "address")));
         entitySearchConfigMap.put("employee", new EntitySearchConfig(Product.class, List.of("employeeID", "employeeName", "phoneNumber", "email", "address", "status", "degree")));

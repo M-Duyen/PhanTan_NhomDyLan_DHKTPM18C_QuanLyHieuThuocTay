@@ -8,10 +8,11 @@ import java.util.List;
 
 @Data
 @Entity
-@AllArgsConstructor
 @Table(name = "categories")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = "products")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category implements Serializable {
     @Id
     @Column(name = "category_id", nullable = false)
