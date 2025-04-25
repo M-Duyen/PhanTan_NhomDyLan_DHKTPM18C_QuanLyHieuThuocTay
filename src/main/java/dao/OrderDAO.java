@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.persistence.EntityTransaction;
 import model.*;
 import jakarta.persistence.EntityManager;
 import ui.model.ModelDataRS;
@@ -34,7 +35,17 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
 
     @Override
     public boolean insertOrderDetail(List<OrderDetail> list) {
-        return false;
+        EntityTransaction tr = em.getTransaction();
+        try {
+            tr.begin();
+            list.forEach(detail -> em.persist(detail));
+            tr.commit();
+            return true;
+        } catch (Exception e) {
+            tr.rollback();
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -82,7 +93,11 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return 0;
+        String query = "SELECT o FROM Order o WHERE o.orderDate BETWEEN :startDate AND :endDate";
+        return em.createQuery(query, Double.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getSingleResult().doubleValue();
     }
 
     /**
@@ -94,7 +109,11 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return null;
+        String query = "SELECT o FROM Order o WHERE o.orderDate BETWEEN :startDate AND :endDate";
+        return (ArrayList<Order>) em.createQuery(query, Order.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
     }
 
     /**
@@ -105,19 +124,15 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public List<Order> filterOrderByEmpID(String empID, String date) {
-        // Parse the date string into a LocalDate
         LocalDate localDate = LocalDate.parse(date);
 
-        // JPQL query to filter orders based on employee ID and order date
         String jpql = "select o " +
                 "from Order o " +
                 "where o.employee.id = :empID and FUNCTION('DATE', o.orderDate) = :date";
 
-
-
         return em.createQuery(jpql, Order.class)
                 .setParameter("empID", empID)
-                .setParameter("date", java.sql.Date.valueOf(localDate)) // Convert LocalDate to java.sql.Date
+                .setParameter("date", java.sql.Date.valueOf(localDate))
                 .getResultList();
     }
 

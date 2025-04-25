@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
+public class    ProductDAO extends GenericDAO<Product, String> implements ProductService {
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
