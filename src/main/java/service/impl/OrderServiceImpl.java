@@ -60,8 +60,8 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public double calculateTotalAllOrder(String empID) {
-        return orderDAO.calculateTotalAllOrder(empID);
+    public double calculateTotalAllOrder(String empID, String date) {
+        return orderDAO.calculateTotalAllOrder(empID, date);
     }
 
     @Override

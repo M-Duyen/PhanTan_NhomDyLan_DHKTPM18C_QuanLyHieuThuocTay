@@ -1,11 +1,13 @@
 package dao;
 
+import com.google.gson.stream.JsonToken;
 import model.*;
 import jakarta.persistence.EntityManager;
 import ui.model.ModelDataRS;
 import service.OrderService;
 import utils.JPAUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -133,12 +135,18 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public double calculateTotalAllOrder(String empID) {
-//        String jpql = "select o.employee.id, sum(o.) " +
-//                "from  Order o";
-//
-//        return em.createQuery(jpql);
-        return 0;
+    public double calculateTotalAllOrder(String empID, String date) {
+        double total = filterOrderByEmpID(empID, date)
+                .stream()
+                .mapToDouble(Order::getTotalDue)
+                .sum();
+
+        BigDecimal bd = new BigDecimal(total);
+        bd = bd.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+        return bd.doubleValue();
+
+
     }
 
 
@@ -519,7 +527,8 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
 //        System.out.println(orderDAO.getProfit());
 //        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
-        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
+//        orderDAO.filterOrderByEmpID("EP1501", "2025-04-25").forEach(System.out::println);
+        System.out.println(orderDAO.calculateTotalAllOrder("EP1501", "2025-04-25"));
 
     }
 }
