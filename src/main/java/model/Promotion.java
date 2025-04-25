@@ -3,12 +3,13 @@ package model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Data
 @Table(name = "promotions")
-public class Promotion {
+public class Promotion implements Serializable {
     @Id
     @Column(name = "promotion_id", nullable = false)
     private String promotionId;

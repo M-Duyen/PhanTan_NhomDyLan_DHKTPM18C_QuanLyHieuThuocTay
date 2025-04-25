@@ -43,9 +43,4 @@ public class OrderDetailServiceImpl extends GenericServiceImpl<OrderDetail, Stri
     public Map<String, Double> getUnitPricesByOrderID(String orderID) {
         return orderDetailDAO.getUnitPricesByOrderID(orderID);
     }
-
-    @Override
-    public List<?> searchByMultipleCriteria(String entityName, String keyword) {
-        return List.of();
-    }
 }

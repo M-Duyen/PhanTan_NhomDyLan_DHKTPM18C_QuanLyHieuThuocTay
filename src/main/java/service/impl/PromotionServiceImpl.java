@@ -27,7 +27,7 @@ public class PromotionServiceImpl extends GenericServiceImpl<Promotion, String> 
     }
 
     @Override
-    public void updatePromotionStatus() throws RemoteException {
-        promotionDAO.updatePromotionStatus();
+    public boolean updatePromotionStatus() throws RemoteException {
+       return promotionDAO.updatePromotionStatus();
     }
 }
