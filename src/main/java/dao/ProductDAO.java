@@ -287,6 +287,8 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return -1;
     }
 
+
+
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);
         System.out.println(dao.getProductID_NotCategory("PF021024000004"));

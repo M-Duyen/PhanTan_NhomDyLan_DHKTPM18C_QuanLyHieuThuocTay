@@ -22,11 +22,11 @@ public class PrescriptionDAO extends GenericDAO<Prescription, String> {
         return LocalDateTime.parse(date, dateTimeFormatter);
     }
 
-    public static Prescription createSamplePrescription(Faker faker) {
-        Prescription prescription = new Prescription();
-        prescription.setPrescriptionID("PC" + faker.number().digits(3));
-        return prescription;
-    }
+//    public static Prescription createSamplePrescription(Faker faker) {
+//        Prescription prescription = new Prescription();
+//        prescription.setPrescriptionID("PC" + faker.number().digits(3));
+//        return prescription;
+//    }
 
     public static void main(String[] args) {
         //Prescription_DAO prescription_dao = new Prescription_DAO();

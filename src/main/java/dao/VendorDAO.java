@@ -4,18 +4,24 @@ package dao;
 import jakarta.persistence.EntityManager;
 import model.Vendor;
 import service.VendorService;
+import utils.JPAUtil;
 
+import java.rmi.RemoteException;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class VendorDAO extends GenericDAO<Vendor, String> implements VendorService {
+
     public VendorDAO(EntityManager em, Class<Vendor> entityClass) {
         super(em, entityClass);
+
     }
 
     public VendorDAO(Class<Vendor> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     /**
@@ -89,6 +95,20 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         int nextNumber = currentMax + 1;
         newMaNCC = prefix + String.format("%03d", nextNumber);
         return newMaNCC;
+    }
+
+    @Override
+    public ArrayList<Vendor> getVendorListByCriteriasByCountry(String criterious, ArrayList<Vendor> arrayList) throws RemoteException {
+        ArrayList<Vendor> vendorByCriList = new ArrayList<>();
+
+        for (Vendor vendor : arrayList) {
+            if (vendor.getVendorID().toLowerCase().trim().contains(criterious.toLowerCase().trim()) ||
+                    vendor.getVendorName().toLowerCase().trim().contains(criterious.toLowerCase().trim())
+            ){
+                vendorByCriList.add(vendor);
+            }
+        }
+        return vendorByCriList;
     }
 
     public static void main(String[] args) {

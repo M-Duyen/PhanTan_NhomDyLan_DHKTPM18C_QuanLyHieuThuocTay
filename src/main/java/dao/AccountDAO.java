@@ -4,6 +4,7 @@ import model.Account;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import service.AccountService;
+import utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class AccountDAO extends GenericDAO<Account, String> implements AccountService {
     public AccountDAO(Class<Account> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public AccountDAO(EntityManager em, Class<Account> clazz) {

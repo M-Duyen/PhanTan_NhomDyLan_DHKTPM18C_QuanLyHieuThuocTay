@@ -11,8 +11,9 @@ import java.util.List;
 public class AccountServiceImpl extends GenericServiceImpl<Account, String> implements AccountService {
     private AccountDAO accountDAO;
 
-    public AccountServiceImpl(GenericDAO<Account, String> genericDAO) throws RemoteException {
-        super(genericDAO);
+    public AccountServiceImpl(AccountDAO accountDAO) throws RemoteException {
+        super(accountDAO);
+        this.accountDAO = accountDAO;
     }
 
     @Override

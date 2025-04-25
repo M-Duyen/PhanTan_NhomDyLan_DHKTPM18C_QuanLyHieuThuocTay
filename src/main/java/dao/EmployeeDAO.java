@@ -4,14 +4,17 @@ import model.Employee;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 import service.EmployeeService;
+import utils.JPAUtil;
 
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class EmployeeDAO extends GenericDAO<Employee, String> implements EmployeeService {
+
     public EmployeeDAO(Class<Employee> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public EmployeeDAO(EntityManager em, Class<Employee> clazz) {
