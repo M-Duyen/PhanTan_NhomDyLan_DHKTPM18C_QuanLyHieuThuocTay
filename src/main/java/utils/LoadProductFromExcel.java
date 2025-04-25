@@ -154,6 +154,8 @@ public class LoadProductFromExcel {
         LoadProductFromExcel loadProductFromExcel = new LoadProductFromExcel();
         ArrayList<Product> listProduct = loadProductFromExcel.loadDataProduct("data/ListProductTest.xlsx");
         productDAO.createMultiple(listProduct);
-
+//        listProduct.forEach(product -> {
+//            System.out.println(product.getCategory());
+//        });
     }
 }
