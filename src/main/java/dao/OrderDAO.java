@@ -14,16 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
-    private EntityManager em;
 
     public OrderDAO(Class<Order> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
     }
 
     public OrderDAO(EntityManager em, Class<Order> clazz) {
         super(em, clazz);
-        this.em = em;
     }
 
     @Override
