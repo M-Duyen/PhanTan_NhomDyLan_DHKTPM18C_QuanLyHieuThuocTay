@@ -27,6 +27,11 @@ public class PromotionServiceImpl extends GenericServiceImpl<Promotion, String> 
     }
 
     @Override
+    public ArrayList<Promotion> getPromotionListByCriterous(boolean criterious, ArrayList<Promotion> proList) throws RemoteException {
+        return promotionDAO.getPromotionListByCriterous(criterious, proList);
+    }
+
+    @Override
     public boolean updatePromotionStatus() throws RemoteException {
        return promotionDAO.updatePromotionStatus();
     }

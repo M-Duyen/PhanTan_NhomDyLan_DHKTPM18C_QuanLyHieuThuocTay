@@ -1,8 +1,8 @@
 package dao;
 
 
-import model.PromotionType;
 import jakarta.persistence.EntityManager;
+import model.PromotionType;
 import service.PromotionTypeService;
 
 public class PromotionTypeDAO extends GenericDAO<PromotionType, String> implements PromotionTypeService {

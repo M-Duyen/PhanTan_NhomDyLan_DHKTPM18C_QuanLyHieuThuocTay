@@ -6,14 +6,14 @@ import model.Vendor;
 import service.VendorService;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class VendorServiceImpl extends GenericServiceImpl<Vendor, String> implements VendorService {
 
     private VendorDAO vendorDao;
 
-    public VendorServiceImpl(VendorDAO vendorDAO) throws RemoteException {
-        super(vendorDAO);
-        this.vendorDao = vendorDAO;
+    public VendorServiceImpl(GenericDAO<Vendor, String> genericDAO) throws RemoteException {
+        super(genericDAO);
     }
 
 
@@ -30,5 +30,10 @@ public class VendorServiceImpl extends GenericServiceImpl<Vendor, String> implem
     @Override
     public String createVendorID(String country) throws RemoteException {
         return vendorDao.createVendorID(country);
+    }
+
+    @Override
+    public ArrayList<Vendor> getVendorListByCriteriasByCountry(String criterious, ArrayList<Vendor> arrayList) throws RemoteException {
+        return vendorDao.getVendorListByCriteriasByCountry(criterious, arrayList);
     }
 }

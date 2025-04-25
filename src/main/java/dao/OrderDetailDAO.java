@@ -164,7 +164,22 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
      */
     @Override
     public Map<String, Double> getUnitPricesByOrderID(String orderID) {
-        return Map.of();
+        String query = "SELECT od.product.productID, od.unit FROM OrderDetail od WHERE od.order.orderID=:orderID";
+        List<Object[]> result = em.createQuery(query, Object[].class)
+                .setParameter("orderID", orderID)
+                .getResultList();
+        Map<String, Double> unitPrices = new HashMap<>();
+        for (Object[] row : result) {
+            String productID = (String) row[0];
+            PackagingUnit unit = (PackagingUnit) row[1];
+
+            Product product = em.find(Product.class, productID);
+            if (product != null && product.getUnitDetails().containsKey(unit)) {
+                ProductUnit productUnit = product.getUnitDetails().get(unit);
+                unitPrices.put(unit.convertUnit(unit), productUnit.getSellPrice());
+            }
+        }
+        return unitPrices;
     }
 
     public static void main(String[] args) {
