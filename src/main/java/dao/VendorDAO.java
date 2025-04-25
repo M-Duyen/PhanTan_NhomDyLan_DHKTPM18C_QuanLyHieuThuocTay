@@ -5,7 +5,6 @@ import jakarta.persistence.EntityManager;
 import model.Vendor;
 import service.VendorService;
 
-import java.rmi.RemoteException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,10 +92,31 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         return newMaNCC;
     }
 
+    /**
+     * Locj
+     *
+     * @param criterious
+     * @param arrayList
+     * @return
+     */
     @Override
-    public ArrayList<Vendor> getVendorListByCriteriasByCountry(String criterious, ArrayList<Vendor> arrayList) throws RemoteException {
-        return null;
+    public ArrayList<Vendor> getVendorListByCriteriasByCountry(String criterious, ArrayList<Vendor> arrayList) {
+        ArrayList<Vendor> vendorByCriList = new ArrayList<>();
+
+        for (Vendor vendor : arrayList) {
+            if (vendor.getVendorID().toLowerCase().trim().contains(criterious.toLowerCase().trim()) ||
+                    vendor.getVendorName().toLowerCase().trim().contains(criterious.toLowerCase().trim())
+            ){
+                vendorByCriList.add(vendor);
+            }
+        }
+        return vendorByCriList;
     }
 
+    public static void main(String[] args) {
+        VendorDAO vendorDAO = new VendorDAO(Vendor.class);
+        ArrayList<Vendor> vd = (ArrayList<Vendor>) vendorDAO.searchByMultipleCriteria("vendor","Viêt Nam");
+        vendorDAO.getVendorListByCriteriasByCountry("s", vd).forEach(System.out::println);
+    }
 
 }

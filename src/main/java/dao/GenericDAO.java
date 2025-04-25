@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import model.Vendor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.GenericService;
@@ -122,6 +123,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
 
         Map<String, EntitySearchConfig> entitySearchConfigMap = new HashMap<>();
         entitySearchConfigMap.put("product", new EntitySearchConfig(Product.class, Arrays.asList("productID", "productName", "registrationNumber")));
+        entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "country", "vendorName")));
         entitySearchConfigMap.put("administration", new EntitySearchConfig(Product.class, List.of("administrationRouteName")));
         entitySearchConfigMap.put("category", new EntitySearchConfig(Product.class, List.of("categoryName")));
         entitySearchConfigMap.put("customer", new EntitySearchConfig(Product.class, List.of("customerID", "customerName", "phoneNumber", "email", "address")));

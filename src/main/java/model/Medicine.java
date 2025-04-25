@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)
@@ -25,5 +26,9 @@ public class Medicine extends Product implements Serializable {
         this.activeIngredient = activeIngredient;
         this.conversionUnit = conversionUnit;
         this.administrationRoute = administrationRoute;
+    }
+
+    public Medicine() {
+
     }
 }

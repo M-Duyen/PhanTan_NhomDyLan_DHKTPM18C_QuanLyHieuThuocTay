@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
 @Table(name = "categories")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = "products")

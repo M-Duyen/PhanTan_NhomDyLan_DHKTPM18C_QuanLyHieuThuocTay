@@ -3,14 +3,12 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import model.Promotion;
-import jakarta.persistence.EntityManager;
+import service.PromotionService;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionDAO extends GenericDAO<Promotion, String> implements service.PromotionService {
+public class PromotionDAO extends GenericDAO<Promotion, String> implements PromotionService {
     public PromotionDAO(EntityManager em, Class<Promotion> entityClass) {
         super(em, entityClass);
     }
@@ -20,11 +18,10 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
     }
 
     /**
-     * Lọc danh sách promotion theo status
-     *
-     * @return
+     * Cập nhật trạng thái của khuyến mãi
      */
-    public boolean updatePromotionStatus_JPQL() {
+    @Override
+    public boolean updatePromotionStatus() {
         String jpql = "UPDATE Promotion p " +
                 "SET p.stats = 0 " +
                 "WHERE p.endDate < CURRENT_DATE " +
@@ -41,6 +38,25 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
             throw new RuntimeException("Lỗi khi cập nhật trạng thái khuyến mãi", e);
         }
     }
+    /**
+     * Lọc khuyến mãi theo tiêu chí bất kỳ
+     *
+     * @param criterious
+     * @return
+     */
+    @Override
+    public ArrayList<Promotion> getPromotionListByCriterous(boolean criterious, ArrayList<Promotion> proList) {
+
+        ArrayList<Promotion> promotionListByCriterous = new ArrayList<>();
+        ArrayList<Promotion> promotionList = proList;
+        for (Promotion promotion : promotionList) {
+            if (promotion.isStats() == criterious) {
+                promotionListByCriterous.add(promotion);
+            }
+        }
+
+        return promotionListByCriterous;
+    }
 
     /**
      * Lọc danh sách promotion theo status
@@ -52,15 +68,6 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
     public ArrayList<Promotion> getPromotionListByStatus(boolean status) {
         return null;
     }
-
-    /**
-     * Tạo mã khuyến mãi tự động
-     *
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-
 
     /**
      * Tạo mã khuyến mãi tự động
@@ -92,33 +99,5 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
 
         int nextId = currentMax + 1;
         return basePattern + String.format("%02d", nextId);
-    }
-
-    @Override
-    public ArrayList<Promotion> getPromotionListByCriterous(boolean criterious, ArrayList<Promotion> proList) throws RemoteException {
-        return null;
-    }
-
-    /**
-     * Cập nhật trạng thái của khuyến mãi
-     */
-    @Override
-    public boolean updatePromotionStatus() {
-        String jpql = "UPDATE Promotion p " +
-                "SET p.stats = 0 " +
-                "WHERE p.endDate < CURRENT_DATE " +
-                "AND p.stats = true";
-
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-            int updatedCount = em.createQuery(jpql).executeUpdate();
-            transaction.commit();
-            return updatedCount > 0;
-        } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            throw new RuntimeException("Lỗi khi cập nhật trạng thái khuyến mãi", e);
-        }
-
     }
 }
