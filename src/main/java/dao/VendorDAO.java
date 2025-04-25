@@ -5,7 +5,9 @@ import jakarta.persistence.EntityManager;
 import model.Vendor;
 import service.VendorService;
 
+import java.rmi.RemoteException;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -90,5 +92,11 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         newMaNCC = prefix + String.format("%03d", nextNumber);
         return newMaNCC;
     }
+
+    @Override
+    public ArrayList<Vendor> getVendorListByCriteriasByCountry(String criterious, ArrayList<Vendor> arrayList) throws RemoteException {
+        return null;
+    }
+
 
 }

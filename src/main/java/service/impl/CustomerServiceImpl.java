@@ -19,7 +19,7 @@ public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> im
 
     @Override
     public boolean checkPhoneNumber(String phone) throws RemoteException {
-        return false;
+        return customerDAO.checkPhoneNumber(phone);
     }
 
     @Override

@@ -143,46 +143,65 @@ VALUES ('790250000001-c', '2024-02-10', N'Mỡ máu', '79025'),
        ('790250000002-c', '2024-02-10', N'Tiểu đường', '79025'),
        ('790240000001-c', '2024-02-10', N'Hở mạch vành', '79024');
 
-INSERT INTO pharmacy_management.orders (order_id, order_date, ship_to_address, payment_method, customer_id, employee_id, prescription_id)
+INSERT INTO pharmacy_management.orders (order_id, order_date, ship_to_address, payment_method, customer_id, employee_id, prescription_id, discount)
 VALUES ('OR3009241501001', CAST('2024-09-30 10:30:00' AS DATETIME), N'Vười Lài', 'BANK_TRANSFER', '0123456789',
-        'EP1501', '790250000001-c'),
-       ('OR3010240302002', NOW(), N'Vười Lài', 'BANK_TRANSFER', '0123456987', 'EP0302', '790250000002-c'),
-       ('OR3010240903003', NOW(), N'Quận Tân Bình', 'BANK_TRANSFER', '0123456798', 'EP0903', '790240000001-c'),
+        'EP1501', '790250000001-c',0),
+       ('OR3010240302002', NOW(), N'Vười Lài', 'BANK_TRANSFER', '0123456987', 'EP0302', '790250000002-c',0),
+       ('OR3010240903003', NOW(), N'Quận Tân Bình', 'BANK_TRANSFER', '0123456798', 'EP0903', '790240000001-c',0),
        ('OR2010241501004', CAST('2024-09-30 10:30:00' AS DATETIME), N'Quận Bình Tân', 'BANK_TRANSFER', '0123456798',
-        'EP1501', '790250000002-c'),
-       ('OR3010241501005', NOW(), N'Quận 1', 'BANK_TRANSFER', '0123456987', 'EP1501', null),
+        'EP1501', '790250000002-c',0),
+       ('OR3010241501005', NOW(), N'Quận 1', 'BANK_TRANSFER', '0123456987', 'EP1501', null,0),
        ('OR0806241501006', CAST('2024-06-08 10:30:00' AS DATETIME), N'Vười Lài', 'BANK_TRANSFER', '0123456789',
-        'EP1501', null);
+        'EP1501', null,0);
 
 
 -- Thêm dữ liệu Product
 INSERT INTO pharmacy_management.products(product_id, product_name, quantity_in_stock, tax_percentage, promotion_id, vendor_id, category_id,
-                     registration_number, purchase_price, end_date)
-VALUES ('PM021024000001', 'MORIHEPAMIN', 50, 0.05, null, 'VDVN001', 'CA014', '10040.KD.13.1', 190000, '2026-12-12'),
+                     registration_number, purchase_price, end_date, unit_note)
+VALUES ('PM021024000001', 'MORIHEPAMIN', 50, 0.05, null, 'VDVN001', 'CA014', '10040.KD.13.1', 190000, '2026-12-12', ' BOX(293), BLISTER_PACK(10), PILL(6)'),
        ('PM021024000002', 'Optimox Sterile eye Drops', 20, 0.05, null, 'VDVN002', 'CA017', '10045.KD.13.1', 39000,
-        '2025-12-12'),
-       ('PS021024000003', N'Băng gạc', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.2', 2000, '2026-12-01'),
-       ('PF021024000004', N'Beroglobin', 150, 0.1, null, 'VDVN001', 'CA020', '10045.KD.13.3', 333000, '2027-01-01'),
-       ('PS021024000005', N'Kim tiêm', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.4', 2000, '2025-11-20'),
+        '2025-12-12', 'BOX(293), BLISTER_PACK(10), PILL(6)'),
+       ('PS021024000003', N'Băng gạc', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.2', 2000, '2026-12-01', ' BOX(293), BLISTER_PACK(10), PILL(6)'),
+       ('PF021024000004', N'Beroglobin', 150, 0.1, null, 'VDVN001', 'CA020', '10045.KD.13.3', 333000, '2027-01-01', ' BOX(293), BLISTER_PACK(10), PILL(6)'),
+       ('PS021024000005', N'Kim tiêm', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.4', 2000, '2025-11-20', ' BOX(293), BLISTER_PACK(10), PILL(6)'),
        ('PF021024000006', N'Beroglobin New', 10, 0.1, null, 'VDVN001', 'CA020', '10045.KD.13.5', 333000,
-        '2025-09-05');
+        '2025-09-05', 'BOX(293), BLISTER_PACK(10), PILL(6)');
+
+INSERT INTO pharmacy_management.order_details (unit, order_quantity, product_id, order_id)
+VALUES ('PILL', 2, 'PM021024000001', 'OR3009241501001'),
+       ('BOTTLE', 3, 'PM021024000002', 'OR3010240302002'),
+       ('JAR', 5, 'PS021024000003', 'OR3010240903003'),
+       ('PACK', 10, 'PF021024000004', 'OR2010241501004'),
+       ('BLISTER_PACK', 7, 'PF021024000006', 'OR3010241501005');
 
 
 -- Thêm dữ liệu cho bảng Unit
-INSERT INTO pharmacy_management.units (unit_id, unit_name, description)
-VALUES (N'U01', N'PILL', N'Viên'),
-       (N'U02', N'BLISTER_PACK', N'Vỉ'),
-       (N'U03', N'PACK', N'Gói'),
-       (N'U04', N'BOTTLE', N'Chai'),
-       (N'U05', N'JAR', N'Lọ'),
-       (N'U06', N'TUBE', N'Tuýp'),
-       (N'U07', N'BAG', N'Túi'),
-       (N'U08', N'AMPOULE', N'Ống'),
-       (N'U09', N'SPRAY_BOTTLE', N'Chai xịt'),
-       (N'U10', N'AEROSOL_CAN', N'Lọ xịt'),
-       (N'U11', N'KIT', N'Bộ kit'),
-       (N'U12', N'BIN', N'Thùng'),
-       (N'U13', N'BOX', N'Hộp');
+# INSERT INTO pharmacy_management.units (unit_id, unit_name, description)
+# VALUES (N'U01', N'PILL', N'Viên'),
+#        (N'U02', N'BLISTER_PACK', N'Vỉ'),
+#        (N'U03', N'PACK', N'Gói'),
+#        (N'U04', N'BOTTLE', N'Chai'),
+#        (N'U05', N'JAR', N'Lọ'),
+#        (N'U06', N'TUBE', N'Tuýp'),
+#        (N'U07', N'BAG', N'Túi'),
+#        (N'U08', N'AMPOULE', N'Ống'),
+#        (N'U09', N'SPRAY_BOTTLE', N'Chai xịt'),
+#        (N'U10', N'AEROSOL_CAN', N'Lọ xịt'),
+#        (N'U11', N'KIT', N'Bộ kit'),
+#        (N'U12', N'BIN', N'Thùng'),
+#        (N'U13', N'BOX', N'Hộp');
 
 
 # DROP DATABASE pharmacy_management
+# -----------THỦ TỤC CẬP NHẬT NGÀY HẾT HẠN CỦA KHUYẾN MÃI ---------------
+DELIMITER //
+
+CREATE PROCEDURE UpdatePromotionStatus()
+BEGIN
+    UPDATE promotions
+    SET stats = 0
+    WHERE end_date < CURDATE() - INTERVAL 1 DAY
+      AND stats = 1;
+END //
+
+DELIMITER ;

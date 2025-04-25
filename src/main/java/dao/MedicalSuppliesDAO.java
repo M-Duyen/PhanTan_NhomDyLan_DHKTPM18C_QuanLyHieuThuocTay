@@ -9,7 +9,7 @@ import net.datafaker.Faker;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class MedicalSuppliesDAO extends GenericDAO<MedicalSupply, String> implements service.MedicalSuppliesService {
+public class MedicalSuppliesDAO extends GenericDAO<MedicalSupply, String> {
 
     public MedicalSuppliesDAO(Class<MedicalSupply> clazz) {
         super(clazz);

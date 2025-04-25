@@ -1,12 +1,9 @@
 package dao;
 
-import model.Medicine;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
+import model.Medicine;
 
-import java.util.List;
-
-public class MedicineDAO extends GenericDAO<Medicine, String> implements service.MedicineService {
+public class MedicineDAO extends GenericDAO<Medicine, String > {
 
     public MedicineDAO(Class<Medicine> clazz) {
         super(clazz);

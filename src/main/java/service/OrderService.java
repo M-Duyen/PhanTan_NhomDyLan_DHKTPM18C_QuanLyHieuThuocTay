@@ -19,7 +19,8 @@ public interface OrderService extends GenericService<Order, String> {
     double getRevenueByCriteria(String criteria) throws RemoteException;
     double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException;
     ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException;
-    ArrayList<Order> filterOrderByEmpID(String empID) throws RemoteException;
+    List<Order> filterOrderByEmpID(String empID, String date) throws RemoteException;
+    List<LocalDate> getAllDateHaveEmpID(String empID) throws RemoteException;
     double calculateTotalAllOrder(String empID) throws RemoteException;
     double getTotalDue(String orderID) throws RemoteException;
     ArrayList<ModelDataRS> getModelDataRSByYear(int year) throws RemoteException;
