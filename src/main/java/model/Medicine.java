@@ -20,4 +20,10 @@ public class Medicine extends Product implements Serializable {
     @JoinColumn(name = "administrationID")
     private AdministrationRoute administrationRoute;
 
+    public Medicine(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, Vendor vendor, Category category, LocalDate endDate, String activeIngredient, String conversionUnit, AdministrationRoute administrationRoute, String noteUnit) {
+        super(id, productName, registrationNumber, purchasePrice, taxPercentage, endDate, vendor, category, noteUnit);
+        this.activeIngredient = activeIngredient;
+        this.conversionUnit = conversionUnit;
+        this.administrationRoute = administrationRoute;
+    }
 }

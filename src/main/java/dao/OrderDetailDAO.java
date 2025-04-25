@@ -2,18 +2,23 @@ package dao;
 
 import model.OrderDetail;
 import jakarta.persistence.EntityManager;
+import model.PackagingUnit;
+import model.Product;
+import model.ProductUnit;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
-   private EntityManager em;
-
     public OrderDetailDAO(Class<OrderDetail> clazz) {
         super(clazz);
     }
@@ -46,12 +51,44 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
      */
     @Override
     public ArrayList<ModelDataPS> getProductStatistical(String start, String end) {
-        return null;
+        LocalDateTime startDateTime = LocalDate.parse(start).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.parse(end).atTime(23, 59, 59);
+
+        String query = "SELECT od.product.productID, od.unit, od.product.productName, SUM(od.orderQuantity) " +
+                "FROM OrderDetail od " +
+                "WHERE od.order.orderDate >= :startDateTime AND od.order.orderDate <= :endDateTime " +
+                "GROUP BY od.product.productID, od.unit, od.product.productName";
+
+        List<Object[]> resultSold = em.createQuery(query, Object[].class)
+                .setParameter("startDateTime", startDateTime)
+                .setParameter("endDateTime", endDateTime)
+                .getResultList();
+
+        ArrayList<ModelDataPS> modelDataPSList = new ArrayList<>();
+        for (Object[] row : resultSold) {
+            String productID = (String) row[0];
+            PackagingUnit unit = (PackagingUnit) row[1];
+            String productName = (String) row[2];
+            int totalSold = ((Number) row[3]).intValue();
+
+            ModelDataPS data = new ModelDataPS(productID, productName, totalSold, unit);
+
+            Product product = em.find(Product.class, productID);
+            if (product != null && product.getUnitDetails().containsKey(unit)) {
+                ProductUnit productUnit = product.getUnitDetails().get(unit);
+                data.setInStock(productUnit.getInStock());
+                data.setTotalPriceSold(totalSold * productUnit.getSellPrice());
+            }
+
+            modelDataPSList.add(data);
+        }
+        return modelDataPSList;
     }
 
     /**
      * Thống kê sản phẩm bán chạy theo ngày, theo loại sản phẩm
      *
+     * TODO: Fix
      * @param startDate
      * @param endDate
      * @return
@@ -84,6 +121,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
 
     /**
      * Thống kê sản phẩm bán chạy theo ngày, theo danh mục (nhóm thuốc)
+     *  TODO: Fix
      *
      * @param startDate
      * @param endDate
@@ -126,6 +164,26 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
      */
     @Override
     public Map<String, Double> getUnitPricesByOrderID(String orderID) {
-        return Map.of();
+        String query = "SELECT od.product.productID, od.unit FROM OrderDetail od WHERE od.order.orderID=:orderID";
+        List<Object[]> result = em.createQuery(query, Object[].class)
+                .setParameter("orderID", orderID)
+                .getResultList();
+        Map<String, Double> unitPrices = new HashMap<>();
+        for (Object[] row : result) {
+            String productID = (String) row[0];
+            PackagingUnit unit = (PackagingUnit) row[1];
+
+            Product product = em.find(Product.class, productID);
+            if (product != null && product.getUnitDetails().containsKey(unit)) {
+                ProductUnit productUnit = product.getUnitDetails().get(unit);
+                unitPrices.put(unit.convertUnit(unit), productUnit.getSellPrice());
+            }
+        }
+        return unitPrices;
+    }
+
+    public static void main(String[] args) {
+        OrderDetailDAO dao = new OrderDetailDAO(OrderDetail.class);
+        System.out.println(dao.getProductStatistical("2025-01-15", "2025-01-16"));
     }
 }

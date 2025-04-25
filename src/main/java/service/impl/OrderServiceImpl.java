@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderServiceImpl extends GenericServiceImpl<Order, String> implements OrderService {
     private OrderDAO orderDAO;
 
-    public OrderServiceImpl(PromotionDAO genericDAO) throws RemoteException {
+    public OrderServiceImpl(GenericDAO<Order, String> genericDAO) throws RemoteException {
         super(genericDAO);
     }
 
@@ -30,18 +30,8 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public Order getOrderByOrderId(String orderId) {
-        return orderDAO.getOrderByOrderId(orderId);
-    }
-
-    @Override
     public String createOrderID(String emplId) {
         return orderDAO.createOrderID(emplId);
-    }
-
-    @Override
-    public ArrayList<Order> getOrderByCriterious(String criterious) {
-        return orderDAO.getOrderByCriterious(criterious);
     }
 
     @Override

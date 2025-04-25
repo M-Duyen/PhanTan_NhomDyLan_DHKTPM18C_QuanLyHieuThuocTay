@@ -7,11 +7,11 @@ import service.VendorService;
 
 import java.rmi.RemoteException;
 
-public class VendorServiceImpl extends GenericServiceImpl<Vendor, String> implements VendorService {
+public class VendorServiceServiceImpl extends GenericServiceImpl<Vendor, String> implements VendorService {
 
     private VendorDAO vendorDao;
 
-    public VendorServiceImpl(GenericDAO<Vendor, String> genericDAO) throws RemoteException {
+    public VendorServiceServiceImpl(GenericDAO<Vendor, String> genericDAO) throws RemoteException {
         super(genericDAO);
     }
 

@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "vendors")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = "products")
+@NoArgsConstructor
 public class Vendor implements Serializable {
 
     @Id
@@ -26,4 +27,10 @@ public class Vendor implements Serializable {
 
     @OneToMany(mappedBy = "vendor")
     private List<Product> products;
+
+    public Vendor(String vendorID, String vendorName, String vendorCountry) {
+        this.vendorID = vendorID;
+        this.vendorName = vendorName;
+        this.country = vendorCountry;
+    }
 }

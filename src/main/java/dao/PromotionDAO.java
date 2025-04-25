@@ -3,8 +3,10 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import model.Promotion;
+import jakarta.persistence.EntityManager;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,9 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
     }
 
     /**
-     * Cập nhật trạng thái của khuyến mãi
+     * Lọc danh sách promotion theo status
+     *
+     * @return
      */
     public boolean updatePromotionStatus_JPQL() {
         String jpql = "UPDATE Promotion p " +
@@ -65,6 +69,7 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
      * @param endDate
      * @return
      */
+
     @Override
     public String createPromotionID(String startDate, String endDate) {
         String prefix = "PR";
@@ -94,11 +99,26 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
         return null;
     }
 
+    /**
+     * Cập nhật trạng thái của khuyến mãi
+     */
     @Override
-    public void updatePromotionStatus() throws RemoteException {
+    public boolean updatePromotionStatus() {
+        String jpql = "UPDATE Promotion p " +
+                "SET p.stats = 0 " +
+                "WHERE p.endDate < CURRENT_DATE " +
+                "AND p.stats = true";
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            int updatedCount = em.createQuery(jpql).executeUpdate();
+            transaction.commit();
+            return updatedCount > 0;
+        } catch (Exception e) {
+            if (transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Lỗi khi cập nhật trạng thái khuyến mãi", e);
+        }
 
     }
-
-
-
 }

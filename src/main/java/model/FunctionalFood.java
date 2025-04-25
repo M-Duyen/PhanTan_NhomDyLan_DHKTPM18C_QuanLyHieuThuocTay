@@ -18,4 +18,10 @@ public class FunctionalFood extends Product implements Serializable {
     private String mainNutrients;
     @Column(columnDefinition = "nvarchar(20)")
     private String supplementaryIngredients;
+
+    public FunctionalFood(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, Vendor vendor, Category category, LocalDate endDate, String mainNutrients, String supplementaryIngredients, String noteUnit) {
+        super(id, productName, registrationNumber, purchasePrice, taxPercentage, endDate, vendor, category, noteUnit);
+        this.mainNutrients = mainNutrients;
+        this.supplementaryIngredients = supplementaryIngredients;
+    }
 }
