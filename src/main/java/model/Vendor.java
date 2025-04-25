@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "vendors")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = "products")
+@NoArgsConstructor
 public class Vendor implements Serializable {
 
     @Id

@@ -4,6 +4,7 @@ import jakarta.persistence.TypedQuery;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
+import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -72,6 +74,13 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         }
 
         return newMaSP;
+    }
+
+    public static void main(String[] args) {
+        ProductDAO dao = new ProductDAO(Product.class);
+        String numType = "F";
+        int index = 0;
+        System.out.println(dao.getIDProduct(numType, index));
     }
 
 }

@@ -34,9 +34,6 @@ public class Product {
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
 
-    @Column(name = "quantity_in_stock", columnDefinition = "int")
-    private int quantityInStock;
-
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
@@ -61,6 +58,19 @@ public class Product {
 
     public Product() {
 
+    }
+
+    public Product(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, LocalDate endDate, Vendor vendor, Category category, String noteUnit) {
+        this.productID = id;
+        this.productName = productName;
+        this.registrationNumber = registrationNumber;
+        this.purchasePrice = purchasePrice;
+        this.taxPercentage = taxPercentage;
+        this.endDate = endDate;
+        this.vendor = vendor;
+        this.category = category;
+        this.unitNote = noteUnit;
+        this.unitDetails = new HashMap<>();
     }
 
 

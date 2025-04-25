@@ -17,4 +17,8 @@ public class ProductUnit {
         this.sellPrice = v;
         this.inStock = quantityInStock;
     }
+
+    public ProductUnit() {
+
+    }
 }
