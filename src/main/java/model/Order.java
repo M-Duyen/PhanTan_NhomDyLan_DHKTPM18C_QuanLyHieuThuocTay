@@ -3,6 +3,7 @@ package model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,25 +11,31 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "order_id", nullable = false)
+    @ToString.Include
     private String orderID;
 
     @Column(name = "order_date", nullable = false)
+    @ToString.Include
     private LocalDateTime orderDate;
 
+    @ToString.Include
     @Column(name = "ship_to_address")
     private String shipToAddress;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
+    @ToString.Include
     @Column(name = "discount")
-    private double discount;
+    private Double discount;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
@@ -46,6 +53,7 @@ public class Order {
     private List<OrderDetail> listOrderDetail;
 
     @Transient
+    @ToString.Include
     public double getTotalDue() {
         double totalDue = 0;
         if (listOrderDetail != null) {
@@ -56,89 +64,6 @@ public class Order {
         return totalDue * (1 - discount);
     }
 
-    public String getOrderID() {
-        return orderID;
-    }
 
-    public void setOrderID(String orderID) {
-        this.orderID = orderID;
-    }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public String getShipToAddress() {
-        return shipToAddress;
-    }
-
-    public void setShipToAddress(String shipToAddress) {
-        this.shipToAddress = shipToAddress;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Prescription getPrescription() {
-        return prescription;
-    }
-
-    public void setPrescription(Prescription prescription) {
-        this.prescription = prescription;
-    }
-
-    public List<OrderDetail> getListOrderDetail() {
-        return listOrderDetail;
-    }
-
-    public void setListOrderDetail(List<OrderDetail> listOrderDetail) {
-        this.listOrderDetail = listOrderDetail;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "prescription=" + prescription +
-                ", customer=" + customer +
-                ", employee=" + employee +
-                ", discount=" + discount +
-                ", paymentMethod=" + paymentMethod +
-                ", shipToAddress='" + shipToAddress + '\'' +
-                ", orderDate=" + orderDate +
-                ", orderID='" + orderID + '\'' +
-                '}';
-    }
 }

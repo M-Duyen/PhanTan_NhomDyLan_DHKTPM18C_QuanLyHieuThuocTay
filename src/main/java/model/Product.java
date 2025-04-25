@@ -1,10 +1,10 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 @Entity
@@ -12,8 +12,7 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
-@AllArgsConstructor
-public class Product {
+public class Product implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
@@ -89,10 +88,10 @@ public class Product {
     public boolean isFunctionalFood() {
         return productID.substring(0, 2).equals("PF");
     }
+
     public void addUnit(PackagingUnit unit, ProductUnit productUnit){
         unitDetails.put(unit, productUnit);
     }
-
 }
 
 
@@ -117,7 +116,7 @@ public class Product {
 //        return result;
 //    }
 //
-//    public double setSellPrice(Enum_PackagingUnit unit){
+//    public double setSellPrice(PackagingUnit unit){
 //        double price = unitPrice.get(unit);
 //        double sellPrice = 0;
 //

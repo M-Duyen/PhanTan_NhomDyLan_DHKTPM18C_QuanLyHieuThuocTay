@@ -3,6 +3,7 @@ package dao;
 
 import model.Category;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 import service.CategoryService;
 
 public class CategoryDAO extends GenericDAO<Category,String> implements CategoryService {

@@ -14,10 +14,10 @@ import java.util.List;
 public class OrderServiceImpl extends GenericServiceImpl<Order, String> implements OrderService {
     private OrderDAO orderDAO;
 
-    public OrderServiceImpl(OrderDAO orderDAO) throws RemoteException {
-        super(orderDAO);
-        this.orderDAO = orderDAO;
+    public OrderServiceImpl(GenericDAO<Order, String> genericDAO) throws RemoteException {
+        super(genericDAO);
     }
+
 
     @Override
     public List<OrderDetail> getOrderDetailsByOrderId(String orderId) {
@@ -50,8 +50,13 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public ArrayList<Order> filterOrderByEmpID(String empID) {
-        return orderDAO.filterOrderByEmpID(empID);
+    public List<Order> filterOrderByEmpID(String empID, String date) {
+        return orderDAO.filterOrderByEmpID(empID, date);
+    }
+
+    @Override
+    public List<LocalDate> getAllDateHaveEmpID(String empID) throws RemoteException {
+        return orderDAO.getAllDateHaveEmpID(empID);
     }
 
     @Override

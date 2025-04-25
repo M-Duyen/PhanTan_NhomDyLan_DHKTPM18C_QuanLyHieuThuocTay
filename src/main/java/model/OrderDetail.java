@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "order_details")
-public class OrderDetail {
+public class OrderDetail implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @ManyToOne

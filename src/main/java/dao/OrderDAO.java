@@ -104,9 +104,24 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<Order> filterOrderByEmpID(String empID) {
-        return null;
+    public List<Order> filterOrderByEmpID(String empID, String date) {
+        // Parse the date string into a LocalDate
+        LocalDate localDate = LocalDate.parse(date);
+
+        // JPQL query to filter orders based on employee ID and order date
+        String jpql = "select o " +
+                "from Order o " +
+                "where o.employee.id = :empID and FUNCTION('DATE', o.orderDate) = :date";
+
+
+
+        return em.createQuery(jpql, Order.class)
+                .setParameter("empID", empID)
+                .setParameter("date", java.sql.Date.valueOf(localDate)) // Convert LocalDate to java.sql.Date
+                .getResultList();
     }
+
+
 
     /**
      * Tính doanh thu theo ngày hiện tại của nhân viên
@@ -116,8 +131,28 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public double calculateTotalAllOrder(String empID) {
+//        String jpql = "select o.employee.id, sum(o.) " +
+//                "from  Order o";
+//
+//        return em.createQuery(jpql);
         return 0;
     }
+
+
+    public List<LocalDate> getAllDateHaveEmpID(String empID) {
+        String jpql = "SELECT o.orderDate FROM Order o WHERE o.employee.id = :empID GROUP BY o.orderDate";
+
+        List<LocalDateTime> dateTimes = em.createQuery(jpql, LocalDateTime.class)
+                .setParameter("empID", empID)
+                .getResultList();
+
+        // Convert to LocalDate
+        return dateTimes.stream()
+                .map(LocalDateTime::toLocalDate)
+                .distinct()
+                .toList();
+    }
+
 
     /**
      * Lấy totalDue của hóa đơn
@@ -479,6 +514,9 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
 
     public static void main(String[] args) {
         OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
-        System.out.println(orderDAO.getProfit());
+//        System.out.println(orderDAO.getProfit());
+//        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
+        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
+
     }
 }

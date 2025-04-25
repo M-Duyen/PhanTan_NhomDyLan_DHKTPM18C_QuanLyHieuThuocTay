@@ -3,6 +3,7 @@ package model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
@@ -11,7 +12,7 @@ import java.util.List;
 @Table(name = "accounts")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Account {
+public class Account implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "account_id", nullable = false, columnDefinition = "char(6)")
