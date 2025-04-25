@@ -1,9 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,6 +12,8 @@ import java.util.*;
 @Table(name = "products")
 @Data
 @ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product implements Serializable {
     @Id
     @EqualsAndHashCode.Include
@@ -70,7 +70,6 @@ public class Product implements Serializable {
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
 
-
     public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
     }
@@ -86,8 +85,9 @@ public class Product implements Serializable {
     public boolean isFunctionalFood() {
         return productID.substring(0, 2).equals("PF");
     }
-
-
+    public void addUnit(PackagingUnit unit, ProductUnit productUnit){
+        unitDetails.put(unit, productUnit);
+    }
 
 }
 
@@ -113,7 +113,7 @@ public class Product implements Serializable {
 //        return result;
 //    }
 //
-//    public double setSellPrice(PackagingUnit unit){
+//    public double setSellPrice(Enum_PackagingUnit unit){
 //        double price = unitPrice.get(unit);
 //        double sellPrice = 0;
 //

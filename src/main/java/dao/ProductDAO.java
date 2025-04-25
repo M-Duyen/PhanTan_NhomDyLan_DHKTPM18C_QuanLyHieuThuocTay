@@ -1,8 +1,11 @@
 package dao;
 
-import model.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import model.PackagingUnit;
+import model.Product;
 import service.ProductService;
+import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -14,9 +17,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
+    private EntityManager em;
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -99,23 +104,23 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        List<String> ids = em.createQuery(
-                        "SELECT p.productID FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart",
-                        String.class
-                ).setParameter("datePart", datePart)
-                .getResultList();
+        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
+                "FROM Product p " +
+                "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
-        for (String id : ids) {
-            if (id.length() >= 15) {
-                try {
-                    int number = Integer.parseInt(id.substring(9, 15));
-                    if (number > currentMax) currentMax = number;
-                } catch (NumberFormatException ignored) {}
+        try {
+            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("datePart", datePart);
+            Integer max = query.getSingleResult();
+            if (max != null) {
+                currentMax = max;
             }
-        }
+            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
+            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
-        int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return newMaSP;
     }
