@@ -49,7 +49,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<OrderDetail> listOrderDetail;
 
     @Transient
