@@ -2,8 +2,7 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.PackagingUnit;
-import model.Product;
+import model.*;
 import service.ProductService;
 import utils.JPAUtil;
 
@@ -17,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-    private EntityManager em;
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
@@ -88,8 +86,57 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public List<Product> fetchProducts() {
-        return null;
+        List<Product> productList = new ArrayList<>();
+
+        try {
+            // Lấy product và productID
+            String jpql = "SELECT p.productID, p FROM Product p";
+            List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
+
+            for (Object[] row : results) {
+                Product p = (Product) row[1];
+
+                Category category = p.getCategory();
+                String categoryID = category.getCategoryID();
+
+                switch (categoryID) {
+                    case "CA001": case "CA002": case "CA003": case "CA004":
+                    case "CA005": case "CA006": case "CA007": case "CA008":
+                    case "CA009": case "CA010": case "CA011": case "CA012":
+                    case "CA013": case "CA014": case "CA015": case "CA016":
+                    case "CA017": case "CA018":
+                        if (p instanceof Medicine) {
+                            Medicine medicine = (Medicine) p;
+//                            loadUnitsForProduct(medicine, em);
+                            productList.add(medicine);
+                        }
+                        break;
+                    case "CA019":
+                        if (p instanceof MedicalSupply) {
+                            MedicalSupply supply = (MedicalSupply) p;
+//                            loadUnitsForProduct(supply, em);
+                            productList.add(supply);
+                        }
+                        break;
+                    case "CA020":
+                        if (p instanceof FunctionalFood) {
+                            FunctionalFood food = (FunctionalFood) p;
+//                            loadUnitsForProduct(food, em);
+                            productList.add(food);
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected category ID: " + categoryID);
+                }
+            }
+        } finally {
+            em.close();
+        }
+
+        return productList;
     }
+
+
 
     /**
      * Tạo mã tự động cho sản phẩm
@@ -289,7 +336,8 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
 
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);
-        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+//        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        dao.fetchProducts().forEach(System.out::println);
     }
 
 

@@ -1,13 +1,9 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
-
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -19,6 +15,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class Medicine extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")

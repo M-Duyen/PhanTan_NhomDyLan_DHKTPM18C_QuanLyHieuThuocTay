@@ -70,6 +70,18 @@ public class Product implements Serializable {
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
 
+    public Product(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, LocalDate endDate, Vendor vendor, Category category, String noteUnit) {
+        this.productID = id;
+        this.productName = productName;
+        this.registrationNumber = registrationNumber;
+        this.purchasePrice = purchasePrice;
+        this.taxPercentage = taxPercentage;
+        this.endDate = endDate;
+        this.vendor = vendor;
+        this.category = category;
+        this.unitNote = noteUnit;
+        this.unitDetails = new HashMap<>();
+    }
     public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
     }
