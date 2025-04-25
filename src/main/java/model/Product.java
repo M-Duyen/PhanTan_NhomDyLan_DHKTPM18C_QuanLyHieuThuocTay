@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,7 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
+@AllArgsConstructor
 public class Product {
     @Id
     @EqualsAndHashCode.Include
@@ -57,6 +59,10 @@ public class Product {
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
+    public Product() {
+
+    }
+
 
     public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
@@ -72,6 +78,9 @@ public class Product {
 
     public boolean isFunctionalFood() {
         return productID.substring(0, 2).equals("PF");
+    }
+    public void addUnit(PackagingUnit unit, ProductUnit productUnit){
+        unitDetails.put(unit, productUnit);
     }
 
 }

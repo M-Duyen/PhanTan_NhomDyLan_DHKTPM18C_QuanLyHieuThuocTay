@@ -26,4 +26,10 @@ public class Vendor implements Serializable {
 
     @OneToMany(mappedBy = "vendor")
     private List<Product> products;
+
+    public Vendor(String vendorID, String vendorName, String vendorCountry) {
+        this.vendorID = vendorID;
+        this.vendorName = vendorName;
+        this.country = vendorCountry;
+    }
 }

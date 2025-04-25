@@ -3,6 +3,9 @@ package model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDate;
+
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "medicines")

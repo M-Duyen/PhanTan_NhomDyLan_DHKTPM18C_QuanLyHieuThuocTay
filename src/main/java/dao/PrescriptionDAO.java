@@ -4,6 +4,7 @@ import model.Prescription;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -43,4 +44,5 @@ public class PrescriptionDAO extends GenericDAO<Prescription, String> {
 
         //prescription_dao.delete("1");
     }
+
 }

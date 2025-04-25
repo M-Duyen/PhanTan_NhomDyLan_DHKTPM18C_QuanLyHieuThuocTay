@@ -25,4 +25,8 @@ public class Category {
     private List<Product> products;
 
 
+    public Category(String categoryID, String categoryName) {
+        this.categoryID = categoryID;
+        this.categoryName = categoryName;
+    }
 }
