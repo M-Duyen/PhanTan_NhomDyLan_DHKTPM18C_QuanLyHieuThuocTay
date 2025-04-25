@@ -19,7 +19,7 @@ public interface OrderService extends GenericService<Order, String> {
     ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException;
     List<Order> filterOrderByEmpID(String empID, String date) throws RemoteException;
     List<LocalDate> getAllDateHaveEmpID(String empID) throws RemoteException;
-    public double calculateTotalAllOrder(String empID, String date) throws RemoteException;
+    double calculateTotalAllOrder(String empID, String date) throws RemoteException;
     double getTotalDue(String orderID) throws RemoteException;
     ArrayList<ModelDataRS> getModelDataRSByYear(int year) throws RemoteException;
     ArrayList<ModelDataRS> getModelDataRSByYearByMonth(int month, int year) throws RemoteException;

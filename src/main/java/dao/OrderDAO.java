@@ -1,7 +1,6 @@
 package dao;
 
 import jakarta.persistence.EntityTransaction;
-import com.google.gson.stream.JsonToken;
 import model.*;
 import jakarta.persistence.EntityManager;
 import ui.model.ModelDataRS;
@@ -161,7 +160,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
 
     }
 
-
+    @Override
     public List<LocalDate> getAllDateHaveEmpID(String empID) {
         String jpql = "SELECT o.orderDate FROM Order o WHERE o.employee.id = :empID GROUP BY o.orderDate";
 
@@ -175,7 +174,6 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
                 .distinct()
                 .toList();
     }
-
 
     /**
      * Lấy totalDue của hóa đơn
@@ -430,6 +428,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         }
         return totalInStock == 0 ? 0 : (totalSold / totalInStock) * 100;
     }
+
     /**
      * Lấy tổng doanh thu đã bán
      *
