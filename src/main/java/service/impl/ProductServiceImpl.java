@@ -20,4 +20,8 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
         return productDAO.createMultiple(products);
     }
 
+    @Override
+    public String getIDProduct(String numType, int index) {
+        return productDAO.getIDProduct(numType, index);
+    }
 }

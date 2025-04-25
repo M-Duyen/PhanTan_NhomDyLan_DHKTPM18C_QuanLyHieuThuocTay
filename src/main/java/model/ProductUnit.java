@@ -13,4 +13,12 @@ public class ProductUnit {
     @Column(name = "in_stock", columnDefinition = "int")
     private int inStock;
 
+    public ProductUnit(double v, int quantityInStock) {
+        this.sellPrice = v;
+        this.inStock = quantityInStock;
+    }
+
+    public ProductUnit() {
+
+    }
 }

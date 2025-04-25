@@ -1,6 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,7 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
+@AllArgsConstructor
 public class Product {
     @Id
     @EqualsAndHashCode.Include
@@ -31,9 +33,6 @@ public class Product {
 
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
-
-    @Column(name = "quantity_in_stock", columnDefinition = "int")
-    private int quantityInStock;
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")
@@ -57,6 +56,23 @@ public class Product {
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
+    public Product() {
+
+    }
+
+    public Product(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, LocalDate endDate, Vendor vendor, Category category, String noteUnit) {
+        this.productID = id;
+        this.productName = productName;
+        this.registrationNumber = registrationNumber;
+        this.purchasePrice = purchasePrice;
+        this.taxPercentage = taxPercentage;
+        this.endDate = endDate;
+        this.vendor = vendor;
+        this.category = category;
+        this.unitNote = noteUnit;
+        this.unitDetails = new HashMap<>();
+    }
+
 
     public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
@@ -72,6 +88,9 @@ public class Product {
 
     public boolean isFunctionalFood() {
         return productID.substring(0, 2).equals("PF");
+    }
+    public void addUnit(PackagingUnit unit, ProductUnit productUnit){
+        unitDetails.put(unit, productUnit);
     }
 
 }
