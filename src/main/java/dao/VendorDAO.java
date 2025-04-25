@@ -91,4 +91,9 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
         return newMaNCC;
     }
 
+    public static void main(String[] args) {
+        VendorDAO dao = new VendorDAO(Vendor.class);
+        dao.searchByMultipleCriteria("vendor", "Viet").forEach(System.out::println);
+    }
+
 }
