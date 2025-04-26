@@ -121,9 +121,9 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
     public List<?> searchByMultipleCriteria(@RequestParam String entityName, @RequestParam String keyword) {
 
         Map<String, EntitySearchConfig> entitySearchConfigMap = new HashMap<>();
-        entitySearchConfigMap.put("product", new EntitySearchConfig(Product.class, Arrays.asList("productID", "productName", "registrationNumber")));
+        entitySearchConfigMap.put("product", new EntitySearchConfig(Product.class, Arrays.asList("productID", "productName", "registrationNumber", "endDate")));
         entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "country", "vendorName")));
-        entitySearchConfigMap.put("administration", new EntitySearchConfig(AdministrationRoute.class, Arrays.asList("administrationRouteName")));
+        entitySearchConfigMap.put("administration", new EntitySearchConfig(AdministrationRoute.class, Arrays.asList("administrationRouteID","administrationRouteName")));
         entitySearchConfigMap.put("category", new EntitySearchConfig(Category.class, Arrays.asList("categoryName")));
         entitySearchConfigMap.put("customer", new EntitySearchConfig(Customer.class, Arrays.asList("customerID", "customerName", "phoneNumber", "email", "address")));
         entitySearchConfigMap.put("employee", new EntitySearchConfig(Employee.class, Arrays.asList("employeeID", "employeeName", "phoneNumber", "email", "address", "status", "degree")));
@@ -131,6 +131,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         entitySearchConfigMap.put("medicalsupply", new EntitySearchConfig(MedicalSupply.class, Arrays.asList("medicalSupplyType")));
         entitySearchConfigMap.put("medicine", new EntitySearchConfig(Medicine.class, Arrays.asList("activeIngredient", "conversionUnit")));
         entitySearchConfigMap.put("promotiontype", new EntitySearchConfig(PromotionType.class, Arrays.asList("promotionTypeName")));
+        entitySearchConfigMap.put("promotion", new EntitySearchConfig(Promotion.class, Arrays.asList("stats")));
 
 
 

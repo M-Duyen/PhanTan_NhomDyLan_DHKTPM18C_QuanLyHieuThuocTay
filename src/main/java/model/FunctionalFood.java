@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "functional_foods")
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class FunctionalFood extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")

@@ -26,7 +26,7 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements Promo
     @Override
     public boolean updatePromotionStatus() {
         String jpql = "UPDATE Promotion p " +
-                "SET p.stats = 0 " +
+                "SET p.stats = false " +
                 "WHERE p.endDate < CURRENT_DATE " +
                 "AND p.stats = true";
 
@@ -68,8 +68,12 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements Promo
      * @return
      */
     @Override
-    public ArrayList<Promotion> getPromotionListByStatus(boolean status) {
-        return null;
+    public List<Promotion> getPromotionListByStatus(boolean status) {
+        String jpql = "SELECT p FROM Promotion p WHERE p.stats = :status";
+        return em.createQuery(jpql, Promotion.class)
+                .setParameter("status", status)
+                .getResultList();
+
     }
 
     /**
