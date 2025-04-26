@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderServiceImpl extends GenericServiceImpl<Order, String> implements OrderService {
-    private OrderDAO orderDAO;
+    private final OrderDAO orderDAO;
 
     public OrderServiceImpl(OrderDAO orderDAO) throws RemoteException {
         super(orderDAO);
@@ -61,8 +61,8 @@ public class OrderServiceImpl extends GenericServiceImpl<Order, String> implemen
     }
 
     @Override
-    public double calculateTotalAllOrder(String empID) throws RemoteException {
-        return orderDAO.calculateTotalAllOrder(empID);
+    public double calculateTotalAllOrder(String empID, String date) throws RemoteException {
+        return orderDAO.calculateTotalAllOrder(empID, date);
     }
 
     @Override

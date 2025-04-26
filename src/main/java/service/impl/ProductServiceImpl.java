@@ -4,6 +4,7 @@ import dao.ProductDAO;
 import model.PackagingUnit;
 import model.Product;
 import service.ProductService;
+import utils.JPAUtil;
 
 import java.rmi.RemoteException;
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class ProductServiceImpl extends GenericServiceImpl<Product, String> implements ProductService {
     private ProductDAO productDAO;
+
 
     public ProductServiceImpl(ProductDAO productDAO) throws RemoteException {
         super(productDAO);

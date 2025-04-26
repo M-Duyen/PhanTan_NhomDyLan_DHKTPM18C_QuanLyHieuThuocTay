@@ -110,6 +110,5 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
     public static void main(String[] args) {
     AccountDAO accountDAO = new AccountDAO(Account.class);
 //    System.out.println(accountDAO.getEmailByAccountID("036-30"));
-        System.out.println(accountDAO.containUserName("EP0903"));
 }
 }

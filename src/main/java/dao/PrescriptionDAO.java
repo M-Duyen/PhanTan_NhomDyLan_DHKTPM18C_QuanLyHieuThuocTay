@@ -6,6 +6,7 @@ import net.datafaker.Faker;
 import org.apache.tomcat.Jar;
 import utils.JPAUtil;
 
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

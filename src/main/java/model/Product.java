@@ -1,8 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +11,8 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
-public class Product implements Serializable {
+@AllArgsConstructor
+public class Product implements Serializable{
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
@@ -49,7 +49,7 @@ public class Product implements Serializable {
     private String unitNote;
 
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")

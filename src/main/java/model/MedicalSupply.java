@@ -4,7 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +13,10 @@ import java.time.LocalDate;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "medical_supplies")
+@ToString(callSuper = true)
 public class MedicalSupply extends Product implements Serializable {
 
     @Column(name = "medicalSupply_type",columnDefinition = "nvarchar(20)")
@@ -23,7 +27,4 @@ public class MedicalSupply extends Product implements Serializable {
         this.medicalSupplyType = medicalSupplyType;
     }
 
-    public MedicalSupply() {
-
-    }
 }

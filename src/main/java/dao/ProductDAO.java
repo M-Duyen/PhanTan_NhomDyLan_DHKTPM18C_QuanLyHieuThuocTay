@@ -1,10 +1,8 @@
 package dao;
 
-import jakarta.persistence.Entity;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
-import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -16,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-    EntityManager em;
+
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
         this.em = JPAUtil.getEntityManager();

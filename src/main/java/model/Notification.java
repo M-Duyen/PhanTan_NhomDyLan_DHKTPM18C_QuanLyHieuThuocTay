@@ -4,11 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Embeddable
 @Data
-public class Notification {
+public class Notification implements Serializable {
     private String content;
 
     @Column(name = "received_date")

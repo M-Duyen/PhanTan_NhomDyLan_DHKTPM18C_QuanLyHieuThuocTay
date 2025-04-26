@@ -1,12 +1,13 @@
 package dao;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.EntityTransaction;
 import model.*;
 import jakarta.persistence.EntityManager;
 import ui.model.ModelDataRS;
 import service.OrderService;
 import utils.JPAUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
-    private EntityManager em;
+
     public OrderDAO(Class<Order> clazz) {
         super(clazz);
         this.em = JPAUtil.getEntityManager();
@@ -36,7 +37,17 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
 
     @Override
     public boolean insertOrderDetail(List<OrderDetail> list) {
-        return false;
+        EntityTransaction tr = em.getTransaction();
+        try {
+            tr.begin();
+            list.forEach(detail -> em.persist(detail));
+            tr.commit();
+            return true;
+        } catch (Exception e) {
+            tr.rollback();
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -84,7 +95,11 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return 0;
+        String query = "SELECT o FROM Order o WHERE o.orderDate BETWEEN :startDate AND :endDate";
+        return em.createQuery(query, Double.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getSingleResult().doubleValue();
     }
 
     /**
@@ -96,7 +111,11 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public ArrayList<Order> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return null;
+        String query = "SELECT o FROM Order o WHERE o.orderDate BETWEEN :startDate AND :endDate";
+        return (ArrayList<Order>) em.createQuery(query, Order.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
     }
 
     /**
@@ -107,19 +126,15 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public List<Order> filterOrderByEmpID(String empID, String date) {
-        // Parse the date string into a LocalDate
         LocalDate localDate = LocalDate.parse(date);
 
-        // JPQL query to filter orders based on employee ID and order date
         String jpql = "select o " +
                 "from Order o " +
                 "where o.employee.id = :empID and FUNCTION('DATE', o.orderDate) = :date";
 
-
-
         return em.createQuery(jpql, Order.class)
                 .setParameter("empID", empID)
-                .setParameter("date", java.sql.Date.valueOf(localDate)) // Convert LocalDate to java.sql.Date
+                .setParameter("date", java.sql.Date.valueOf(localDate))
                 .getResultList();
     }
 
@@ -132,15 +147,21 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public double calculateTotalAllOrder(String empID) {
-//        String jpql = "select o.employee.id, sum(o.) " +
-//                "from  Order o";
-//
-//        return em.createQuery(jpql);
-        return 0;
+    public double calculateTotalAllOrder(String empID, String date) {
+        double total = filterOrderByEmpID(empID, date)
+                .stream()
+                .mapToDouble(Order::getTotalDue)
+                .sum();
+
+        BigDecimal bd = new BigDecimal(total);
+        bd = bd.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+        return bd.doubleValue();
+
+
     }
 
-
+    @Override
     public List<LocalDate> getAllDateHaveEmpID(String empID) {
         String jpql = "SELECT o.orderDate FROM Order o WHERE o.employee.id = :empID GROUP BY o.orderDate";
 
@@ -277,7 +298,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDateTime start, LocalDateTime end) {
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
         List<Object[]> results = em.createQuery(
                         "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
                                 "WHERE o.orderDate >= :start AND o.orderDate <= :end", Object[].class
@@ -328,7 +349,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<Double> getOverviewStatistical(LocalDateTime startDate, LocalDateTime endDate) {
+    public ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) {
         double totalRevenue = 0;
         int totalQuantitySold = 0;
 
@@ -516,11 +537,10 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
     }
 
     public static void main(String[] args) {
-        OrderDAO orderDAO = new OrderDAO( Order.class);
+        OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
 //        System.out.println(orderDAO.getProfit());
 //        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
-//        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
-        System.out.println(orderDAO.getProfit());;
+        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
 
     }
 }

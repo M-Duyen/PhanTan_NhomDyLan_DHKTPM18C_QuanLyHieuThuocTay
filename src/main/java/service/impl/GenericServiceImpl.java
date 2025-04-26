@@ -13,6 +13,7 @@ public abstract class GenericServiceImpl<T, ID> extends UnicastRemoteObject impl
 
     protected GenericDAO<T, ID> genericDAO;
 
+
     public GenericServiceImpl(GenericDAO<T,ID> genericDAO) throws RemoteException {
         this.genericDAO = genericDAO;
     }

@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class EmployeeDAO extends GenericDAO<Employee, String> implements EmployeeService {
-    private EntityManager em;
     public EmployeeDAO(Class<Employee> clazz) {
         super(clazz);
         this.em = JPAUtil.getEntityManager();
