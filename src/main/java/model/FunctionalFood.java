@@ -8,6 +8,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
@@ -26,4 +27,7 @@ public class FunctionalFood extends Product implements Serializable {
         this.mainNutrients = mainNutrients;
         this.supplementaryIngredients = supplementaryIngredients;
     }
+
+
+
 }

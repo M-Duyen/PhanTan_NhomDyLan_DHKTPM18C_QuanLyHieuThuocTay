@@ -1,6 +1,6 @@
 package service.impl;
 
-import dao.GenericDAO;
+
 import dao.VendorDAO;
 import model.Vendor;
 import service.VendorService;
@@ -12,8 +12,9 @@ public class VendorServiceImpl extends GenericServiceImpl<Vendor, String> implem
 
     private VendorDAO vendorDao;
 
-    public VendorServiceImpl(GenericDAO<Vendor, String> genericDAO) throws RemoteException {
-        super(genericDAO);
+    public VendorServiceImpl(VendorDAO vendorDAO) throws RemoteException {
+        super(vendorDAO);
+        this.vendorDao = vendorDAO;
     }
 
 

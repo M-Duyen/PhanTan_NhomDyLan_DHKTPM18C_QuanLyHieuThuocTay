@@ -11,7 +11,8 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
-public class Product implements Serializable {
+@AllArgsConstructor
+public class Product implements Serializable{
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
@@ -70,6 +71,7 @@ public class Product implements Serializable {
         this.unitNote = noteUnit;
         this.unitDetails = new HashMap<>();
     }
+
 
     public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();

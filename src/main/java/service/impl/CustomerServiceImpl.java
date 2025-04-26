@@ -14,7 +14,7 @@ public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> im
 
     public CustomerServiceImpl(CustomerDAO customerDAO) throws RemoteException {
         super(customerDAO);
-        this.customerDAO =  customerDAO;
+        this.customerDAO = customerDAO;
     }
 
 

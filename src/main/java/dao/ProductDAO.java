@@ -2,8 +2,10 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.*;
+import model.PackagingUnit;
+import model.Product;
 import service.ProductService;
+import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -15,9 +17,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
+    private EntityManager em;
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -84,52 +88,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public List<Product> fetchProducts() {
-        List<Product> productList = new ArrayList<>();
-
-        try {
-            String jpql = "SELECT p.productID, p FROM Product p";
-            List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
-
-            for (Object[] row : results) {
-                Product p = (Product) row[1];
-
-                Category category = p.getCategory();
-                String categoryID = category.getCategoryID();
-
-                switch (categoryID) {
-                    case "CA001": case "CA002": case "CA003": case "CA004":
-                    case "CA005": case "CA006": case "CA007": case "CA008":
-                    case "CA009": case "CA010": case "CA011": case "CA012":
-                    case "CA013": case "CA014": case "CA015": case "CA016":
-                    case "CA017": case "CA018":
-                        if (p instanceof Medicine) {
-                            Medicine medicine = (Medicine) p;
-//                            loadUnitsForProduct(medicine, em);
-                            productList.add(medicine);
-                        }
-                        break;
-                    case "CA019":
-                        if (p instanceof MedicalSupply) {
-                            MedicalSupply supply = (MedicalSupply) p;
-//                            loadUnitsForProduct(supply, em);
-                            productList.add(supply);
-                        }
-                        break;
-                    case "CA020":
-                        if (p instanceof FunctionalFood) {
-                            FunctionalFood food = (FunctionalFood) p;
-//                            loadUnitsForProduct(food, em);
-                            productList.add(food);
-                        }
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected category ID: " + categoryID);
-                }
-            }
-        } finally {
-            em.close();
-        }
-        return productList;
+        return null;
     }
 
     /**
@@ -145,23 +104,23 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        List<String> ids = em.createQuery(
-                        "SELECT p.productID FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart",
-                        String.class
-                ).setParameter("datePart", datePart)
-                .getResultList();
+        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
+                "FROM Product p " +
+                "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
-        for (String id : ids) {
-            if (id.length() >= 15) {
-                try {
-                    int number = Integer.parseInt(id.substring(9, 15));
-                    if (number > currentMax) currentMax = number;
-                } catch (NumberFormatException ignored) {}
+        try {
+            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("datePart", datePart);
+            Integer max = query.getSingleResult();
+            if (max != null) {
+                currentMax = max;
             }
-        }
+            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
+            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
-        int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return newMaSP;
     }
@@ -327,4 +286,13 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         }
         return -1;
     }
+
+
+
+    public static void main(String[] args) {
+        ProductDAO dao = new ProductDAO(Product.class);
+        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+    }
+
+
 }
