@@ -23,7 +23,7 @@ public class Runner {
 
 
     public static void main(String[] args) {
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mariadb");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mariadb");
 
     }
 }

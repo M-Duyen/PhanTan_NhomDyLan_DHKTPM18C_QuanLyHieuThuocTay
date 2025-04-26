@@ -4,6 +4,7 @@ import model.Account;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import service.AccountService;
+import utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,12 @@ import java.util.List;
 public class AccountDAO extends GenericDAO<Account, String> implements AccountService {
     public AccountDAO(Class<Account> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public AccountDAO(EntityManager em, Class<Account> clazz) {
         super(em, clazz);
+
     }
 
     /**
@@ -107,5 +110,6 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
     public static void main(String[] args) {
     AccountDAO accountDAO = new AccountDAO(Account.class);
 //    System.out.println(accountDAO.getEmailByAccountID("036-30"));
+        System.out.println(  accountDAO.containUserName("EP1501"));
 }
 }

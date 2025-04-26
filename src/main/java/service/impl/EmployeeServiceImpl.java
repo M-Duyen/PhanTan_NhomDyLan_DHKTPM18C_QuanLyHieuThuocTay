@@ -13,6 +13,7 @@ public class EmployeeServiceImpl extends GenericServiceImpl<Employee, String> im
     private EmployeeDAO employeeDAO;
     public EmployeeServiceImpl(GenericDAO<Employee, String> genericDAO) throws RemoteException {
         super(genericDAO);
+        this.employeeDAO = (EmployeeDAO) genericDAO;
     }
 
     @Override
