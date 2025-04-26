@@ -3,6 +3,8 @@ package model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "medicines")
 @Data
+@NoArgsConstructor
+@ToString(exclude = {"administrationRoute"})
 public class Medicine extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")

@@ -12,6 +12,7 @@ import java.util.*;
 @Table(name = "products")
 @Data
 @AllArgsConstructor
+@ToString(exclude = {"promotion", "vendor", "category"})
 public class Product implements Serializable{
     @Id
     @EqualsAndHashCode.Include

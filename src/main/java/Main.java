@@ -1,5 +1,6 @@
 import dao.OrderDAO;
 import dao.ProductDAO;
+import dao.PromotionTypeDAO;
 import model.PackagingUnit;
 import model.Product;
 import model.ProductUnit;
@@ -17,7 +18,10 @@ public class Main {
 //        System.out.println(product.getSellPrice(PackagingUnit.BOX));
 
         OrderDAO orderDAO = new OrderDAO(model.Order.class);
-        orderDAO.filterOrderByEmpID("EP1501", "2025-04-25").forEach(System.out::println);
+//        orderDAO.filterOrderByEmpID("EP1501", "2025-04-25").forEach(System.out::println);
+
+        PromotionTypeDAO promotionTypeDAO = new PromotionTypeDAO(model.PromotionType.class);
+        promotionTypeDAO.searchByMultipleCriteria("promotionType", "Khuyến mãi").forEach(System.out::println);
 
     }
 }

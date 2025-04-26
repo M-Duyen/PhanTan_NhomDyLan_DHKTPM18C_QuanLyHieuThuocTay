@@ -4,6 +4,7 @@ import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 import service.CustomerService;
+import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import java.util.Map;
 public class CustomerDAO extends GenericDAO<Customer, String> implements CustomerService {
     public CustomerDAO(Class<Customer> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
+
     }
 
     public CustomerDAO(EntityManager em, Class<Customer> clazz) {
