@@ -29,7 +29,7 @@
                       value="jdbc:mariadb://localhost:3306/pharmacy_management" />
             <property name="jakarta.persistence.jdbc.user" value="root" />
             <property name="jakarta.persistence.jdbc.password"
-                      value="123456789" />
+                      value="sapassword" />
             <property name="jakarta.persistence.jdbc.dialect"
                       value="org.hibernate.dialect.MariaDBDialect" />
             <property name="hibernate.show_sql" value="false" />

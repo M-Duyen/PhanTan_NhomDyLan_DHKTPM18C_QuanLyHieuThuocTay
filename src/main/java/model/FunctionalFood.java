@@ -3,18 +3,18 @@ package model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "functional_foods")
 @NoArgsConstructor
-@ToString(callSuper = true)
 public class FunctionalFood extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")
@@ -27,7 +27,4 @@ public class FunctionalFood extends Product implements Serializable {
         this.mainNutrients = mainNutrients;
         this.supplementaryIngredients = supplementaryIngredients;
     }
-
-
-
 }

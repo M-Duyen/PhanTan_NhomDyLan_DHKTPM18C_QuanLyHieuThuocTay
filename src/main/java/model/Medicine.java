@@ -1,21 +1,16 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "medicines")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString(callSuper = true)
 public class Medicine extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")
