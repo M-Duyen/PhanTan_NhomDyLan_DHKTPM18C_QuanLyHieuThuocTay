@@ -11,8 +11,9 @@ public class VendorServiceServiceImpl extends GenericServiceImpl<Vendor, String>
 
     private VendorDAO vendorDao;
 
-    public VendorServiceServiceImpl(GenericDAO<Vendor, String> genericDAO) throws RemoteException {
-        super(genericDAO);
+    public VendorServiceServiceImpl(VendorDAO vendorDAO) throws RemoteException {
+        super(vendorDAO);
+        this.vendorDao = vendorDAO;
     }
 
 

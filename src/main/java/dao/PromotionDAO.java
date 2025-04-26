@@ -3,17 +3,20 @@ package dao;
 import jakarta.persistence.EntityTransaction;
 import model.Promotion;
 import jakarta.persistence.EntityManager;
+import utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PromotionDAO extends GenericDAO<Promotion, String> implements service.PromotionService {
+    private EntityManager em;
     public PromotionDAO(EntityManager em, Class<Promotion> entityClass) {
         super(em, entityClass);
     }
 
     public PromotionDAO(Class<Promotion> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     /**

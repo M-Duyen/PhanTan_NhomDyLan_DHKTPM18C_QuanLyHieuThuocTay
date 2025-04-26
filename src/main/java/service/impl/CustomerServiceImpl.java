@@ -12,8 +12,9 @@ import java.util.Map;
 public class CustomerServiceImpl extends GenericServiceImpl<Customer, String> implements CustomerService {
     private CustomerDAO customerDAO;
 
-    public CustomerServiceImpl(GenericDAO<Customer, String> genericDAO) throws RemoteException {
-        super(genericDAO);
+    public CustomerServiceImpl(CustomerDAO customerDAO) throws RemoteException {
+        super(customerDAO);
+        this.customerDAO = customerDAO;
     }
 
 

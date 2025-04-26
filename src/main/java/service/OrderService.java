@@ -23,8 +23,8 @@ public interface OrderService extends GenericService<Order, String> {
     double getTotalDue(String orderID) throws RemoteException;
     ArrayList<ModelDataRS> getModelDataRSByYear(int year) throws RemoteException;
     ArrayList<ModelDataRS> getModelDataRSByYearByMonth(int month, int year) throws RemoteException;
-    ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) throws RemoteException;
-    ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) throws RemoteException;
+    ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDateTime start, LocalDateTime end) throws RemoteException;
+    ArrayList<Double> getOverviewStatistical(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException;
     double getTotalProductsSold() throws RemoteException;
     double getRevenueSoldPercentage() throws RemoteException;
     double getProfit() throws RemoteException;

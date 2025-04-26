@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.persistence.Entity;
 import model.OrderDetail;
 import jakarta.persistence.EntityManager;
 import model.PackagingUnit;
@@ -8,6 +9,7 @@ import model.ProductUnit;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
+import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,8 +21,10 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
+    private EntityManager em;
     public OrderDetailDAO(Class<OrderDetail> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
     public OrderDetailDAO(EntityManager em, Class<OrderDetail> clazz) {
