@@ -3,6 +3,7 @@ package dao;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
+import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;

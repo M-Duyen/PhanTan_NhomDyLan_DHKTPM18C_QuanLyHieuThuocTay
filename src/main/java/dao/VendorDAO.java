@@ -6,6 +6,7 @@ import model.Vendor;
 import service.VendorService;
 import utils.JPAUtil;
 
+import java.rmi.RemoteException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;

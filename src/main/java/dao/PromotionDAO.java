@@ -19,27 +19,6 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements servi
     }
 
     /**
-     * Cập nhật trạng thái của khuyến mãi
-     */
-    @Override
-    public boolean updatePromotionStatus() {
-        String jpql = "UPDATE Promotion p " +
-                "SET p.stats = 0 " +
-                "WHERE p.endDate < CURRENT_DATE " +
-                "AND p.stats = true";
-
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-            int updatedCount = em.createQuery(jpql).executeUpdate();
-            transaction.commit();
-            return updatedCount > 0; // Trả về true nếu có bản ghi bị cập nhật
-        } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            throw new RuntimeException("Lỗi khi cập nhật trạng thái khuyến mãi", e);
-        }
-    }
-    /**
      * Lọc khuyến mãi theo tiêu chí bất kỳ
      *
      * @param criterious

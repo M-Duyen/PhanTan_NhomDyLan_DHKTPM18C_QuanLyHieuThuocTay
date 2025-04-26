@@ -11,10 +11,6 @@ import java.util.Map;
 
 public class EmployeeServiceImpl extends GenericServiceImpl<Employee, String> implements EmployeeService {
     private EmployeeDAO employeeDAO;
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) throws RemoteException {
-        super(employeeDAO);
-        this.employeeDAO = employeeDAO;
-    }
 
     public EmployeeServiceImpl(EmployeeDAO employeeDAO) throws RemoteException {
         super(employeeDAO);

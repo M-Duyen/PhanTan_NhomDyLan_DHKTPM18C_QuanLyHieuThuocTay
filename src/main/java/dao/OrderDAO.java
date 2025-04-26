@@ -298,7 +298,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDateTime start, LocalDateTime end) {
         List<Object[]> results = em.createQuery(
                         "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
                                 "WHERE o.orderDate >= :start AND o.orderDate <= :end", Object[].class
@@ -349,7 +349,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) {
+    public ArrayList<Double> getOverviewStatistical(LocalDateTime startDate, LocalDateTime endDate) {
         double totalRevenue = 0;
         int totalQuantitySold = 0;
 
