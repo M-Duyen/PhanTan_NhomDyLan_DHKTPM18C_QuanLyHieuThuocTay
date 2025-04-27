@@ -296,6 +296,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @param qtyChange
      * @return
      */
+    @Override
     public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) {
         if (product == null || qtyChange <= 0) {
             return product;

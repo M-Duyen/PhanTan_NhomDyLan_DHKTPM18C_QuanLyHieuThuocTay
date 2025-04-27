@@ -37,6 +37,6 @@ public interface ProductService extends GenericService<Product, String>{
 
     int getNextConver(String[] parts, int currentIndex) throws RemoteException;
 
-
+    Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) throws RemoteException;
 
 }

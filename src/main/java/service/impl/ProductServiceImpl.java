@@ -94,4 +94,9 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
         return productDAO.getNextConver(parts, currentIndex);
     }
 
+    @Override
+    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) throws RemoteException {
+        return productDAO.getProductAfterUpdateUnits(product, unit, inc, qtyChange);
+    }
+
 }
