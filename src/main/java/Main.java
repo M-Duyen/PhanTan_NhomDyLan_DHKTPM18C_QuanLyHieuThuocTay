@@ -27,13 +27,16 @@ public class Main {
 //        productDAO.getProductListNearExpire().forEach(System.out::println);
 //        productDAO.getLowStockProducts(5000)
 //                .forEach(product -> System.out.println("Kết quả: " + product));
-        productDAO.searchByMultipleCriteria("product","2025-01-17").forEach(System.out::println);
+//        productDAO.searchByMultipleCriteria("product","2025-01-17").forEach(System.out::println);
+//        productDAO.getAll().forEach(System.out::println);
 
 
 
 
         OrderDAO orderDAO = new OrderDAO(model.Order.class);
 //        orderDAO.filterOrderByEmpID("EP1501", "2025-04-25").forEach(System.out::println);
+        orderDAO.searchByMultipleCriteria("order", "Vười").forEach(System.out::println);
+//        orderDAO.getAll().forEach(System.out::println);
 
 //        PromotionTypeDAO promotionTypeDAO = new PromotionTypeDAO(model.PromotionType.class);
 //        promotionTypeDAO.searchByMultipleCriteria("promotionType", "Khuyến mãi").forEach(System.out::println);
