@@ -75,8 +75,8 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
     }
 
     @Override
-    public boolean updateProductInStock_WithTransaction(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc, Connection con) throws RemoteException {
-        return productDAO.updateProductInStock_WithTransaction(productID, qtyChange, unitEnum, inc, con);
+    public boolean updateProductInStock(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc) throws RemoteException {
+        return productDAO.updateProductInStock(productID, qtyChange, unitEnum, inc);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
     }
 
     @Override
-    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) throws RemoteException {
+    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) {
         return productDAO.getProductAfterUpdateUnits(product, unit, inc, qtyChange);
     }
 

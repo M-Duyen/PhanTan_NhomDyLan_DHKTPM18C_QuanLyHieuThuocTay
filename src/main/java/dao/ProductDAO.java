@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
-import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -15,10 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -59,6 +56,12 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return proListNearExpire;
     }
 
+    /**
+     * Lọc danh sách sản phẩm có số lượng tồn kho thấp (<=25)
+     *
+     * @param threshold
+     * @return
+     */
     @Override
     public List<Product> getLowStockProducts(int threshold) {
         try {
@@ -348,7 +351,8 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public Product getProduct_ByBarcode(String barcode) {
-        return null;
+        String productID = convertBarcode_ToProductID(barcode);
+        return this.findById(productID);
     }
 
     /**
@@ -370,12 +374,42 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @param productID
      * @param qtyChange
      * @param inc
-     * @param con
      * @return
      */
     @Override
-    public boolean updateProductInStock_WithTransaction(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc, Connection con) {
+    public boolean updateProductInStock(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc) {
+
         return false;
+    }
+
+    //10 BOX, 100 PACK, 600 PILL
+    //BOX: 9, PACK: 90 (100 - 1 * 10), ...
+    public Map<PackagingUnit, Integer> getUnitNoteChangeSelling(String productID, int qtyChange, PackagingUnit sellUnit) {
+        Product product = findById(productID);
+        Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
+
+        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 234, BLISTER_PACK: 6, PILL: 4
+        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
+
+        int smallestQty = 0;
+        for(int i = 0;  i < unitLevels.size();  i++) {
+            if(unitLevels.get(i).equals(sellUnit)) {
+                int uniteNotePart = unitNoteMap.get(unitLevels.get(i + 1));
+                if(uniteNotePart == 0) {
+                    break;
+                }
+                smallestQty = qtyChange * uniteNotePart;
+            }
+        }
+        for(int i = unitLevels.size() - 1;  i >= 0;  i--) {
+            PackagingUnit unit = unitLevels.get(i);
+            System.out.println("Unit: " + unit);
+            int stock = product.getInstockQuantity(unit);
+            result.put(unitLevels.get(i), stock - smallestQty);
+
+            smallestQty = smallestQty / unitNoteMap.get(unit);
+        }
+        return result;
     }
 
     /**
@@ -524,16 +558,15 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
-        ProductDAO productDAO = new ProductDAO(Product.class);
-        //BIN(100), PACK(20)
-        //2000, 100
-        Product product = productDAO.getProductAfterUpdateUnits(productDAO.findById("PS270425000004"), PackagingUnit.BIN, true, 9);
-//         Product  product = productDAO.findById("PF270425000002");
-        product.getUnitDetails().forEach((unit, productUnit) -> {
-            System.out.println("Unit: " + unit);
-            System.out.println("In Stock: " + productUnit.getInStock());
-        });
-        //233, 1398, 5592
+        //{BOX=234, BLISTER_PACK=6, PILL=4}
+        ProductDAO dao = new ProductDAO(Product.class);
+        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
+        //System.out.println(dao.getIDProduct("PM", 3));
+        PackagingUnit unit = PackagingUnit.fromString("BOX");
+        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
+        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
     }
 
 
