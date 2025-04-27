@@ -242,19 +242,24 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
-                "FROM Product p " +
-                "WHERE FUNCTION('SUBSTRING', p.productID, 1, 2) = :numType " +
-                "AND FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
+        String jpql = "SELECT SUBSTRING(p.productID, 9, 6) FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart";
 
         try {
-            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
-            query.setParameter("numType", numType);
+            TypedQuery<String> query = em.createQuery(jpql, String.class);
             query.setParameter("datePart", datePart);
-            Integer max = query.getSingleResult();
-            if (max != null) {
-                currentMax = max;
+            List<String> results = query.getResultList();
+
+            if (results != null && !results.isEmpty()) {
+                currentMax = results.stream() // Bắt đầu "stream" (luồng) từ results.
+                        .filter(Objects::nonNull) //Bỏ qua những phần tử bị null
+                        .mapToInt(Integer::parseInt)// Chuyển từng String thành int.
+                        .max()// Tìm số lớn nhất trong danh sách đó.
+                        .orElse(0); // Nếu không tìm được số nào (list rỗng), trả về 0 thay vì null để tránh lỗi.
             }
+
+            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
+            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -551,16 +556,11 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
-        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
-        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
-        System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
-        System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
-        //System.out.println(dao.getIDProduct("PM", 3));
-        PackagingUnit unit = PackagingUnit.fromString("BOX");
-        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
-        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
+//        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        System.out.println(dao.getIDProduct("PF", 0));
     }
+
 
 
 }
