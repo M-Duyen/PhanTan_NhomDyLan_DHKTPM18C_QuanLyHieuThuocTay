@@ -22,8 +22,8 @@ public class Main {
 //                .forEach(System.out::println);
 
 //        productDAO.getProductListNearExpire().forEach(System.out::println);
-//        productDAO.getLowStockProducts(5000)
-//                .forEach(product -> System.out.println("Kết quả: " + product));
+        productDAO.getLowStockProducts(210)
+                .forEach(product -> System.out.println("Kết quả: " + product));
 //        productDAO.searchByMultipleCriteria("product","2025-01-17").forEach(System.out::println);
 //        productDAO.getAll().forEach(System.out::println);
 
@@ -43,6 +43,6 @@ public class Main {
 //        promotionDAO.updatePromotionStatus();
 
         AccountDAO accountDAO = new AccountDAO(model.Account.class);
-        System.out.println(accountDAO.updatePasswordByAccountID("EP1501", "EP1501"));
+//        System.out.println(accountDAO.updatePasswordByAccountID("EP1501", "EP1501"));
     }
 }

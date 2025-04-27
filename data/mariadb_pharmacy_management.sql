@@ -70,6 +70,10 @@ VALUES ('PR01', N'Khuyến mãi từ nhà cung cấp'),
        ('PR03', N'Khuyến mãi theo hạn dùng'),
        ('PR00', N'Khuyến mãi ngoài');
 
+# UPDATE accounts
+# SET is_logged_in = false
+# WHERE account_id like 'EP1501';
+
 
 # --Thêm dữ liệu Promotion
 INSERT INTO pharmacy_management.promotions(promotion_id, promotion_name, start_date, end_date, stats, promotion_type_id,

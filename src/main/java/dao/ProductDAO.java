@@ -2,6 +2,7 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import model.*;
 import service.ProductService;
 import utils.JPAUtil;
@@ -59,55 +60,38 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return proListNearExpire;
     }
 
-    /**
-     * Lọc danh sách sản phẩm có số lượng tồn kho thấp (<=25)
-     *
-     * @param threshold
-     * @return
-     */
     @Override
     public List<Product> getLowStockProducts(int threshold) {
-        // Lấy toàn bộ danh sách sản phẩm một lần
-        List<Product> allProducts = fetchProducts();
+        try {
+            if (em.isOpen()) {  // Kiểm tra xem EntityManager có mở hay không
+                List<Object[]> resultList = em.createQuery(
+                                "SELECT p.productID, p.productName, u.inStock " +
+                                        "FROM Product p JOIN p.unitDetails u " +
+                                        "WHERE KEY(u) = 'BOX' AND u.inStock < :threshold", Object[].class
+                        )
+                        .setParameter("threshold", threshold) // Thêm tham số threshold vào câu truy vấn
+                        .getResultList();
 
-        // Lọc và xử lý sản phẩm từ Medicine
-        List<Product> productFromMedicine = allProducts.stream()
-                .filter(product -> product instanceof Medicine)
-                .map(product -> (Medicine) product)
-                .filter(medicine -> {
-                    int stock = getBoxQuantityMedicine(medicine.getUnitNote());
-                    return stock <= threshold;
-                })
-                .collect(Collectors.toList());
+                // Xử lý kết quả
+                List<Product> finalResult = new ArrayList<>();
+                for (Object[] row : resultList) {
+                    String productId = (String) row[0];
+                    int inStock = ((Number) row[2]).intValue(); // Dùng Number để an toàn giữa Long và Integer
 
-        // Lọc và xử lý sản phẩm từ FunctionalFood
-        List<Product> productFromFF = allProducts.stream()
-                .filter(product -> product instanceof FunctionalFood)
-                .map(product -> (FunctionalFood) product)
-                .filter(ff -> {
-                    int stock = calculateTotalFromUnitNoteFunctionalFood(ff.getUnitNote());
-                    return stock <= threshold;
-                })
-                .collect(Collectors.toList());
+                    Product product = findById(productId);
+                    finalResult.add(product);
+                }
 
-        // Lọc và xử lý sản phẩm từ MedicalSupply
-        List<Product> productFromMS = allProducts.stream()
-                .filter(product -> product instanceof MedicalSupply)
-                .map(product -> (MedicalSupply) product)
-                .filter(ms -> {
-                    int stock = calculateTotalFromUnitNoteFunctionalFood(ms.getUnitNote());
-                    return stock <= threshold;
-                })
-                .collect(Collectors.toList());
-
-        // Kết hợp tất cả sản phẩm có tồn kho thấp vào một danh sách
-        List<Product> proListLowStock = new ArrayList<>();
-        proListLowStock.addAll(productFromMedicine);
-        proListLowStock.addAll(productFromFF);
-        proListLowStock.addAll(productFromMS);
-
-        return proListLowStock;
+                return finalResult;
+            } else {
+                throw new IllegalStateException("EntityManager is closed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
+
 
 
     /**
@@ -206,52 +190,45 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @return
      */
     @Override
+    @Transactional
     public List<Product> fetchProducts() {
         List<Product> productList = new ArrayList<>();
 
-        try {
-            // Lấy product và productID
-            String jpql = "SELECT p.productID, p FROM Product p";
-            List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
+        // Lấy product và productID
+        String jpql = "SELECT p.productID, p FROM Product p";
+        List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
 
-            for (Object[] row : results) {
-                Product p = (Product) row[1];
+        for (Object[] row : results) {
+            Product p = (Product) row[1];
+            Category category = p.getCategory();
+            String categoryID = category.getCategoryID();
 
-                Category category = p.getCategory();
-                String categoryID = category.getCategoryID();
-
-                switch (categoryID) {
-                    case "CA001": case "CA002": case "CA003": case "CA004":
-                    case "CA005": case "CA006": case "CA007": case "CA008":
-                    case "CA009": case "CA010": case "CA011": case "CA012":
-                    case "CA013": case "CA014": case "CA015": case "CA016":
-                    case "CA017": case "CA018":
-                        if (p instanceof Medicine) {
-                            Medicine medicine = (Medicine) p;
-//                            loadUnitsForProduct(medicine, em);
-                            productList.add(medicine);
-                        }
-                        break;
-                    case "CA019":
-                        if (p instanceof MedicalSupply) {
-                            MedicalSupply supply = (MedicalSupply) p;
-//                            loadUnitsForProduct(supply, em);
-                            productList.add(supply);
-                        }
-                        break;
-                    case "CA020":
-                        if (p instanceof FunctionalFood) {
-                            FunctionalFood food = (FunctionalFood) p;
-//                            loadUnitsForProduct(food, em);
-                            productList.add(food);
-                        }
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected category ID: " + categoryID);
-                }
+            switch (categoryID) {
+                case "CA001": case "CA002": case "CA003": case "CA004":
+                case "CA005": case "CA006": case "CA007": case "CA008":
+                case "CA009": case "CA010": case "CA011": case "CA012":
+                case "CA013": case "CA014": case "CA015": case "CA016":
+                case "CA017": case "CA018":
+                    if (p instanceof Medicine) {
+                        Medicine medicine = (Medicine) p;
+                        productList.add(medicine);
+                    }
+                    break;
+                case "CA019":
+                    if (p instanceof MedicalSupply) {
+                        MedicalSupply supply = (MedicalSupply) p;
+                        productList.add(supply);
+                    }
+                    break;
+                case "CA020":
+                    if (p instanceof FunctionalFood) {
+                        FunctionalFood food = (FunctionalFood) p;
+                        productList.add(food);
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected category ID: " + categoryID);
             }
-        } finally {
-            em.close();
         }
 
         return productList;

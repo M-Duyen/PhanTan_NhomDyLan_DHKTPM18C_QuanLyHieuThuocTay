@@ -113,7 +113,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for (Object[] row : result) {
             String type = (String) row[0];
-            int qty = (int) row[1];
+            long qty = (long) row[1];
 
             modelList.add(new ModelDataPS_Circle(type, qty));
         }
@@ -149,7 +149,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for(Object[] row : result) {
             String categoryName = (String) row[0];
-            int count = (Integer) row[1];
+            long count = (long) row[1];
 
             modelList.add(new ModelDataPS_Circle(categoryName, count));
         }
