@@ -9,15 +9,13 @@ import utils.JPAUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionDAO extends GenericDAO<Promotion, String> implements service.PromotionService {
+public class PromotionDAO extends GenericDAO<Promotion, String> implements PromotionService {
     public PromotionDAO(EntityManager em, Class<Promotion> entityClass) {
         super(em, entityClass);
     }
 
     public PromotionDAO(Class<Promotion> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
-
     }
 
     /**

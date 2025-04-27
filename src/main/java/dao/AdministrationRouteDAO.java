@@ -8,7 +8,6 @@ public class AdministrationRouteDAO extends GenericDAO<AdministrationRoute, Stri
 
     public AdministrationRouteDAO(Class<AdministrationRoute> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
 
     }
 

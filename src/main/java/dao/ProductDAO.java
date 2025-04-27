@@ -134,6 +134,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
                 })
                 .reduce(1, (a, b) -> a * b);
     }
+
     /** Lấy số lượng BOX trong unitNote
      *
      * @param unitNote
@@ -159,6 +160,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
                 })
                 .orElse(0); // nếu không tìm thấy BOX
     }
+
     /** Lấy số lượng BIN trong unitNote BIN * PACK
      *
      * @param unitNote
@@ -453,8 +455,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         }
         return -1;
     }
-
-
 
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);

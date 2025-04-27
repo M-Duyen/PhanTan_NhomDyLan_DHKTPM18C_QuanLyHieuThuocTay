@@ -8,7 +8,6 @@ import model.ProductUnit;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
-import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,14 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
     public OrderDetailDAO(Class<OrderDetail> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
-
     }
 
     public OrderDetailDAO(EntityManager em, Class<OrderDetail> clazz) {
