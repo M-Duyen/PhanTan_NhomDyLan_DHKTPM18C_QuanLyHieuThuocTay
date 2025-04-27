@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.persistence.EntityTransaction;
 import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
@@ -74,7 +75,9 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
     @Override
     public Customer getCustomerByPhone(String phone) {
         String query = "SELECT c FROM Customer c WHERE c.phoneNumber = :phone";
-        return em.createQuery(query, Customer.class).getSingleResult();
+        return em.createQuery(query, Customer.class)
+                .setParameter("phone", phone)
+                .getSingleResult();
     }
 
 
@@ -104,10 +107,14 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
     @Override
     public boolean updateCustPoint_Decrease(String phone, double point) {
         String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
-        return em.createQuery(jpql)
+        EntityTransaction tr = em.getTransaction();
+        tr.begin();
+        int updated = em.createQuery(jpql)
                 .setParameter("point", point)
                 .setParameter("phone", phone)
-                .executeUpdate() > 0;
+                .executeUpdate();
+        tr.commit();
+        return updated > 0;
     }
 
 
@@ -121,10 +128,14 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
     @Override
     public boolean updateCustPoint_Increase(String phone, double point) {
         String jpql = "UPDATE Customer c SET c.point = c.point + :point WHERE c.phoneNumber = :phone";
-         return em.createQuery(jpql)
+        EntityTransaction tr = em.getTransaction();
+        tr.begin();
+        int updated = em.createQuery(jpql)
                 .setParameter("point", point)
                 .setParameter("phone", phone)
-                .executeUpdate() > 0;
+                .executeUpdate();
+        tr.commit();
+        return updated > 0;
     }
 
     /**

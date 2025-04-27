@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
@@ -258,19 +259,17 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-
-        String jpql = "SELECT MAX(SUBSTRING(p.productID, 9, 6)) " +
-                "FROM Product p " +
-                "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
+        String jpql = "SELECT SUBSTRING(p.productID, 9, 6) FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart";
 
         try {
-            List<Integer> result = em.createQuery(jpql, Integer.class)
-                    .setParameter("datePart", datePart)
-                    .getResultList();
-            if(!result.isEmpty() && result != null) {
-                currentMax = result.stream()
+            TypedQuery<String> query = em.createQuery(jpql, String.class);
+            query.setParameter("datePart", datePart);
+            List<String> results = query.getResultList();
+
+            if (results != null && !results.isEmpty()) {
+                currentMax = results.stream()
                         .filter(Objects::nonNull)
-                        .mapToInt(Integer::intValue)
+                        .mapToInt(Integer::parseInt)
                         .max()
                         .orElse(0);
             }
