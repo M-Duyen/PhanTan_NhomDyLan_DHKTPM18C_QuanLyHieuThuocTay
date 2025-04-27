@@ -3,9 +3,6 @@ package dao;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
-import utils.JPAUtil;
-
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -391,11 +388,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @param inc
      * @return
      */
-    //unitNote: BOX(293), BLISTER_PACK(10), PILL(6)
-    //Không cần quan tâm BOX(293),mỗi BOX được 10 BLISTER_PACK, mỗi BLISTER_PACK có 6 PILL
-    //Ví dụ trong kho đang có 10 BOX, vậy tương ứng có 100 BLISTER_PACK, 600 PILL
-    //Ta bán đi 5 BLISTER_PACK, PILL còn 570, BOX còn 10
-    //Với lần bán sau 5 BLISTER_PACK thì còn 540 PILL, BOX còn 9
     @Override
     public boolean updateProductInStock(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc) {
 
