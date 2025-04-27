@@ -397,7 +397,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         Product product = findById(productID);
         Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
 
-        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 293, BLISTER_PACK: 10, PILL: 6
+        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 234, BLISTER_PACK: 6, PILL: 4
         List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
 
         int smallestQty = 0;
@@ -412,6 +412,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         }
         for(int i = unitLevels.size() - 1;  i >= 0;  i--) {
             PackagingUnit unit = unitLevels.get(i);
+            System.out.println("Unit: " + unit);
             int stock = product.getInstockQuantity(unit);
             result.put(unitLevels.get(i), stock - smallestQty);
 
@@ -484,6 +485,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @param qtyChange
      * @return
      */
+    @Override
     public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) {
         if (product == null || qtyChange <= 0) {
             return product;
@@ -565,12 +567,14 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
+        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
         //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
-        System.out.println(dao.getProduct_ByBarcode("7111224000001"));
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
         //System.out.println(dao.getIDProduct("PM", 3));
-        PackagingUnit unit = PackagingUnit.fromString("BLISTER_PACK");
-        dao.getUnitNoteChangeSelling("7111224000001", 10, unit);
-        System.out.println(dao.getProduct_ByBarcode("7111224000001"));
+        PackagingUnit unit = PackagingUnit.fromString("BOX");
+        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
+        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
     }
 }
