@@ -1,7 +1,4 @@
-import dao.OrderDAO;
-import dao.ProductDAO;
-import dao.PromotionDAO;
-import dao.PromotionTypeDAO;
+import dao.*;
 import model.PackagingUnit;
 import model.Product;
 import model.ProductUnit;
@@ -35,7 +32,7 @@ public class Main {
 
         OrderDAO orderDAO = new OrderDAO(model.Order.class);
 //        orderDAO.filterOrderByEmpID("EP1501", "2025-04-25").forEach(System.out::println);
-        orderDAO.searchByMultipleCriteria("order", "Vười").forEach(System.out::println);
+//        orderDAO.searchByMultipleCriteria("order", "Vười").forEach(System.out::println);
 //        orderDAO.getAll().forEach(System.out::println);
 
 //        PromotionTypeDAO promotionTypeDAO = new PromotionTypeDAO(model.PromotionType.class);
@@ -45,5 +42,7 @@ public class Main {
 //        promotionDAO.getPromotionListByStatus(true).forEach(System.out::println);
 //        promotionDAO.updatePromotionStatus();
 
+        AccountDAO accountDAO = new AccountDAO(model.Account.class);
+        System.out.println(accountDAO.updatePasswordByAccountID("EP1501", "EP1501"));
     }
 }

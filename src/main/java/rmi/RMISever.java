@@ -31,7 +31,6 @@ public class RMISever {
         PromotionTypeDAO promotionTypeDAO = new PromotionTypeDAO(PromotionType.class);
         VendorDAO vendorDAO = new VendorDAO(Vendor.class);
 
-
         //Tạo Java Remote Object
         CustomerService customerService = new CustomerServiceImpl(customerDAO);
         AccountService accountService = new AccountServiceImpl(accountDAO);
