@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import model.*;
-import jakarta.persistence.EntityManager;
 import service.ProductService;
 import utils.JPAUtil;
 
@@ -14,6 +13,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
 
@@ -60,6 +60,12 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return proListNearExpire;
     }
 
+    /**
+     * Lọc danh sách sản phẩm có số lượng tồn kho thấp (<=25)
+     *
+     * @param threshold
+     * @return
+     */
     @Override
     public List<Product> getLowStockProducts(int threshold) {
         try {
@@ -190,8 +196,48 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @return
      */
     @Override
+    @Transactional
     public List<Product> fetchProducts() {
-        return null;
+        List<Product> productList = new ArrayList<>();
+
+        // Lấy product và productID
+        String jpql = "SELECT p.productID, p FROM Product p";
+        List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
+
+        for (Object[] row : results) {
+            Product p = (Product) row[1];
+            Category category = p.getCategory();
+            String categoryID = category.getCategoryID();
+
+            switch (categoryID) {
+                case "CA001": case "CA002": case "CA003": case "CA004":
+                case "CA005": case "CA006": case "CA007": case "CA008":
+                case "CA009": case "CA010": case "CA011": case "CA012":
+                case "CA013": case "CA014": case "CA015": case "CA016":
+                case "CA017": case "CA018":
+                    if (p instanceof Medicine) {
+                        Medicine medicine = (Medicine) p;
+                        productList.add(medicine);
+                    }
+                    break;
+                case "CA019":
+                    if (p instanceof MedicalSupply) {
+                        MedicalSupply supply = (MedicalSupply) p;
+                        productList.add(supply);
+                    }
+                    break;
+                case "CA020":
+                    if (p instanceof FunctionalFood) {
+                        FunctionalFood food = (FunctionalFood) p;
+                        productList.add(food);
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected category ID: " + categoryID);
+            }
+        }
+
+        return productList;
     }
 
     /**
@@ -207,19 +253,24 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
-                "FROM Product p " +
-                "WHERE FUNCTION('SUBSTRING', p.productID, 1, 2) = :numType " +
-                "AND FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
+        String jpql = "SELECT SUBSTRING(p.productID, 9, 6) FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart";
 
         try {
-            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
-            query.setParameter("numType", numType);
+            TypedQuery<String> query = em.createQuery(jpql, String.class);
             query.setParameter("datePart", datePart);
-            Integer max = query.getSingleResult();
-            if (max != null) {
-                currentMax = max;
+            List<String> results = query.getResultList();
+
+            if (results != null && !results.isEmpty()) {
+                currentMax = results.stream() // Bắt đầu "stream" (luồng) từ results.
+                        .filter(Objects::nonNull) //Bỏ qua những phần tử bị null
+                        .mapToInt(Integer::parseInt)// Chuyển từng String thành int.
+                        .max()// Tìm số lớn nhất trong danh sách đó.
+                        .orElse(0); // Nếu không tìm được số nào (list rỗng), trả về 0 thay vì null để tránh lỗi.
             }
+
+            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
+            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -393,6 +444,8 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return -1;
     }
 
+
+
     /**
      * Cập nhật số lượng tồn kho của sản phẩm theo đơn vị
      * inc = true thì +, ngược lại thì -
@@ -485,18 +538,9 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
-        ProductDAO productDAO = new ProductDAO(Product.class);
-        //BIN(100), PACK(20)
-        //2000, 100
-        Product product = productDAO.getProductAfterUpdateUnits(productDAO.findById("PS270425000004"), PackagingUnit.BIN, true, 9);
-//         Product  product = productDAO.findById("PF270425000002");
-        product.getUnitDetails().forEach((unit, productUnit) -> {
-            System.out.println("Unit: " + unit);
-            System.out.println("In Stock: " + productUnit.getInStock());
-        });
-        //233, 1398, 5592
+        ProductDAO dao = new ProductDAO(Product.class);
+        System.out.println(dao.getIDProduct("PM", 0));
     }
-
 
 
 }

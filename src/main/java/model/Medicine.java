@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Table(name = "medicines")
 @Data
 @NoArgsConstructor
-@ToString(callSuper = true)
 public class Medicine extends Product implements Serializable {
 
     @Column(columnDefinition = "nvarchar(20)")
