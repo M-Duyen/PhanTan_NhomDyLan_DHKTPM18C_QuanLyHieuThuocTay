@@ -1,8 +1,7 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import model.*;
+import jakarta.persistence.EntityManager;
 import service.ProductService;
 
 import java.sql.Connection;
@@ -84,52 +83,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public List<Product> fetchProducts() {
-        List<Product> productList = new ArrayList<>();
-
-        try {
-            String jpql = "SELECT p.productID, p FROM Product p";
-            List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
-
-            for (Object[] row : results) {
-                Product p = (Product) row[1];
-
-                Category category = p.getCategory();
-                String categoryID = category.getCategoryID();
-
-                switch (categoryID) {
-                    case "CA001": case "CA002": case "CA003": case "CA004":
-                    case "CA005": case "CA006": case "CA007": case "CA008":
-                    case "CA009": case "CA010": case "CA011": case "CA012":
-                    case "CA013": case "CA014": case "CA015": case "CA016":
-                    case "CA017": case "CA018":
-                        if (p instanceof Medicine) {
-                            Medicine medicine = (Medicine) p;
-//                            loadUnitsForProduct(medicine, em);
-                            productList.add(medicine);
-                        }
-                        break;
-                    case "CA019":
-                        if (p instanceof MedicalSupply) {
-                            MedicalSupply supply = (MedicalSupply) p;
-//                            loadUnitsForProduct(supply, em);
-                            productList.add(supply);
-                        }
-                        break;
-                    case "CA020":
-                        if (p instanceof FunctionalFood) {
-                            FunctionalFood food = (FunctionalFood) p;
-//                            loadUnitsForProduct(food, em);
-                            productList.add(food);
-                        }
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected category ID: " + categoryID);
-                }
-            }
-        } finally {
-            em.close();
-        }
-        return productList;
+        return null;
     }
 
     /**

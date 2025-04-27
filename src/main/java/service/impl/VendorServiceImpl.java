@@ -1,6 +1,6 @@
 package service.impl;
 
-
+import dao.GenericDAO;
 import dao.VendorDAO;
 import model.Vendor;
 import service.VendorService;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class VendorServiceImpl extends GenericServiceImpl<Vendor, String> implements VendorService {
 
-    private VendorDAO vendorDao;
+    private final VendorDAO vendorDao;
 
     public VendorServiceImpl(VendorDAO vendorDAO) throws RemoteException {
         super(vendorDAO);

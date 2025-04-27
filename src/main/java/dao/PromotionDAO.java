@@ -1,43 +1,23 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import model.Promotion;
-import service.PromotionService;
+import jakarta.persistence.EntityManager;
+import utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionDAO extends GenericDAO<Promotion, String> implements PromotionService {
+public class PromotionDAO extends GenericDAO<Promotion, String> implements service.PromotionService {
     public PromotionDAO(EntityManager em, Class<Promotion> entityClass) {
         super(em, entityClass);
     }
 
     public PromotionDAO(Class<Promotion> clazz) {
         super(clazz);
+        this.em = JPAUtil.getEntityManager();
     }
 
-    /**
-     * Cập nhật trạng thái của khuyến mãi
-     */
-    @Override
-    public boolean updatePromotionStatus() {
-        String jpql = "UPDATE Promotion p " +
-                "SET p.stats = 0 " +
-                "WHERE p.endDate < CURRENT_DATE " +
-                "AND p.stats = true";
-
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-            int updatedCount = em.createQuery(jpql).executeUpdate();
-            transaction.commit();
-            return updatedCount > 0; // Trả về true nếu có bản ghi bị cập nhật
-        } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            throw new RuntimeException("Lỗi khi cập nhật trạng thái khuyến mãi", e);
-        }
-    }
     /**
      * Lọc khuyến mãi theo tiêu chí bất kỳ
      *
@@ -99,5 +79,28 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements Promo
 
         int nextId = currentMax + 1;
         return basePattern + String.format("%02d", nextId);
+    }
+
+    /**
+     * Cập nhật trạng thái của khuyến mãi
+     */
+    @Override
+    public boolean updatePromotionStatus() {
+        String jpql = "UPDATE Promotion p " +
+                "SET p.stats = 0 " +
+                "WHERE p.endDate < CURRENT_DATE " +
+                "AND p.stats = true";
+
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            int updatedCount = em.createQuery(jpql).executeUpdate();
+            transaction.commit();
+            return updatedCount > 0;
+        } catch (Exception e) {
+            if (transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Lỗi khi cập nhật trạng thái khuyến mãi", e);
+        }
+
     }
 }

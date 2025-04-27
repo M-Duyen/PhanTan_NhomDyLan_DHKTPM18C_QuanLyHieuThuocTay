@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OrderDAO extends GenericDAO<Order, String> implements OrderService {
-    EntityManager em;
+
     public OrderDAO(Class<Order> clazz) {
         super(clazz);
         this.em = JPAUtil.getEntityManager();
@@ -176,6 +176,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
                 .toList();
     }
 
+
     /**
      * Lấy totalDue của hóa đơn
      *
@@ -297,7 +298,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDate start, LocalDate end) {
+    public ArrayList<ModelDataRS> getModelDataRSByYearByTime(LocalDateTime start, LocalDateTime end) {
         List<Object[]> results = em.createQuery(
                         "SELECT DISTINCT DAY(o.orderDate), o FROM Order o JOIN FETCH o.listOrderDetail od " +
                                 "WHERE o.orderDate >= :start AND o.orderDate <= :end", Object[].class
@@ -348,7 +349,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public ArrayList<Double> getOverviewStatistical(LocalDate startDate, LocalDate endDate) {
+    public ArrayList<Double> getOverviewStatistical(LocalDateTime startDate, LocalDateTime endDate) {
         double totalRevenue = 0;
         int totalQuantitySold = 0;
 
@@ -429,7 +430,6 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         }
         return totalInStock == 0 ? 0 : (totalSold / totalInStock) * 100;
     }
-
     /**
      * Lấy tổng doanh thu đã bán
      *
@@ -449,8 +449,9 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         }
         Double totalTonTemp = em.createQuery(
                 "SELECT SUM(ud.inStock * ud.sellPrice) " +
-                        "FROM Product.unitDetails ud", Double.class
+                        "FROM Product p JOIN p.unitDetails ud", Double.class
         ).getSingleResult();
+
         totalTonKho = totalTonTemp == null ? 0 : totalTonTemp;
 
         if(totalTonKho + totalDue == 0){
@@ -538,9 +539,8 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
     public static void main(String[] args) {
         OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
 //        System.out.println(orderDAO.getProfit());
-        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
-//        orderDAO.filterOrderByEmpID("EP1501", "2025-04-25").forEach(System.out::println);
-//        System.out.println(orderDAO.calculateTotalAllOrder("EP1501", "2025-04-25"));
+//        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
+        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
 
     }
 }
