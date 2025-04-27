@@ -9,7 +9,7 @@ import utils.JPAUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionDAO extends GenericDAO<Promotion, String> implements PromotionService {
+public class PromotionDAO extends GenericDAO<Promotion, String> implements service.PromotionService {
     public PromotionDAO(EntityManager em, Class<Promotion> entityClass) {
         super(em, entityClass);
     }

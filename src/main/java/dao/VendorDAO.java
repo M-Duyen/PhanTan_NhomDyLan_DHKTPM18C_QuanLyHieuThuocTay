@@ -13,10 +13,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class VendorDAO extends GenericDAO<Vendor, String> implements VendorService {
-
     public VendorDAO(EntityManager em, Class<Vendor> entityClass) {
         super(em, entityClass);
-
     }
 
     public VendorDAO(Class<Vendor> clazz) {

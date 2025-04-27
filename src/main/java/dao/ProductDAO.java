@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-    private EntityManager em;
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
@@ -60,6 +59,12 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return proListNearExpire;
     }
 
+    /**
+     * Lọc danh sách sản phẩm có số lượng tồn kho thấp (<=25)
+     *
+     * @param threshold
+     * @return
+     */
     @Override
     public List<Product> getLowStockProducts(int threshold) {
         // Lấy toàn bộ danh sách sản phẩm một lần
@@ -265,24 +270,27 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
 
         String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
                 "FROM Product p " +
-                "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
+                "WHERE FUNCTION('SUBSTRING', p.productID, 1, 2) = :numType " +
+                "AND FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
         try {
             TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("numType", numType);
             query.setParameter("datePart", datePart);
             Integer max = query.getSingleResult();
             if (max != null) {
                 currentMax = max;
             }
-            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        int nextMaSP = currentMax + 1 + index;
+        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
+
         return newMaSP;
     }
+
 
     /**
      * Lấy danh mục của sản phẩm

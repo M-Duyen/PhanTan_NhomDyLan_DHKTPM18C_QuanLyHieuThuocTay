@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.persistence.Entity;
 import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
