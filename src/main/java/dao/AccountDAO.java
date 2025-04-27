@@ -195,21 +195,10 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
     public boolean loginCheck(String accountId, String password) {
         Account account = findById(accountId);
 
-//        if (account == null) {
-//            throw new RuntimeException("Không tìm thấy tài khoản!");
-//        }
-//
-//        if (account.isLoggedIn()) {
-//            throw new RuntimeException("Tài khoản đang được đăng nhập trên thiết bị khác!");
-//        }
-//
-//        if (!account.getPassword().equals(password)) {
-//            throw new RuntimeException("Sai mật khẩu!");
-//        }
-
         // Cho phép đăng nhập
         account.setLoggedIn(true);
         update(account);
+        System.out.println(account.isLoggedIn());
 
         return true;
     }
@@ -226,11 +215,12 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
         // Cập nhật đăng xuất
         account.setLoggedIn(false);
         update(account);
+        System.out.println(account.isLoggedIn());
 
         return true;
     }
 
-    /**     * Kiểm tra tài khoản đã đăng nhập hay chưa
+    /** Kiểm tra tài khoản đã đăng nhập hay chưa
      *
      * @param accountId
      * @return

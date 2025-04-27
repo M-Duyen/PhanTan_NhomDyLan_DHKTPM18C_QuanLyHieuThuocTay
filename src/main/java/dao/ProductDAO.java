@@ -184,19 +184,12 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return bin * pack;
     }
 
-
-
-
-
-
-
     /**
      * Lọc danh sách sản phẩm và phân loại
      *
      * @return
      */
     @Override
-    @Transactional
     public List<Product> fetchProducts() {
         List<Product> productList = new ArrayList<>();
 
