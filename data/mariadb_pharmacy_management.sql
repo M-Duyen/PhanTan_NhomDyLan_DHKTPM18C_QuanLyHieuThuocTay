@@ -220,7 +220,7 @@ VALUES
      'EP0903', null, 0);
 
 -- Thêm dữ liệu Product
-INSERT INTO pharmacy_management.products(product_id, product_name, quantity_in_stock, tax_percentage, promotion_id,
+INSERT INTO pharmacy_management.products(product_id, product_name, tax_percentage, promotion_id,
                                          vendor_id, category_id,
                                          registration_number, purchase_price, end_date, unit_note)
 VALUES ('PM021024000001', 'MORIHEPAMIN', 50, 0.05, null, 'VDVN001', 'CA014', '10040.KD.13.1', 190000, '2026-12-12',
