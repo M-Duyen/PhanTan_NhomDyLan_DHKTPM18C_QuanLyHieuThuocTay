@@ -2,20 +2,19 @@ package dao;
 
 import model.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import service.ProductService;
 import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
         this.em = JPAUtil.getEntityManager();
@@ -67,16 +66,132 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public List<Product> getLowStockProducts(int threshold) {
-        List<Product> lowStockProductList = new ArrayList<>();
-        List<Product> proList = fetchProducts();
-//TODO: Xử lý chổ thêm chổ này
-//        for (Product product : proList) {
-//            if (product.getQuantityInStock() <= threshold) {
-//                lowStockProductList.add(product);
-//            }
-//        }
-        return lowStockProductList;
+        // Lấy toàn bộ danh sách sản phẩm một lần
+        List<Product> allProducts = fetchProducts();
+
+        // Lọc và xử lý sản phẩm từ Medicine
+        List<Product> productFromMedicine = allProducts.stream()
+                .filter(product -> product instanceof Medicine)
+                .map(product -> (Medicine) product)
+                .filter(medicine -> {
+                    int stock = getBoxQuantityMedicine(medicine.getUnitNote());
+                    return stock <= threshold;
+                })
+                .collect(Collectors.toList());
+
+        // Lọc và xử lý sản phẩm từ FunctionalFood
+        List<Product> productFromFF = allProducts.stream()
+                .filter(product -> product instanceof FunctionalFood)
+                .map(product -> (FunctionalFood) product)
+                .filter(ff -> {
+                    int stock = calculateTotalFromUnitNoteFunctionalFood(ff.getUnitNote());
+                    return stock <= threshold;
+                })
+                .collect(Collectors.toList());
+
+        // Lọc và xử lý sản phẩm từ MedicalSupply
+        List<Product> productFromMS = allProducts.stream()
+                .filter(product -> product instanceof MedicalSupply)
+                .map(product -> (MedicalSupply) product)
+                .filter(ms -> {
+                    int stock = calculateTotalFromUnitNoteFunctionalFood(ms.getUnitNote());
+                    return stock <= threshold;
+                })
+                .collect(Collectors.toList());
+
+        // Kết hợp tất cả sản phẩm có tồn kho thấp vào một danh sách
+        List<Product> proListLowStock = new ArrayList<>();
+        proListLowStock.addAll(productFromMedicine);
+        proListLowStock.addAll(productFromFF);
+        proListLowStock.addAll(productFromMS);
+
+        return proListLowStock;
     }
+
+    /**
+     * Tính tổng số lượng từ unitNote lấy BOX*BIN
+     *
+     * @param unitNote
+     * @return
+     */
+    private int calculateTotalFromUnitNoteFunctionalFood(String unitNote) {
+        if (unitNote == null || unitNote.isBlank()) {
+            return 1; // không có BIN hoặc BOX thì nhân 1
+        }
+
+        return Arrays.stream(unitNote.split(","))
+                .map(String::trim)
+                .filter(s -> s.startsWith("BIN") || s.startsWith("BOX")) // chỉ lấy BIN hoặc BOX
+                .map(s -> {
+                    int start = s.indexOf('(');
+                    int end = s.indexOf(')');
+                    if (start != -1 && end != -1 && start < end) {
+                        return Integer.parseInt(s.substring(start + 1, end));
+                    }
+                    return 1; // nếu không đúng định dạng thì mặc định là 1
+                })
+                .reduce(1, (a, b) -> a * b);
+    }
+
+    /** Lấy số lượng BOX trong unitNote
+     *
+     * @param unitNote
+     * @return
+     */
+
+    public int getBoxQuantityMedicine(String unitNote) {
+        if (unitNote == null || unitNote.isBlank()) {
+            return 0; // không có gì thì trả 0
+        }
+
+        return Arrays.stream(unitNote.split(","))
+                .map(String::trim)
+                .filter(s -> s.startsWith("BOX")) // chỉ lấy dòng bắt đầu bằng BOX
+                .findFirst()
+                .map(s -> {
+                    int start = s.indexOf('(');
+                    int end = s.indexOf(')');
+                    if (start != -1 && end != -1 && start < end) {
+                        return Integer.parseInt(s.substring(start + 1, end));
+                    }
+                    return 0; // nếu format lỗi
+                })
+                .orElse(0); // nếu không tìm thấy BOX
+    }
+
+    /** Lấy số lượng BIN trong unitNote BIN * PACK
+     *
+     * @param unitNote
+     * @return
+     */
+    private int calculateBinTimesPackMedicalSupply(String unitNote) {
+        if (unitNote == null || unitNote.isBlank()) {
+            return 0; // Nếu không có dữ liệu thì trả 0
+        }
+
+        int bin = 1;
+        int pack = 1;
+
+        for (String part : unitNote.split(",")) {
+            part = part.trim();
+            if (part.startsWith("BIN")) {
+                int start = part.indexOf('(');
+                int end = part.indexOf(')');
+                if (start != -1 && end != -1 && start < end) {
+                    bin = Integer.parseInt(part.substring(start + 1, end));
+                }
+            } else if (part.startsWith("PACK")) {
+                int start = part.indexOf('(');
+                int end = part.indexOf(')');
+                if (start != -1 && end != -1 && start < end) {
+                    pack = Integer.parseInt(part.substring(start + 1, end));
+                }
+            }
+        }
+
+        return bin * pack;
+    }
+
 
     /**
      * Lọc danh sách sản phẩm và phân loại
@@ -85,7 +200,54 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public List<Product> fetchProducts() {
-        return null;
+        List<Product> productList = new ArrayList<>();
+
+        try {
+            // Lấy product và productID
+            String jpql = "SELECT p.productID, p FROM Product p";
+            List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
+
+            for (Object[] row : results) {
+                Product p = (Product) row[1];
+
+                Category category = p.getCategory();
+                String categoryID = category.getCategoryID();
+
+                switch (categoryID) {
+                    case "CA001": case "CA002": case "CA003": case "CA004":
+                    case "CA005": case "CA006": case "CA007": case "CA008":
+                    case "CA009": case "CA010": case "CA011": case "CA012":
+                    case "CA013": case "CA014": case "CA015": case "CA016":
+                    case "CA017": case "CA018":
+                        if (p instanceof Medicine) {
+                            Medicine medicine = (Medicine) p;
+//                            loadUnitsForProduct(medicine, em);
+                            productList.add(medicine);
+                        }
+                        break;
+                    case "CA019":
+                        if (p instanceof MedicalSupply) {
+                            MedicalSupply supply = (MedicalSupply) p;
+//                            loadUnitsForProduct(supply, em);
+                            productList.add(supply);
+                        }
+                        break;
+                    case "CA020":
+                        if (p instanceof FunctionalFood) {
+                            FunctionalFood food = (FunctionalFood) p;
+//                            loadUnitsForProduct(food, em);
+                            productList.add(food);
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected category ID: " + categoryID);
+                }
+            }
+        } finally {
+            em.close();
+        }
+
+        return productList;
     }
 
     /**
@@ -101,23 +263,23 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        List<String> ids = em.createQuery(
-                        "SELECT p.productID FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart",
-                        String.class
-                ).setParameter("datePart", datePart)
-                .getResultList();
+        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
+                "FROM Product p " +
+                "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
-        for (String id : ids) {
-            if (id.length() >= 15) {
-                try {
-                    int number = Integer.parseInt(id.substring(9, 15));
-                    if (number > currentMax) currentMax = number;
-                } catch (NumberFormatException ignored) {}
+        try {
+            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("datePart", datePart);
+            Integer max = query.getSingleResult();
+            if (max != null) {
+                currentMax = max;
             }
-        }
+            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
+            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
-        int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return newMaSP;
     }

@@ -6,6 +6,7 @@ import service.PromotionService;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PromotionServiceImpl extends GenericServiceImpl<Promotion, String> implements PromotionService {
     private PromotionDAO promotionDAO;
@@ -17,7 +18,7 @@ public class PromotionServiceImpl extends GenericServiceImpl<Promotion, String> 
 
 
     @Override
-    public ArrayList<Promotion> getPromotionListByStatus(boolean status) throws RemoteException {
+    public List<Promotion> getPromotionListByStatus(boolean status) throws RemoteException {
         return promotionDAO.getPromotionListByStatus(status);
     }
 
