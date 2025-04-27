@@ -1,9 +1,8 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.PackagingUnit;
-import model.Product;
+import model.*;
+import jakarta.persistence.EntityManager;
 import service.ProductService;
 import utils.JPAUtil;
 
@@ -13,12 +12,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-    private EntityManager em;
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
@@ -105,27 +102,25 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        String jpql = "SELECT SUBSTRING(p.productID, 9, 6) FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart";
+        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
+                "FROM Product p " +
+                "WHERE FUNCTION('SUBSTRING', p.productID, 1, 2) = :numType " +
+                "AND FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
         try {
-            TypedQuery<String> query = em.createQuery(jpql, String.class);
+            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("numType", numType);
             query.setParameter("datePart", datePart);
-            List<String> results = query.getResultList();
-
-            if (results != null && !results.isEmpty()) {
-                currentMax = results.stream() // Bắt đầu "stream" (luồng) từ results.
-                        .filter(Objects::nonNull) //Bỏ qua những phần tử bị null
-                        .mapToInt(Integer::parseInt)// Chuyển từng String thành int.
-                        .max()// Tìm số lớn nhất trong danh sách đó.
-                        .orElse(0); // Nếu không tìm được số nào (list rỗng), trả về 0 thay vì null để tránh lỗi.
+            Integer max = query.getSingleResult();
+            if (max != null) {
+                currentMax = max;
             }
-
-            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        int nextMaSP = currentMax + 1 + index;
+        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
         return newMaSP;
     }
@@ -293,14 +288,10 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return -1;
     }
 
-
-
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);
-//        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
-        System.out.println(dao.getIDProduct("PF", 0));
+        System.out.println(dao.getIDProduct("PM", 0));
     }
-
 
 
 }
