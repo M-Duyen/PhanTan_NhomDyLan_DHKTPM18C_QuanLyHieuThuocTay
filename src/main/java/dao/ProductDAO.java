@@ -1,5 +1,6 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
@@ -258,29 +259,25 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-
-        String jpql = "SELECT MAX(SUBSTRING(p.productID, 9, 6)) " +
+        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
                 "FROM Product p " +
-                "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
+                "WHERE FUNCTION('SUBSTRING', p.productID, 1, 2) = :numType " +
+                "AND FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
         try {
-            List<Integer> result = em.createQuery(jpql, Integer.class)
-                    .setParameter("datePart", datePart)
-                    .getResultList();
-            if(!result.isEmpty() && result != null) {
-                currentMax = result.stream()
-                        .filter(Objects::nonNull)
-                        .mapToInt(Integer::intValue)
-                        .max()
-                        .orElse(0);
+            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("numType", numType);
+            query.setParameter("datePart", datePart);
+            Integer max = query.getSingleResult();
+            if (max != null) {
+                currentMax = max;
             }
-
-            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        int nextMaSP = currentMax + 1 + index;
+        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
         return newMaSP;
     }
@@ -394,7 +391,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return false;
     }
 
-
     //10 BOX, 100 PACK, 600 PILL
     //BOX: 9, PACK: 90 (100 - 1 * 10), ...
     public Map<PackagingUnit, Integer> getUnitNoteChangeSelling(String productID, int qtyChange, PackagingUnit sellUnit) {
@@ -478,6 +474,96 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return -1;
     }
 
+    /**
+     * Cập nhật số lượng tồn kho của sản phẩm theo đơn vị
+     * inc = true thì +, ngược lại thì -
+     *
+     * @param product
+     * @param unit
+     * @param inc
+     * @param qtyChange
+     * @return
+     */
+    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) {
+        if (product == null || qtyChange <= 0) {
+            return product;
+        }
+
+        Map<PackagingUnit, ProductUnit> productUnits = product.getUnitDetails();
+        if (!productUnits.containsKey(unit)) {
+            return product;
+        }
+
+        Map<PackagingUnit, Integer> unitConversionMap = parseUnitNoteToMap(product.getUnitNote());
+        List<PackagingUnit> unitsOrder = new ArrayList<>(unitConversionMap.keySet());
+
+        // Đồng bộ từ đơn vị nhỏ nhất lên lớn nhất
+        int toSmallest = 1;
+        int startIndex = unitsOrder.indexOf(unit);
+        for (int i = startIndex; i < unitsOrder.size() - 1; i++) {
+            PackagingUnit nextUnit = unitsOrder.get(i + 1);
+            toSmallest *= unitConversionMap.get(nextUnit);
+        }
+
+        int qtyChangeInSmallest = qtyChange * toSmallest;
+
+        PackagingUnit smallestUnit = unitsOrder.get(unitsOrder.size() - 1);
+        ProductUnit smallestProductUnit = productUnits.get(smallestUnit);
+        if (smallestProductUnit == null) {
+            smallestProductUnit = new ProductUnit(0.0, 0);
+            productUnits.put(smallestUnit, smallestProductUnit);
+        }
+        int newSmallestStock = inc
+                ? smallestProductUnit.getInStock() + qtyChangeInSmallest
+                : smallestProductUnit.getInStock() - qtyChangeInSmallest;
+        smallestProductUnit.setInStock(newSmallestStock);
+
+        int remain = smallestProductUnit.getInStock();
+
+        int flag = 1;
+        for (int i = unitsOrder.size() - 2; i >= 0; i--) {
+            PackagingUnit currentUnit = unitsOrder.get(i);
+            ProductUnit currentProductUnit = productUnits.get(currentUnit);
+            if (currentProductUnit == null) {
+                currentProductUnit = new ProductUnit(0.0, 0);
+                productUnits.put(currentUnit, currentProductUnit);
+            }
+
+            int conversionQty = unitConversionMap.get(unitsOrder.get(i + 1));
+            flag *= conversionQty;
+            int unitQty = remain / flag;
+            currentProductUnit.setInStock(unitQty);
+        }
+
+        return product;
+    }
+
+    /**
+     * Phân tích UnitNote thành đơn vị quy đổi theo THỨ TỰ
+     *
+     * @param unitNote
+     * @return
+     */
+    private Map<PackagingUnit, Integer> parseUnitNoteToMap(String unitNote) {
+        Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
+        if (unitNote == null || unitNote.isEmpty()) {
+            return result;
+        }
+
+        String[] parts = unitNote.split(",");
+        for (String part : parts) {
+            part = part.trim();
+            int idx1 = part.indexOf('(');
+            int idx2 = part.indexOf(')');
+            if (idx1 >= 0 && idx2 > idx1) {
+                String unitName = part.substring(0, idx1).trim();
+                int conversionQty = Integer.parseInt(part.substring(idx1 + 1, idx2));
+                result.put(PackagingUnit.valueOf(unitName), conversionQty);
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);
         //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
@@ -487,6 +573,4 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         dao.getUnitNoteChangeSelling("7111224000001", 10, unit);
         System.out.println(dao.getProduct_ByBarcode("7111224000001"));
     }
-
-
 }
