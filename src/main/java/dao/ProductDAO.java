@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import model.*;
 import service.ProductService;
-import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -19,7 +18,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
 
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -89,7 +87,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         List<Product> productList = new ArrayList<>();
 
         try {
-            // Lấy product và productID
             String jpql = "SELECT p.productID, p FROM Product p";
             List<Object[]> results = em.createQuery(jpql, Object[].class).getResultList();
 
@@ -132,7 +129,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         } finally {
             em.close();
         }
-
         return productList;
     }
 

@@ -152,7 +152,6 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
 
             modelList.add(new ModelDataPS_Circle(categoryName, count));
         }
-
         return modelList;
     }
 

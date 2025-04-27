@@ -1,10 +1,9 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 @Entity
@@ -12,25 +11,33 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "products")
 @Data
+@ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class Product implements Serializable {
     @Id
     @EqualsAndHashCode.Include
+    @ToString.Include
     @Column(name = "product_id", nullable = false, columnDefinition = "char(14)")
     private String productID;
 
+    @ToString.Include
     @Column(name = "product_name", columnDefinition = "nvarchar(50)")
     private String productName;
 
+    @ToString.Include
     @Column(name = "registration_number", columnDefinition = "varchar(16)")
     private String registrationNumber;
 
+    @ToString.Include
     @Column(name = "purchase_price")
     private double purchasePrice;
 
+    @ToString.Include
     @Column(name = "tax_percentage", columnDefinition = "float")
     private double taxPercentage;
 
+    @ToString.Include
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
 
@@ -46,19 +53,17 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ToString.Include
     @Column(name ="unit_note", columnDefinition = "varchar(60)")
     private String unitNote;
 
 
-    @ElementCollection(    fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
     private Map<PackagingUnit, ProductUnit> unitDetails = new HashMap<>();
 
-    public Product() {
-
-    }
 
     public Product(String id, String productName, String registrationNumber, double purchasePrice, double taxPercentage, LocalDate endDate, Vendor vendor, Category category, String noteUnit) {
         this.productID = id;
@@ -72,7 +77,6 @@ public class Product {
         this.unitNote = noteUnit;
         this.unitDetails = new HashMap<>();
     }
-
 
     public double getSellPrice(PackagingUnit unit) {
         return unitDetails.get(unit).getSellPrice();
@@ -89,10 +93,10 @@ public class Product {
     public boolean isFunctionalFood() {
         return productID.substring(0, 2).equals("PF");
     }
+
     public void addUnit(PackagingUnit unit, ProductUnit productUnit){
         unitDetails.put(unit, productUnit);
     }
-
 }
 
 
