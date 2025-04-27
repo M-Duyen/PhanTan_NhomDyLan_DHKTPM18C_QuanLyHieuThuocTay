@@ -4,6 +4,7 @@ import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 import service.CustomerService;
+import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.util.HashMap;

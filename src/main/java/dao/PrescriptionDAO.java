@@ -2,7 +2,10 @@ package dao;
 
 import model.Prescription;
 import jakarta.persistence.EntityManager;
+import net.datafaker.Faker;
+import utils.JPAUtil;
 
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
