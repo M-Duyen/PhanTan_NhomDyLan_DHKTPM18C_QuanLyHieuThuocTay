@@ -13,8 +13,6 @@ import java.util.Map;
 public class CustomerDAO extends GenericDAO<Customer, String> implements CustomerService {
     public CustomerDAO(Class<Customer> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
-
     }
 
     public CustomerDAO(EntityManager em, Class<Customer> clazz) {
@@ -164,11 +162,10 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
 //        dao.updateCustPoint_Increase("1234567890",10);
 //        System.out.println(dao.findById("1234567890"));
 //        System.out.println(dao.getCustomerPoint("1234567890"));
-//        dao.getAll().forEach(x-> System.out.println(x));
+        dao.getAll().forEach(x-> System.out.println(x));
 //            dao.getAllCustomersAsMap().forEach((k, v) -> {
 //                System.out.println(k +": "+v);
 //            });
 //            dao.delete("1234567890");
-
     }
 }

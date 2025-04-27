@@ -70,6 +70,10 @@ VALUES ('PR01', N'Khuyến mãi từ nhà cung cấp'),
        ('PR03', N'Khuyến mãi theo hạn dùng'),
        ('PR00', N'Khuyến mãi ngoài');
 
+# UPDATE accounts
+# SET is_logged_in = false
+# WHERE account_id like 'EP1501';
+
 
 # --Thêm dữ liệu Promotion
 INSERT INTO pharmacy_management.promotions(promotion_id, promotion_name, start_date, end_date, stats, promotion_type_id,
@@ -111,26 +115,28 @@ VALUES ('VDVN001', N'Công ty CP Dược Phẩm Agimexpharm', N'Việt Nam'),
        ('VDVN003', N'Công ty CP Dược Phẩm Khánh Hòa', N'Việt Nam');
 
 -- Thêm dữ liệu Manager
-INSERT INTO pharmacy_management.managers(manager_id, manager_name, phone_number, birth_date)
-VALUES ('MN001', N'Huỳnh Thanh Giang', '0961416115', '1994-05-12');
+INSERT INTO pharmacy_management.managers(manager_id, manager_name, phone_number, birth_date, gender, degree, email,
+                                         address, status)
+VALUES ('MN001', N'Huỳnh Thanh Giang', '0961416115', '1994-05-12', 0,N'Thạc sĩ', 'htg1882004@gmail.com',
+        N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1);
 
 -- Thêm dữ liệu Employee
 INSERT INTO pharmacy_management.employees(employee_id, employee_name, phone_number, birth_date, gender, degree, email,
                                           address, status)
-VALUES ('EP1501', N'Nguyễn Thị Mỹ Duyên', '0961416115', '1999-02-27', 1, N'Thạc sĩ', 'job@yourbusinessname.com',
+VALUES ('EP1501', N'Nguyễn Thị Mỹ Duyên', '0961416115', '1999-02-27', 1, N'Thạc sĩ', 'nguyenmyduyen2702@gmail.com',
         N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1),
        ('EP0302', N'Hồ Quang Nhân', '0399754203', '1999-07-19', 0, N'Đại học', 'hqn19072004@gmail.com',
         N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1),
-       ('EP0903', N'Phan Phước Hiệp', '0961416115', '1999-11-27', 0, N'Đại học', 'job@yourbusinessname.com',
+       ('EP0903', N'Phan Phước Hiệp', '0961416115', '1999-11-27', 0, N'Đại học', 'phanphuochhiep2004@gmail.com',
         N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1);
 
 
 -- Thêm dữ liệu Account
-INSERT INTO pharmacy_management.accounts (account_id, password, manager_id, employee_id)
-VALUES ('MN001', 'MN001@', 'MN001', null),
-       ('EP1501', 'EP1501@', 'MN001', 'EP1501'),
-       ('EP0302', 'EP0302@', 'MN001', 'EP0302'),
-       ('EP0903', 'EP0903@', 'MN001', 'EP0903');
+INSERT INTO pharmacy_management.accounts (account_id, password, manager_id, employee_id, is_logged_in )
+VALUES ('MN001', 'MN001@', 'MN001', null, false),
+       ('EP1501', 'EP1501@', 'MN001', 'EP1501', false),
+       ('EP0302', 'EP0302@', 'MN001', 'EP0302', false),
+       ('EP0903', 'EP0903@', 'MN001', 'EP0903', false);
 
 
 -- Thêm dữ liệu Customer

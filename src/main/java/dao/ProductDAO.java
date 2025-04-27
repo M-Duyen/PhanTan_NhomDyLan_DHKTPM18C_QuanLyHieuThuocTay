@@ -1,6 +1,8 @@
 package dao;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import model.*;
 import jakarta.persistence.EntityManager;
 import service.ProductService;
@@ -9,9 +11,7 @@ import utils.JPAUtil;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,24 +60,129 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return proListNearExpire;
     }
 
-    /**
-     * Lọc danh sách sản phẩm có số lượng tồn kho thấp (<=25)
-     *
-     * @param threshold
-     * @return
-     */
     @Override
     public List<Product> getLowStockProducts(int threshold) {
-        List<Product> lowStockProductList = new ArrayList<>();
-        List<Product> proList = fetchProducts();
-//TODO: Xử lý chổ thêm chổ này
-//        for (Product product : proList) {
-//            if (product.getQuantityInStock() <= threshold) {
-//                lowStockProductList.add(product);
-//            }
-//        }
-        return lowStockProductList;
+        try {
+            if (em.isOpen()) {  // Kiểm tra xem EntityManager có mở hay không
+                List<Object[]> resultList = em.createQuery(
+                                "SELECT p.productID, p.productName, u.inStock " +
+                                        "FROM Product p JOIN p.unitDetails u " +
+                                        "WHERE KEY(u) = 'BOX' AND u.inStock < :threshold", Object[].class
+                        )
+                        .setParameter("threshold", threshold) // Thêm tham số threshold vào câu truy vấn
+                        .getResultList();
+
+                // Xử lý kết quả
+                List<Product> finalResult = new ArrayList<>();
+                for (Object[] row : resultList) {
+                    String productId = (String) row[0];
+                    int inStock = ((Number) row[2]).intValue(); // Dùng Number để an toàn giữa Long và Integer
+
+                    Product product = findById(productId);
+                    finalResult.add(product);
+                }
+
+                return finalResult;
+            } else {
+                throw new IllegalStateException("EntityManager is closed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
+
+
+
+    /**
+     * Tính tổng số lượng từ unitNote lấy BOX*BIN
+     *
+     * @param unitNote
+     * @return
+     */
+    private int calculateTotalFromUnitNoteFunctionalFood(String unitNote) {
+        if (unitNote == null || unitNote.isBlank()) {
+            return 1; // không có BIN hoặc BOX thì nhân 1
+        }
+
+        return Arrays.stream(unitNote.split(","))
+                .map(String::trim)
+                .filter(s -> s.startsWith("BIN") || s.startsWith("BOX")) // chỉ lấy BIN hoặc BOX
+                .map(s -> {
+                    int start = s.indexOf('(');
+                    int end = s.indexOf(')');
+                    if (start != -1 && end != -1 && start < end) {
+                        return Integer.parseInt(s.substring(start + 1, end));
+                    }
+                    return 1; // nếu không đúng định dạng thì mặc định là 1
+                })
+                .reduce(1, (a, b) -> a * b);
+    }
+
+    /** Lấy số lượng BOX trong unitNote
+     *
+     * @param unitNote
+     * @return
+     */
+
+    public int getBoxQuantityMedicine(String unitNote) {
+        if (unitNote == null || unitNote.isBlank()) {
+            return 0; // không có gì thì trả 0
+        }
+
+        return Arrays.stream(unitNote.split(","))
+                .map(String::trim)
+                .filter(s -> s.startsWith("BOX")) // chỉ lấy dòng bắt đầu bằng BOX
+                .findFirst()
+                .map(s -> {
+                    int start = s.indexOf('(');
+                    int end = s.indexOf(')');
+                    if (start != -1 && end != -1 && start < end) {
+                        return Integer.parseInt(s.substring(start + 1, end));
+                    }
+                    return 0; // nếu format lỗi
+                })
+                .orElse(0); // nếu không tìm thấy BOX
+    }
+
+    /** Lấy số lượng BIN trong unitNote BIN * PACK
+     *
+     * @param unitNote
+     * @return
+     */
+    private int calculateBinTimesPackMedicalSupply(String unitNote) {
+        if (unitNote == null || unitNote.isBlank()) {
+            return 0; // Nếu không có dữ liệu thì trả 0
+        }
+
+        int bin = 1;
+        int pack = 1;
+
+        for (String part : unitNote.split(",")) {
+            part = part.trim();
+            if (part.startsWith("BIN")) {
+                int start = part.indexOf('(');
+                int end = part.indexOf(')');
+                if (start != -1 && end != -1 && start < end) {
+                    bin = Integer.parseInt(part.substring(start + 1, end));
+                }
+            } else if (part.startsWith("PACK")) {
+                int start = part.indexOf('(');
+                int end = part.indexOf(')');
+                if (start != -1 && end != -1 && start < end) {
+                    pack = Integer.parseInt(part.substring(start + 1, end));
+                }
+            }
+        }
+
+        return bin * pack;
+    }
+
+
+
+
+
+
 
     /**
      * Lọc danh sách sản phẩm và phân loại
@@ -288,10 +393,110 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return -1;
     }
 
-    public static void main(String[] args) {
-        ProductDAO dao = new ProductDAO(Product.class);
-        System.out.println(dao.getIDProduct("PM", 0));
+    /**
+     * Cập nhật số lượng tồn kho của sản phẩm theo đơn vị
+     * inc = true thì +, ngược lại thì -
+     *
+     * @param product
+     * @param unit
+     * @param inc
+     * @param qtyChange
+     * @return
+     */
+    @Override
+    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) {
+        if (product == null || qtyChange <= 0) {
+            return product;
+        }
+
+        Map<PackagingUnit, ProductUnit> productUnits = product.getUnitDetails();
+        if (!productUnits.containsKey(unit)) {
+            return product;
+        }
+
+        Map<PackagingUnit, Integer> unitConversionMap = parseUnitNoteToMap(product.getUnitNote());
+        List<PackagingUnit> unitsOrder = new ArrayList<>(unitConversionMap.keySet());
+
+        // Đồng bộ từ đơn vị nhỏ nhất lên lớn nhất
+        int toSmallest = 1;
+        int startIndex = unitsOrder.indexOf(unit);
+        for (int i = startIndex; i < unitsOrder.size() - 1; i++) {
+            PackagingUnit nextUnit = unitsOrder.get(i + 1);
+            toSmallest *= unitConversionMap.get(nextUnit);
+        }
+
+        int qtyChangeInSmallest = qtyChange * toSmallest;
+
+        PackagingUnit smallestUnit = unitsOrder.get(unitsOrder.size() - 1);
+        ProductUnit smallestProductUnit = productUnits.get(smallestUnit);
+        if (smallestProductUnit == null) {
+            smallestProductUnit = new ProductUnit(0.0, 0);
+            productUnits.put(smallestUnit, smallestProductUnit);
+        }
+        int newSmallestStock = inc
+                ? smallestProductUnit.getInStock() + qtyChangeInSmallest
+                : smallestProductUnit.getInStock() - qtyChangeInSmallest;
+        smallestProductUnit.setInStock(newSmallestStock);
+
+        int remain = smallestProductUnit.getInStock();
+
+        int flag = 1;
+        for (int i = unitsOrder.size() - 2; i >= 0; i--) {
+            PackagingUnit currentUnit = unitsOrder.get(i);
+            ProductUnit currentProductUnit = productUnits.get(currentUnit);
+            if (currentProductUnit == null) {
+                currentProductUnit = new ProductUnit(0.0, 0);
+                productUnits.put(currentUnit, currentProductUnit);
+            }
+
+            int conversionQty = unitConversionMap.get(unitsOrder.get(i + 1));
+            flag *= conversionQty;
+            int unitQty = remain / flag;
+            currentProductUnit.setInStock(unitQty);
+        }
+
+        return product;
     }
+
+    /**
+     * Phân tích UnitNote thành đơn vị quy đổi theo THỨ TỰ
+     *
+     * @param unitNote
+     * @return
+     */
+    private Map<PackagingUnit, Integer> parseUnitNoteToMap(String unitNote) {
+        Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
+        if (unitNote == null || unitNote.isEmpty()) {
+            return result;
+        }
+
+        String[] parts = unitNote.split(",");
+        for (String part : parts) {
+            part = part.trim();
+            int idx1 = part.indexOf('(');
+            int idx2 = part.indexOf(')');
+            if (idx1 >= 0 && idx2 > idx1) {
+                String unitName = part.substring(0, idx1).trim();
+                int conversionQty = Integer.parseInt(part.substring(idx1 + 1, idx2));
+                result.put(PackagingUnit.valueOf(unitName), conversionQty);
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ProductDAO productDAO = new ProductDAO(Product.class);
+        //BIN(100), PACK(20)
+        //2000, 100
+        Product product = productDAO.getProductAfterUpdateUnits(productDAO.findById("PS270425000004"), PackagingUnit.BIN, true, 9);
+//         Product  product = productDAO.findById("PF270425000002");
+        product.getUnitDetails().forEach((unit, productUnit) -> {
+            System.out.println("Unit: " + unit);
+            System.out.println("In Stock: " + productUnit.getInStock());
+        });
+        //233, 1398, 5592
+    }
+
 
 
 }
