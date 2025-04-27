@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import model.Promotion;
 import service.PromotionService;
+import utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;

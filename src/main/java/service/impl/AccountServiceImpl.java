@@ -18,6 +18,11 @@ public class AccountServiceImpl extends GenericServiceImpl<Account, String> impl
     }
 
     @Override
+    public boolean sendEmail(String to, String title, String content) throws RemoteException {
+        return accountDAO.sendEmail(to, title, content);
+    }
+
+    @Override
     public String getEmailByAccountID(String accountID) throws RemoteException {
         return accountDAO.getEmailByAccountID(accountID);
     }
@@ -35,5 +40,25 @@ public class AccountServiceImpl extends GenericServiceImpl<Account, String> impl
     @Override
     public List<String> login(String userName, String pass) throws RemoteException {
         return accountDAO.login(userName, pass);
+    }
+
+    @Override
+    public boolean logout(String accountId) throws RemoteException {
+        return accountDAO.logout(accountId);
+    }
+
+    @Override
+    public boolean loginCheck(String accountId, String password) throws RemoteException {
+        return accountDAO.loginCheck(accountId, password);
+    }
+
+    @Override
+    public boolean isAccountLoggedIn(String accountId) throws RemoteException {
+        return accountDAO.isAccountLoggedIn(accountId);
+    }
+
+    @Override
+    public boolean updateLoggedInStatus(String accountId, boolean isLoggedIn) throws RemoteException {
+        return accountDAO.updateLoggedInStatus(accountId, isLoggedIn);
     }
 }

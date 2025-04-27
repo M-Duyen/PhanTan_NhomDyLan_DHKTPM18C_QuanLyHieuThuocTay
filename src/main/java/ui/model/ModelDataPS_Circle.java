@@ -9,9 +9,9 @@ import java.io.Serializable;
 @ToString
 public class ModelDataPS_Circle implements Serializable {
     String name;
-    int count;
+    long count;
 
-    public ModelDataPS_Circle(String name, int count) {
+    public ModelDataPS_Circle(String name, long count) {
         this.name = name;
         this.count = count;
     }

@@ -27,6 +27,16 @@ public class Manager implements Serializable {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    private boolean gender;
+
+    private String email;
+
+    private String address;
+
+    private boolean status;
+
+    private String degree;
+
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
     private List<Account> accounts;
 

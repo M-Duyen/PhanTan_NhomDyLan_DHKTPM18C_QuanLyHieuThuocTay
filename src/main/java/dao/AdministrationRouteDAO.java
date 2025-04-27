@@ -2,6 +2,7 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import model.AdministrationRoute;
+import utils.JPAUtil;
 
 public class AdministrationRouteDAO extends GenericDAO<AdministrationRoute, String> implements service.AdministrationRouteService {
 
