@@ -70,6 +70,10 @@ VALUES ('PR01', N'Khuyến mãi từ nhà cung cấp'),
        ('PR03', N'Khuyến mãi theo hạn dùng'),
        ('PR00', N'Khuyến mãi ngoài');
 
+# UPDATE accounts
+# SET is_logged_in = false
+# WHERE account_id like 'EP1501';
+
 
 # --Thêm dữ liệu Promotion
 INSERT INTO pharmacy_management.promotions(promotion_id, promotion_name, start_date, end_date, stats, promotion_type_id,
@@ -111,26 +115,28 @@ VALUES ('VDVN001', N'Công ty CP Dược Phẩm Agimexpharm', N'Việt Nam'),
        ('VDVN003', N'Công ty CP Dược Phẩm Khánh Hòa', N'Việt Nam');
 
 -- Thêm dữ liệu Manager
-INSERT INTO pharmacy_management.managers(manager_id, manager_name, phone_number, birth_date)
-VALUES ('MN001', N'Huỳnh Thanh Giang', '0961416115', '1994-05-12');
+INSERT INTO pharmacy_management.managers(manager_id, manager_name, phone_number, birth_date, gender, degree, email,
+                                         address, status)
+VALUES ('MN001', N'Huỳnh Thanh Giang', '0961416115', '1994-05-12', 0,N'Thạc sĩ', 'htg1882004@gmail.com',
+        N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1);
 
 -- Thêm dữ liệu Employee
 INSERT INTO pharmacy_management.employees(employee_id, employee_name, phone_number, birth_date, gender, degree, email,
                                           address, status)
-VALUES ('EP1501', N'Nguyễn Thị Mỹ Duyên', '0961416115', '1999-02-27', 1, N'Thạc sĩ', 'job@yourbusinessname.com',
+VALUES ('EP1501', N'Nguyễn Thị Mỹ Duyên', '0961416115', '1999-02-27', 1, N'Thạc sĩ', 'nguyenmyduyen2702@gmail.com',
         N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1),
        ('EP0302', N'Hồ Quang Nhân', '0399754203', '1999-07-19', 0, N'Đại học', 'hqn19072004@gmail.com',
         N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1),
-       ('EP0903', N'Phan Phước Hiệp', '0961416115', '1999-11-27', 0, N'Đại học', 'job@yourbusinessname.com',
+       ('EP0903', N'Phan Phước Hiệp', '0961416115', '1999-11-27', 0, N'Đại học', 'phanphuochhiep2004@gmail.com',
         N'12, Nguyễn Văn Bảo, P.4, Q.GV, HCM', 1);
 
 
 -- Thêm dữ liệu Account
-INSERT INTO pharmacy_management.accounts (account_id, password, manager_id, employee_id)
-VALUES ('MN001', 'MN001@', 'MN001', null),
-       ('EP1501', 'EP1501@', 'MN001', 'EP1501'),
-       ('EP0302', 'EP0302@', 'MN001', 'EP0302'),
-       ('EP0903', 'EP0903@', 'MN001', 'EP0903');
+INSERT INTO pharmacy_management.accounts (account_id, password, manager_id, employee_id, is_logged_in )
+VALUES ('MN001', 'MN001@', 'MN001', null, false),
+       ('EP1501', 'EP1501@', 'MN001', 'EP1501', false),
+       ('EP0302', 'EP0302@', 'MN001', 'EP0302', false),
+       ('EP0903', 'EP0903@', 'MN001', 'EP0903', false);
 
 
 -- Thêm dữ liệu Customer
@@ -219,21 +225,6 @@ VALUES ('OR3009241501001', CAST('2024-09-30 10:30:00' AS DATETIME), N'Vười L�
         'EP0903', null, 0);
 
 -- Thêm dữ liệu Product
-INSERT INTO pharmacy_management.products(product_id, product_name, tax_percentage, promotion_id,
-                                         vendor_id, category_id,
-                                         registration_number, purchase_price, end_date, unit_note)
-VALUES ('PM021024000001', 'MORIHEPAMIN', 50, 0.05, null, 'VDVN001', 'CA014', '10040.KD.13.1', 190000, '2026-12-12',
-        ' BOX(293), BLISTER_PACK(10), PILL(6)'),
-       ('PM021024000002', 'Optimox Sterile eye Drops', 20, 0.05, null, 'VDVN002', 'CA017', '10045.KD.13.1', 39000,
-        '2025-12-12', 'BOX(293), BLISTER_PACK(10), PILL(6)'),
-       ('PS021024000003', N'Băng gạc', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.2', 2000, '2026-12-01',
-        ' BOX(293), BLISTER_PACK(10), PILL(6)'),
-       ('PF021024000004', N'Beroglobin', 150, 0.1, null, 'VDVN001', 'CA020', '10045.KD.13.3', 333000, '2027-01-01',
-        ' BOX(293), BLISTER_PACK(10), PILL(6)'),
-       ('PS021024000005', N'Kim tiêm', 100, 0.05, null, 'VDVN003', 'CA019', '10045.KD.13.4', 2000, '2025-11-20',
-        ' BOX(293), BLISTER_PACK(10), PILL(6)'),
-       ('PF021024000006', N'Beroglobin New', 10, 0.1, null, 'VDVN001', 'CA020', '10045.KD.13.5', 333000,
-        '2025-09-05', 'BOX(293), BLISTER_PACK(10), PILL(6)');
 
 INSERT INTO pharmacy_management.products(product_id, product_name, tax_percentage, purchase_price, registration_number,
                                          end_date, promotion_id, vendor_id, category_id, unit_note)
@@ -731,12 +722,10 @@ VALUES ('PM111224000001', 'PILL', 515094, 250.917),
        ('PS240425000001', 'BIN', 100, 112000.00);
 
 INSERT INTO pharmacy_management.functional_foods (product_id, mainNutrients, supplementaryIngredients)
-VALUES ('PF021024000004', 'Sắt, VitaminB12', 'SWEETENERS'),
-       ('PF021024000006', 'VitaminB6', NULL);
+VALUES ('PF111224000001', 'Sắt, VitaminB12', 'SWEETENERS');
 
 INSERT INTO pharmacy_management.medical_supplies(product_id, medicalSupply_type)
-VALUES ('PS021024000003', 'Dụng cụ sơ cứu'),
-       ('PS021024000005', 'Dụng cụ sơ cứu'),
+VALUES ('PS131224000001', 'Dụng cụ sơ cứu'),
        ('PS111224000001', 'Dụng cụ sơ cứu');
 
 INSERT INTO pharmacy_management.medicines(product_id, activeIngredient, conversionUnit, administrationID)

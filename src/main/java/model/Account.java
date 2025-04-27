@@ -12,11 +12,13 @@ import java.util.List;
 @Table(name = "accounts")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class Account implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "account_id", nullable = false, columnDefinition = "char(6)")
     private String accountID;
+
     private String password;
 
     @ToString.Exclude
@@ -32,5 +34,9 @@ public class Account implements Serializable {
     @ElementCollection
     @CollectionTable(name = "account_notifications",
             joinColumns = @JoinColumn(name = "account_id"))
-    List<Notification> notifications;
+    private List<Notification> notifications;
+
+    @Column(name = "is_logged_in")
+    private boolean loggedIn = false;
+
 }

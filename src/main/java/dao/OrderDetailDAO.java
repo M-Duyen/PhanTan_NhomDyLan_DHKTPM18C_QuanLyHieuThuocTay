@@ -1,6 +1,5 @@
 package dao;
 
-import jakarta.persistence.Entity;
 import model.OrderDetail;
 import jakarta.persistence.EntityManager;
 import model.PackagingUnit;
@@ -21,10 +20,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
-    private EntityManager em;
     public OrderDetailDAO(Class<OrderDetail> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
     }
 
     public OrderDetailDAO(EntityManager em, Class<OrderDetail> clazz) {
@@ -116,7 +113,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for (Object[] row : result) {
             String type = (String) row[0];
-            int qty = (int) row[1];
+            long qty = (long) row[1];
 
             modelList.add(new ModelDataPS_Circle(type, qty));
         }
@@ -152,7 +149,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for(Object[] row : result) {
             String categoryName = (String) row[0];
-            int count = (Integer) row[1];
+            long count = (long) row[1];
 
             modelList.add(new ModelDataPS_Circle(categoryName, count));
         }

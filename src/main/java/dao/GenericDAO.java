@@ -1,14 +1,11 @@
 package dao;
 
-import model.Product;
+import jakarta.persistence.criteria.*;
+import model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import model.Vendor;
+import model.Order;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.GenericService;
@@ -94,12 +91,22 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        // Lấy tất cả tên thuộc tính (bao gồm cả lớp cha nếu có)
-        Set<String> fieldNames = getAllFieldNames(clazz);
-
         criteria.forEach((key, value) -> {
-            if (value != null && fieldNames.contains(key.toLowerCase())) {
-                predicates.add(cb.like(cb.lower(root.get(key).as(String.class)), "%" + value.toString().toLowerCase() + "%"));
+            if (value != null) {
+                Path<String> path;
+
+                if (key.contains(".")) {
+                    String[] parts = key.split("\\.");
+                    Path<Object> joinPath = (Path<Object>) root;
+                    for (int i = 0; i < parts.length - 1; i++) {
+                        joinPath = ((From<?, ?>) joinPath).join(parts[i], JoinType.LEFT);
+                    }
+                    path = joinPath.get(parts[parts.length - 1]);
+                } else {
+                    path = root.get(key);
+                }
+
+                predicates.add(cb.like(cb.lower(path.as(String.class)), "%" + value.toString().toLowerCase() + "%"));
             }
         });
 
@@ -107,6 +114,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         TypedQuery<T> query = em.createQuery(cq);
         return query.getResultList();
     }
+
 
     private Set<String> getAllFieldNames(Class<?> clazz) {
         Set<String> fieldNames = new HashSet<>();
@@ -122,16 +130,20 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
     public List<?> searchByMultipleCriteria(@RequestParam String entityName, @RequestParam String keyword) {
 
         Map<String, EntitySearchConfig> entitySearchConfigMap = new HashMap<>();
-        entitySearchConfigMap.put("product", new EntitySearchConfig(Product.class, Arrays.asList("productID", "productName", "registrationNumber")));
+        entitySearchConfigMap.put("product", new EntitySearchConfig(Product.class, Arrays.asList("productID", "productName", "registrationNumber", "endDate")));
         entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "country", "vendorName")));
-        entitySearchConfigMap.put("administration", new EntitySearchConfig(Product.class, List.of("administrationRouteName")));
-        entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "vendorName", "country")));
-        entitySearchConfigMap.put("category", new EntitySearchConfig(Product.class, List.of("categoryName")));
-        entitySearchConfigMap.put("customer", new EntitySearchConfig(Product.class, List.of("customerID", "customerName", "phoneNumber", "email", "address")));
-        entitySearchConfigMap.put("employee", new EntitySearchConfig(Product.class, List.of("employeeID", "employeeName", "phoneNumber", "email", "address", "status", "degree")));
-        entitySearchConfigMap.put("functional food", new EntitySearchConfig(Product.class, List.of("mainNutrients", "supplementaryIngredients")));
-        entitySearchConfigMap.put("medical supply", new EntitySearchConfig(Product.class, List.of("medicalSupplyType")));
-        entitySearchConfigMap.put("medicine", new EntitySearchConfig(Product.class, List.of("activeIngredient", "conversionUnit")));
+        entitySearchConfigMap.put("administration", new EntitySearchConfig(AdministrationRoute.class, Arrays.asList("administrationRouteID","administrationRouteName")));
+        entitySearchConfigMap.put("category", new EntitySearchConfig(Category.class, Arrays.asList("categoryName")));
+        entitySearchConfigMap.put("customer", new EntitySearchConfig(Customer.class, Arrays.asList("customerID", "customerName", "phoneNumber", "email", "address")));
+        entitySearchConfigMap.put("employee", new EntitySearchConfig(Employee.class, Arrays.asList("employeeID", "employeeName", "phoneNumber", "email", "address", "status", "degree")));
+        entitySearchConfigMap.put("functionalfood", new EntitySearchConfig(FunctionalFood.class, Arrays.asList("mainNutrients", "supplementaryIngredients")));
+        entitySearchConfigMap.put("medicalsupply", new EntitySearchConfig(MedicalSupply.class, Arrays.asList("medicalSupplyType")));
+        entitySearchConfigMap.put("medicine", new EntitySearchConfig(Medicine.class, Arrays.asList("activeIngredient", "conversionUnit")));
+        entitySearchConfigMap.put("promotiontype", new EntitySearchConfig(PromotionType.class, Arrays.asList("promotionTypeName")));
+        entitySearchConfigMap.put("promotion", new EntitySearchConfig(Promotion.class, Arrays.asList("stats","promotionType.promotionTypeName")));
+        entitySearchConfigMap.put("order", new EntitySearchConfig(Order.class, Arrays.asList("orderDate", "shipToAddress")));
+
+
 
 
         EntitySearchConfig config = entitySearchConfigMap.get(entityName.toLowerCase());

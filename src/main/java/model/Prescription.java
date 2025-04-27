@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "prescriptions")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class Prescription implements Serializable {
     @Id
     @Column(name = "prescription_id", nullable = false)

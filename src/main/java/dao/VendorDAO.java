@@ -111,7 +111,7 @@ public class VendorDAO extends GenericDAO<Vendor, String> implements VendorServi
 
     public static void main(String[] args) {
         VendorDAO dao = new VendorDAO(Vendor.class);
-        dao.searchByMultipleCriteria("vendor", "Viet").forEach(System.out::println);
+        dao.searchByMultipleCriteria("vendor", "s").forEach(System.out::println);
     }
 
 }

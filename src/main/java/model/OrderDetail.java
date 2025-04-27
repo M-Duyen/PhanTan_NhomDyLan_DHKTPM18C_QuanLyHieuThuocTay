@@ -3,6 +3,7 @@ package model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "order_details")
+@ToString(exclude = {"order", "product"})
 public class OrderDetail implements Serializable {
     @Id
     @EqualsAndHashCode.Include
