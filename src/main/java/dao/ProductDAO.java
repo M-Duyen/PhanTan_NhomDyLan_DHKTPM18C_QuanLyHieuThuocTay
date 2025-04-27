@@ -1,11 +1,10 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import model.*;
+import jakarta.persistence.EntityManager;
 import service.ProductService;
-import utils.JPAUtil;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -13,13 +12,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
-
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -246,24 +242,19 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        String jpql = "SELECT SUBSTRING(p.productID, 9, 6) FROM Product p WHERE SUBSTRING(p.productID, 3, 6) = :datePart";
+        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
+                "FROM Product p " +
+                "WHERE FUNCTION('SUBSTRING', p.productID, 1, 2) = :numType " +
+                "AND FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
         try {
-            TypedQuery<String> query = em.createQuery(jpql, String.class);
+            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
+            query.setParameter("numType", numType);
             query.setParameter("datePart", datePart);
-            List<String> results = query.getResultList();
-
-            if (results != null && !results.isEmpty()) {
-                currentMax = results.stream() // Bắt đầu "stream" (luồng) từ results.
-                        .filter(Objects::nonNull) //Bỏ qua những phần tử bị null
-                        .mapToInt(Integer::parseInt)// Chuyển từng String thành int.
-                        .max()// Tìm số lớn nhất trong danh sách đó.
-                        .orElse(0); // Nếu không tìm được số nào (list rỗng), trả về 0 thay vì null để tránh lỗi.
+            Integer max = query.getSingleResult();
+            if (max != null) {
+                currentMax = max;
             }
-
-            int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
-            newMaSP = numType + datePart + String.format("%06d", nextMaSP);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -353,7 +344,8 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public Product getProduct_ByBarcode(String barcode) {
-        return null;
+        String productID = convertBarcode_ToProductID(barcode);
+        return this.findById(productID);
     }
 
     /**
@@ -375,12 +367,42 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @param productID
      * @param qtyChange
      * @param inc
-     * @param con
      * @return
      */
     @Override
-    public boolean updateProductInStock_WithTransaction(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc, Connection con) {
+    public boolean updateProductInStock(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc) {
+
         return false;
+    }
+
+    //10 BOX, 100 PACK, 600 PILL
+    //BOX: 9, PACK: 90 (100 - 1 * 10), ...
+    public Map<PackagingUnit, Integer> getUnitNoteChangeSelling(String productID, int qtyChange, PackagingUnit sellUnit) {
+        Product product = findById(productID);
+        Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
+
+        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 234, BLISTER_PACK: 6, PILL: 4
+        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
+
+        int smallestQty = 0;
+        for(int i = 0;  i < unitLevels.size();  i++) {
+            if(unitLevels.get(i).equals(sellUnit)) {
+                int uniteNotePart = unitNoteMap.get(unitLevels.get(i + 1));
+                if(uniteNotePart == 0) {
+                    break;
+                }
+                smallestQty = qtyChange * uniteNotePart;
+            }
+        }
+        for(int i = unitLevels.size() - 1;  i >= 0;  i--) {
+            PackagingUnit unit = unitLevels.get(i);
+            System.out.println("Unit: " + unit);
+            int stock = product.getInstockQuantity(unit);
+            result.put(unitLevels.get(i), stock - smallestQty);
+
+            smallestQty = smallestQty / unitNoteMap.get(unit);
+        }
+        return result;
     }
 
     /**
@@ -436,8 +458,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         }
         return -1;
     }
-
-
 
     /**
      * Cập nhật số lượng tồn kho của sản phẩm theo đơn vị
@@ -531,8 +551,15 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
+        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
-        System.out.println(dao.getIDProduct("PM", 0));
+        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
+        //System.out.println(dao.getIDProduct("PM", 3));
+        PackagingUnit unit = PackagingUnit.fromString("BOX");
+        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
+        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
     }
 
 
