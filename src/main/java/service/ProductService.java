@@ -29,7 +29,7 @@ public interface ProductService extends GenericService<Product, String>{
 
     boolean updateProductInStock(String productID, int qtyChange, boolean inc) throws RemoteException;
 
-    boolean updateProductInStock_WithTransaction(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc, Connection con) throws RemoteException;
+    boolean updateProductInStock(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc) throws RemoteException;
 
     String extractUnitName(String input) throws RemoteException;
 

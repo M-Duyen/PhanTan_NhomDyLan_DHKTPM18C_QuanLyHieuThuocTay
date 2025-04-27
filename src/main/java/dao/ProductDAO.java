@@ -2,7 +2,6 @@ package dao;
 
 import model.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import service.ProductService;
 import utils.JPAUtil;
 
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
     public ProductDAO(Class<Product> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
     }
 
     public ProductDAO(EntityManager em, Class<Product> clazz) {
@@ -263,17 +261,23 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         int currentMax = 0;
         String datePart = new SimpleDateFormat("ddMMyy").format(new Date());
 
-        String jpql = "SELECT MAX(CAST(FUNCTION('SUBSTRING', p.productID, 9, 6) AS int)) " +
+
+        String jpql = "SELECT MAX(SUBSTRING(p.productID, 9, 6)) " +
                 "FROM Product p " +
                 "WHERE FUNCTION('SUBSTRING', p.productID, 3, 6) = :datePart";
 
         try {
-            TypedQuery<Integer> query = em.createQuery(jpql, Integer.class);
-            query.setParameter("datePart", datePart);
-            Integer max = query.getSingleResult();
-            if (max != null) {
-                currentMax = max;
+            List<Integer> result = em.createQuery(jpql, Integer.class)
+                    .setParameter("datePart", datePart)
+                    .getResultList();
+            if(!result.isEmpty() && result != null) {
+                currentMax = result.stream()
+                        .filter(Objects::nonNull)
+                        .mapToInt(Integer::intValue)
+                        .max()
+                        .orElse(0);
             }
+
             int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
             newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
@@ -362,7 +366,8 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      */
     @Override
     public Product getProduct_ByBarcode(String barcode) {
-        return null;
+        String productID = convertBarcode_ToProductID(barcode);
+        return this.findById(productID);
     }
 
     /**
@@ -384,12 +389,47 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
      * @param productID
      * @param qtyChange
      * @param inc
-     * @param con
      * @return
      */
+    //unitNote: BOX(293), BLISTER_PACK(10), PILL(6)
+    //Không cần quan tâm BOX(293),mỗi BOX được 10 BLISTER_PACK, mỗi BLISTER_PACK có 6 PILL
+    //Ví dụ trong kho đang có 10 BOX, vậy tương ứng có 100 BLISTER_PACK, 600 PILL
+    //Ta bán đi 5 BLISTER_PACK, PILL còn 570, BOX còn 10
+    //Với lần bán sau 5 BLISTER_PACK thì còn 540 PILL, BOX còn 9
     @Override
-    public boolean updateProductInStock_WithTransaction(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc, Connection con) {
+    public boolean updateProductInStock(String productID, int qtyChange, PackagingUnit unitEnum, boolean inc) {
+
         return false;
+    }
+
+
+    //10 BOX, 100 PACK, 600 PILL
+    //BOX: 9, PACK: 90 (100 - 1 * 10), ...
+    public Map<PackagingUnit, Integer> getUnitNoteChangeSelling(String productID, int qtyChange, PackagingUnit sellUnit) {
+        Product product = findById(productID);
+        Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
+
+        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 293, BLISTER_PACK: 10, PILL: 6
+        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
+
+        int smallestQty = 0;
+        for(int i = 0;  i < unitLevels.size();  i++) {
+            if(unitLevels.get(i).equals(sellUnit)) {
+                int uniteNotePart = unitNoteMap.get(unitLevels.get(i + 1));
+                if(uniteNotePart == 0) {
+                    break;
+                }
+                smallestQty = qtyChange * uniteNotePart;
+            }
+        }
+        for(int i = unitLevels.size() - 1;  i >= 0;  i--) {
+            PackagingUnit unit = unitLevels.get(i);
+            int stock = product.getInstockQuantity(unit);
+            result.put(unitLevels.get(i), stock - smallestQty);
+
+            smallestQty = smallestQty / unitNoteMap.get(unit);
+        }
+        return result;
     }
 
     /**
@@ -448,7 +488,12 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
 
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);
-        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        System.out.println(dao.getProduct_ByBarcode("7111224000001"));
+        //System.out.println(dao.getIDProduct("PM", 3));
+        PackagingUnit unit = PackagingUnit.fromString("BLISTER_PACK");
+        dao.getUnitNoteChangeSelling("7111224000001", 10, unit);
+        System.out.println(dao.getProduct_ByBarcode("7111224000001"));
     }
 
 

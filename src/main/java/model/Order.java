@@ -8,32 +8,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"listOrderDetail"})
 @Table(name = "orders")
 public class Order implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "order_id", nullable = false)
-    @ToString.Include
     private String orderID;
 
     @Column(name = "order_date", nullable = false)
-    @ToString.Include
     private LocalDateTime orderDate;
 
-    @ToString.Include
     @Column(name = "ship_to_address")
     private String shipToAddress;
 
     @Enumerated(EnumType.STRING)
-    @ToString.Include
     @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
-    @ToString.Include
     @Column(name = "discount")
     private Double discount;
 
@@ -53,7 +47,6 @@ public class Order implements Serializable {
     private List<OrderDetail> listOrderDetail;
 
     @Transient
-    @ToString.Include
     public double getTotalDue() {
         double totalDue = 0;
         if (listOrderDetail != null) {
@@ -64,6 +57,18 @@ public class Order implements Serializable {
         return totalDue * (1 - discount);
     }
 
+    public Order(String orderID, LocalDateTime orderDate, String shipToAddress, PaymentMethod paymentMethod, Double discount, Employee employee, Customer customer, Prescription prescription) {
+        this.orderID = orderID;
+        this.orderDate = orderDate;
+        this.shipToAddress = shipToAddress;
+        this.paymentMethod = paymentMethod;
+        this.discount = discount;
+        this.employee = employee;
+        this.customer = customer;
+        this.prescription = prescription;
+    }
 
+    public Order() {
 
+    }
 }
