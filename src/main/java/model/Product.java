@@ -50,7 +50,7 @@ public class Product {
     private String unitNote;
 
 
-    @ElementCollection
+    @ElementCollection(    fetch = FetchType.EAGER)
     @CollectionTable(name = "product_units", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "product_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "unit_name")
@@ -117,7 +117,7 @@ public class Product {
 //        return result;
 //    }
 //
-//    public double setSellPrice(Enum_PackagingUnit unit){
+//    public double setSellPrice(PackagingUnit unit){
 //        double price = unitPrice.get(unit);
 //        double sellPrice = 0;
 //
