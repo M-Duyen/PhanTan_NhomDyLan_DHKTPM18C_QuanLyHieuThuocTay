@@ -2,6 +2,7 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name = "promotions")
+@ToString(exclude = "promotionType")
 public class Promotion implements Serializable {
     @Id
     @Column(name = "promotion_id", nullable = false)

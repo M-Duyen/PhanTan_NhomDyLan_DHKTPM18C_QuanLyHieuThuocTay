@@ -1,6 +1,5 @@
 package dao;
 
-import jakarta.persistence.Entity;
 import model.Customer;
 import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
@@ -12,10 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomerDAO extends GenericDAO<Customer, String> implements CustomerService {
-    private EntityManager em;
     public CustomerDAO(Class<Customer> clazz) {
         super(clazz);
         this.em = JPAUtil.getEntityManager();
+
     }
 
     public CustomerDAO(EntityManager em, Class<Customer> clazz) {

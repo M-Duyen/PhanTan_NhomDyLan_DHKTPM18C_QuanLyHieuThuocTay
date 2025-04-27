@@ -4,9 +4,11 @@ import lombok.Data;
 import lombok.ToString;
 import model.PackagingUnit;
 
+import java.io.Serializable;
+
 @Data
 @ToString
-public class ModelDataPS {
+public class ModelDataPS implements Serializable {
     String productID;
     String productName;
     PackagingUnit packagingUnit;
