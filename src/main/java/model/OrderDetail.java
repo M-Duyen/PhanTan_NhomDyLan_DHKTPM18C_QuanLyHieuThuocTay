@@ -11,36 +11,50 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order_details")
-@ToString(exclude = {"order", "product"})
+@ToString(onlyExplicitlyIncluded = true)
 public class OrderDetail implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     @ManyToOne
+    @ToString.Include
     @JoinColumn(name = "order_id")
     private Order order;
 
     @Id
     @EqualsAndHashCode.Include
     @ManyToOne
+    @ToString.Include
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Id
     @EqualsAndHashCode.Include
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private PackagingUnit unit;
 
     @Column(name = "order_quantity", nullable = false)
+    @ToString.Include
     private int orderQuantity;
 
 
     @Transient
+    @ToString.Include
     public double getLineTotal() {
         if (product != null) {
-//            return orderQuantity * product.getUnitPrice(unit);
             return orderQuantity * product.getSellPrice(unit);
         }
         return 0;
+    }
+
+    public OrderDetail() {
+    }
+
+    public OrderDetail(Order order, Product product, PackagingUnit unit, int orderQuantity) {
+        this.order = order;
+        this.product = product;
+        this.unit = unit;
+        this.orderQuantity = orderQuantity;
     }
 
     public Order getOrder() {

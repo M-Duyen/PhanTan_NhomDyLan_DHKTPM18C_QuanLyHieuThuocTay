@@ -95,7 +95,7 @@ public class ProductServiceImpl extends GenericServiceImpl<Product, String> impl
     }
 
     @Override
-    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) throws RemoteException {
+    public Product getProductAfterUpdateUnits(Product product, PackagingUnit unit, boolean inc, int qtyChange) {
         return productDAO.getProductAfterUpdateUnits(product, unit, inc, qtyChange);
     }
 

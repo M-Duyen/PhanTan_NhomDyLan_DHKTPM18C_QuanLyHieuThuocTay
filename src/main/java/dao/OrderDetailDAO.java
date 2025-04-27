@@ -8,7 +8,6 @@ import model.ProductUnit;
 import ui.model.ModelDataPS;
 import ui.model.ModelDataPS_Circle;
 import service.OrderDetailService;
-import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,14 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
     public OrderDetailDAO(Class<OrderDetail> clazz) {
         super(clazz);
-        this.em = JPAUtil.getEntityManager();
-
     }
 
     public OrderDetailDAO(EntityManager em, Class<OrderDetail> clazz) {
@@ -115,10 +110,10 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for (Object[] row : result) {
             String type = (String) row[0];
-            Number count = (Number) row[1];
-            int qty = count.intValue();
+            Number qty = (Number) row[1];
 
-            modelList.add(new ModelDataPS_Circle(type, qty));
+            int quantity = qty.intValue();
+            modelList.add(new ModelDataPS_Circle(type, quantity));
         }
         return modelList;
     }
@@ -152,9 +147,10 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for(Object[] row : result) {
             String categoryName = (String) row[0];
-            Number countNumber = (Number) row[1];
-            int count = countNumber.intValue();
-            modelList.add(new ModelDataPS_Circle(categoryName, count));
+            Number count = (Number) row[1];
+
+            int qty = count.intValue();
+            modelList.add(new ModelDataPS_Circle(categoryName, qty));
         }
         return modelList;
     }

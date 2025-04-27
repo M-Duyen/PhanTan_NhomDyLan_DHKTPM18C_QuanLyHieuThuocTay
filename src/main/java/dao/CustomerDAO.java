@@ -106,15 +106,23 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
      */
     @Override
     public boolean updateCustPoint_Decrease(String phone, double point) {
-        String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
         EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        int updated = em.createQuery(jpql)
-                .setParameter("point", point)
-                .setParameter("phone", phone)
-                .executeUpdate();
-        tr.commit();
-        return updated > 0;
+        try {
+            tr.begin();
+            String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
+            int updated = em.createQuery(jpql)
+                    .setParameter("point", point)
+                    .setParameter("phone", phone)
+                    .executeUpdate();
+            tr.commit();
+            return updated > 0;
+        } catch (Exception e) {
+            if (tr.isActive()) {
+                tr.rollback();
+            }
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -127,15 +135,23 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
      */
     @Override
     public boolean updateCustPoint_Increase(String phone, double point) {
-        String jpql = "UPDATE Customer c SET c.point = c.point + :point WHERE c.phoneNumber = :phone";
         EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        int updated = em.createQuery(jpql)
-                .setParameter("point", point)
-                .setParameter("phone", phone)
-                .executeUpdate();
-        tr.commit();
-        return updated > 0;
+        try {
+            tr.begin();
+            String jpql = "UPDATE Customer c SET c.point = c.point + :point WHERE c.phoneNumber = :phone";
+            int updated = em.createQuery(jpql)
+                    .setParameter("point", point)
+                    .setParameter("phone", phone)
+                    .executeUpdate();
+            tr.commit();
+            return updated > 0;
+        } catch (Exception e) {
+            if (tr.isActive()) {
+                tr.rollback();
+            }
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
