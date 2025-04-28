@@ -48,6 +48,7 @@ public class RMIServerlocalhost {
         PromotionService promotionService = new PromotionServiceImpl(promotionDAO);
         PromotionTypeService promotionTypeService = new PromotionTypeServiceImpl(promotionTypeDAO);
         VendorService vendorService = new VendorServiceImpl(vendorDAO);
+        ServerService serverService = new ServerServiceImpl();
 
         //bind
         context.bind("rmi://localhost:7281/customerService", customerService);
@@ -66,6 +67,7 @@ public class RMIServerlocalhost {
         context.bind("rmi://localhost:7281/promotionService", promotionService);
         context.bind("rmi://localhost:7281/promotionTypeService", promotionTypeService);
         context.bind("rmi://localhost:7281/vendorService", vendorService);
+        context.bind("rmi://localhost:7281/serverService", serverService);
 
         System.out.println("Server Started!");
     }
