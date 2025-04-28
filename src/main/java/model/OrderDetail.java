@@ -1,15 +1,14 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 @Table(name = "order_details")
 @ToString(onlyExplicitlyIncluded = true)
 public class OrderDetail implements Serializable {

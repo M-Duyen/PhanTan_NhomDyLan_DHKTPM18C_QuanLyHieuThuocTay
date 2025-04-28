@@ -180,12 +180,14 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         return bin * pack;
     }
 
+
     /**
      * Lọc danh sách sản phẩm và phân loại
      *
      * @return
      */
     @Override
+    @Transactional
     public List<Product> fetchProducts() {
         List<Product> productList = new ArrayList<>();
 
@@ -250,11 +252,11 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
             List<String> results = query.getResultList();
 
             if (results != null && !results.isEmpty()) {
-                currentMax = results.stream() // Bắt đầu "stream" (luồng) từ results.
-                        .filter(Objects::nonNull) //Bỏ qua những phần tử bị null
-                        .mapToInt(Integer::parseInt)// Chuyển từng String thành int.
-                        .max()// Tìm số lớn nhất trong danh sách đó.
-                        .orElse(0); // Nếu không tìm được số nào (list rỗng), trả về 0 thay vì null để tránh lỗi.
+                currentMax = results.stream()
+                        .filter(Objects::nonNull)
+                        .mapToInt(Integer::parseInt)
+                        .max()
+                        .orElse(0);
             }
 
             int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
@@ -263,9 +265,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        int nextMaSP = currentMax + 1 + index;
-        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
         return newMaSP;
     }
@@ -556,11 +555,14 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
+        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
-//        System.out.println(dao.getProductID_NotCategory("PF021024000004"));
-        System.out.println(dao.getIDProduct("PF", 0));
+        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
+        System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
+        //System.out.println(dao.getIDProduct("PM", 3));
+        PackagingUnit unit = PackagingUnit.fromString("BOX");
+        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
+        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
     }
-
-
-
 }
