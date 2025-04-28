@@ -28,6 +28,14 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         try {
             em.getTransaction().begin();
             for (Product product : products) {
+                Vendor vendor = product.getVendor();
+                if (vendor != null && em.find(Vendor.class, vendor.getVendorID()) == null) {
+                    em.persist(vendor);
+                }
+                Category category = product.getCategory();
+                if (category != null && em.find(Category.class, category.getCategoryID()) == null) {
+                    em.persist(category);
+                }
                 em.persist(product);
             }
             em.getTransaction().commit();
@@ -38,6 +46,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
             return false;
         }
     }
+
 
     /**
      * Lọc danh sách sản phẩm gần hết hạn
