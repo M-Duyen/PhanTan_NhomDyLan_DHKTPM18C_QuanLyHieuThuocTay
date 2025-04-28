@@ -12,17 +12,17 @@ public class ServerServiceImpl extends UnicastRemoteObject implements ServerServ
     public ServerServiceImpl() throws RemoteException {
     };
 
-    public void setAwaiKey() throws RemoteException{
+    public synchronized void  setAwaiKey(boolean status) throws RemoteException{
         try {
-            utilStatics.setAwaiKey();
+            UtilStatics.setAwaiKey(status);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public boolean getAwaiKey() throws RemoteException{
+    public synchronized boolean getAwaiKey() throws RemoteException{
         try {
-            return utilStatics.getAwaiKey();
+            return UtilStatics.getAwaiKey();
         } catch (Exception e) {
             e.printStackTrace();
             return false;

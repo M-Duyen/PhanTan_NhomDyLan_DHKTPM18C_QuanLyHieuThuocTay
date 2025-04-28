@@ -50,6 +50,7 @@ public class RMISever {
         VendorService vendorService = new VendorServiceImpl(vendorDAO);
         ServerService serverService = new ServerServiceImpl();
 
+
         //bind
         context.bind("rmi://DESKTOP-6PMIT8Q:7281/customerService", customerService);
         context.bind("rmi://DESKTOP-6PMIT8Q:7281/accountService", accountService);
@@ -68,6 +69,8 @@ public class RMISever {
         context.bind("rmi://DESKTOP-6PMIT8Q:7281/promotionTypeService", promotionTypeService);
         context.bind("rmi://DESKTOP-6PMIT8Q:7281/vendorService", vendorService);
         context.bind("rmi://DESKTOP-6PMIT8Q:7281/serverService", serverService);
+
+        accountDAO.outAllAccount();
         System.out.println("Server Started!");
     }
 }

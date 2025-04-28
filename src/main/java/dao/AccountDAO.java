@@ -250,7 +250,20 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
             return false;
         }
     }
+    /**
+     * Đăng xuất tất cả tài khoản
+     *
+     * @return
+     */
 
+    public boolean outAllAccount(){
+        String jpql = "UPDATE Account a SET a.loggedIn = false";
+        em.getTransaction().begin();
+        int updatedCount = em.createQuery(jpql)
+                .executeUpdate();
+        em.getTransaction().commit();
+        return updatedCount > 0;
+    }
 
     public static void main(String[] args) {
         AccountDAO accountDAO = new AccountDAO(Account.class);
