@@ -51,23 +51,23 @@ public class RMISever {
         ServerService serverService = new ServerServiceImpl();
 
         //bind
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/customerService", customerService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/accountService", accountService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/administrationRouteService", administrationRouteService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/categoryService", categoryService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/employeeService", employeeService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/functionalFoodService", functionalFoodService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/managerService", managerService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/medicalSuppliesService", medicalSuppliesService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/medicineService", medicineService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/orderService", orderService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/orderDetailService", orderDetailService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/prescriptionService", prescriptionService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/productService", productService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/promotionService", promotionService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/promotionTypeService", promotionTypeService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/vendorService", vendorService);
-        context.bind("rmi://DESKTOP-6PMIT8Q:7281/serverService", serverService);
+        context.bind("rmi://PPH:7281/customerService", customerService);
+        context.bind("rmi://PPH:7281/accountService", accountService);
+        context.bind("rmi://PPH:7281/administrationRouteService", administrationRouteService);
+        context.bind("rmi://PPH:7281/categoryService", categoryService);
+        context.bind("rmi://PPH:7281/employeeService", employeeService);
+        context.bind("rmi://PPH:7281/functionalFoodService", functionalFoodService);
+        context.bind("rmi://PPH:7281/managerService", managerService);
+        context.bind("rmi://PPH:7281/medicalSuppliesService", medicalSuppliesService);
+        context.bind("rmi://PPH:7281/medicineService", medicineService);
+        context.bind("rmi://PPH:7281/orderService", orderService);
+        context.bind("rmi://PPH:7281/orderDetailService", orderDetailService);
+        context.bind("rmi://PPH:7281/prescriptionService", prescriptionService);
+        context.bind("rmi://PPH:7281/productService", productService);
+        context.bind("rmi://PPH:7281/promotionService", promotionService);
+        context.bind("rmi://PPH:7281/promotionTypeService", promotionTypeService);
+        context.bind("rmi://PPH:7281/vendorService", vendorService);
+        context.bind("rmi://PPH:7281/serverService", serverService);
         System.out.println("Server Started!");
     }
 }

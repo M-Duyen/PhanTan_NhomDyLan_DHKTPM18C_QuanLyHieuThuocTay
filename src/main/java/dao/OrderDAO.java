@@ -541,6 +541,6 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
 //        System.out.println(orderDAO.getProfit());
 //        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
 //        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
-        System.out.println(orderDAO.findById("OC2804250903002").getTotalDue());
+        System.out.println(orderDAO.findById("OC2804250903003").getTotalDue());
     }
 }
