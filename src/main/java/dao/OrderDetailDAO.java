@@ -85,7 +85,6 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
     /**
      * Thống kê sản phẩm bán chạy theo ngày, theo loại sản phẩm
      *
-     * TODO: Fix
      * @param startDate
      * @param endDate
      * @return
@@ -109,10 +108,22 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
         for (Object[] row : result) {
             String type = (String) row[0];
+            String typeString = "";
+            switch (type) {
+                case "PM":
+                    typeString = "Thuốc";
+                    break;
+                case "PF":
+                    typeString = "Thực phẩm chức nănng";
+                    break;
+                case "PS":
+                    typeString = "Vật tư y tế";
+                    break;
+            }
             Number qty = (Number) row[1];
 
             int quantity = qty.intValue();
-            modelList.add(new ModelDataPS_Circle(type, quantity));
+            modelList.add(new ModelDataPS_Circle(typeString, quantity));
         }
         return modelList;
     }
