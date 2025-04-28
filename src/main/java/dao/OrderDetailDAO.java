@@ -142,6 +142,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         List<Object[]> result = em.createQuery(query, Object[].class)
                 .setParameter("startDate", startDateTime)
                 .setParameter("endDate", endDateTime)
+                .setMaxResults(15)
                 .getResultList();
 
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();

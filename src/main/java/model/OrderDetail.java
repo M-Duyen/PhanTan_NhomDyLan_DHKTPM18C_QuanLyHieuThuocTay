@@ -8,8 +8,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Table(name = "order_details")
 @ToString(onlyExplicitlyIncluded = true)
 public class OrderDetail implements Serializable {
