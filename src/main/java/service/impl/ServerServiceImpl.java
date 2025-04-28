@@ -7,19 +7,20 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ServerServiceImpl extends UnicastRemoteObject implements ServerService {
+    public static UtilStatics utilStatics;
 
     public ServerServiceImpl() throws RemoteException {
     };
 
-    public void setAwaiKey() throws RemoteException{
+    public synchronized void  setAwaiKey(boolean status) throws RemoteException{
         try {
-            UtilStatics.setAwaiKey();
+            UtilStatics.setAwaiKey(status);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public boolean getAwaiKey() throws RemoteException{
+    public synchronized boolean getAwaiKey() throws RemoteException{
         try {
             return UtilStatics.getAwaiKey();
         } catch (Exception e) {

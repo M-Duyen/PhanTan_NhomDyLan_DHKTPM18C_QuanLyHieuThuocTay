@@ -111,13 +111,14 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
         EntityTransaction tr = em.getTransaction();
         try {
             tr.begin();
-            String jpql = "UPDATE Customer c SET c.point = c.point - :point WHERE c.phoneNumber = :phone";
-            int updated = em.createQuery(jpql)
-                    .setParameter("point", point)
+            String jpql = "SELECT c FROM Customer c WHERE c.phoneNumber = :phone";
+            Customer cus = em.createQuery(jpql, Customer.class)
                     .setParameter("phone", phone)
-                    .executeUpdate();
+                    .getSingleResult();
+            cus.setPoint(cus.getPoint() - point);
+            em.merge(cus);
             tr.commit();
-            return updated > 0;
+            return true;
         } catch (Exception e) {
             if (tr.isActive()) {
                 tr.rollback();
@@ -140,13 +141,14 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
         EntityTransaction tr = em.getTransaction();
         try {
             tr.begin();
-            String jpql = "UPDATE Customer c SET c.point = c.point + :point WHERE c.phoneNumber = :phone";
-            int updated = em.createQuery(jpql)
-                    .setParameter("point", point)
+            String jpql = "SELECT c FROM Customer c WHERE c.phoneNumber = :phone";
+            Customer cus = em.createQuery(jpql, Customer.class)
                     .setParameter("phone", phone)
-                    .executeUpdate();
+                    .getSingleResult();
+            cus.setPoint(cus.getPoint() + point);
+            em.merge(cus);
             tr.commit();
-            return updated > 0;
+            return true;
         } catch (Exception e) {
             if (tr.isActive()) {
                 tr.rollback();

@@ -4,6 +4,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface ServerService  extends Remote{
-    void setAwaiKey() throws RemoteException;
+    void setAwaiKey(boolean status) throws RemoteException;
     boolean getAwaiKey() throws RemoteException;
 }

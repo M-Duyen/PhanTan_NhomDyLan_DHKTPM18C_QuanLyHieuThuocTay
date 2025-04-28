@@ -47,7 +47,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         }
     }
 
-
     /**
      * Lọc danh sách sản phẩm gần hết hạn
      *
@@ -577,24 +576,10 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
-        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
-        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
-        //System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
-        //System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
-        //System.out.println(dao.getIDProduct("PM", 3));
-        //PackagingUnit unit = PackagingUnit.fromString("BOX");
-        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
-        //System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
-
-        Product product = dao.findById("PM280425000001");
-        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 293, BLISTER_PACK: 10, PILL: 6
-        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
-
-        unitNoteMap.entrySet().forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue()));
-        //unitLevels.forEach(System.out::println);
-
-        PackagingUnit unit = PackagingUnit.fromString("BOX");
-        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM280425000001", 1, unit));
+        System.out.println(dao.getIDProduct("PM", 0));
+//        System.out.println(dao.findById("OC2804250903002").ge);
     }
+
+
 }

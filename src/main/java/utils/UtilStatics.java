@@ -2,10 +2,10 @@ package utils;
 
 public class UtilStatics {
     public static boolean awaiKey = false;
-    public static void setAwaiKey(){
-        awaiKey = !awaiKey;
+    public synchronized static void setAwaiKey(boolean awaiKeySet) {
+        awaiKey = awaiKeySet;
     }
-    public static boolean getAwaiKey(){
+    public synchronized static boolean getAwaiKey(){
         return awaiKey;
     }
 }
