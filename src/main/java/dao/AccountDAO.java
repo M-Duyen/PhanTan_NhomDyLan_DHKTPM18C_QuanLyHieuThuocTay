@@ -119,15 +119,14 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
      * @return
      */
     public String containUserName(String userName) {
-        String jpql = "select ac.accountID " +
-                "from Account ac " +
-                "where ac.accountID=:username";
+        String jpql = "select ac.accountID from Account ac where ac.accountID = :username";
 
-        return em.createQuery(jpql, String.class)
+        List<String> result = em.createQuery(jpql, String.class)
                 .setParameter("username", userName)
-                .getSingleResult();
-
+                .getResultList();
+        return result.isEmpty() ? null : result.get(0);
     }
+
 
     /**
      * Đăng nhập
