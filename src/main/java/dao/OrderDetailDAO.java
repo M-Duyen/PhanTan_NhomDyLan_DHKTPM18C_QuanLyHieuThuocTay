@@ -11,10 +11,7 @@ import service.OrderDetailService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
     public OrderDetailDAO(Class<OrderDetail> clazz) {
@@ -52,14 +49,16 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         LocalDateTime startDateTime = LocalDate.parse(start).atStartOfDay();
         LocalDateTime endDateTime = LocalDate.parse(end).atTime(23, 59, 59);
 
-        String query = "SELECT od.product.productID, od.unit, od.product.productName, SUM(od.orderQuantity) " +
+        String query = "SELECT od.product.productID, od.unit, od.product.productName, SUM(od.orderQuantity) AS sumQty " +
                 "FROM OrderDetail od " +
                 "WHERE od.order.orderDate >= :startDateTime AND od.order.orderDate <= :endDateTime " +
-                "GROUP BY od.product.productID, od.unit, od.product.productName";
+                "GROUP BY od.product.productID, od.unit, od.product.productName " +
+                "ORDER BY sumQty DESC";
 
         List<Object[]> resultSold = em.createQuery(query, Object[].class)
                 .setParameter("startDateTime", startDateTime)
                 .setParameter("endDateTime", endDateTime)
+                .setMaxResults(14)
                 .getResultList();
 
         ArrayList<ModelDataPS> modelDataPSList = new ArrayList<>();
@@ -142,6 +141,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         List<Object[]> result = em.createQuery(query, Object[].class)
                 .setParameter("startDate", startDateTime)
                 .setParameter("endDate", endDateTime)
+                .setMaxResults(15)
                 .getResultList();
 
         ArrayList<ModelDataPS_Circle> modelList = new ArrayList<>();
@@ -183,6 +183,6 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
 
     public static void main(String[] args) {
         OrderDetailDAO dao = new OrderDetailDAO(OrderDetail.class);
-        System.out.println(dao.getProductStatistical("2025-01-15", "2025-01-16"));
+        dao.getProductStatistical("2025-01-15", "2025-04-28").forEach(x -> System.out.println(x.getSold()));
     }
 }

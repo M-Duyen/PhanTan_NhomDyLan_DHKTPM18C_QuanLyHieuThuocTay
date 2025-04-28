@@ -56,7 +56,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      * @return
      */
     @Override
-    public String createOrderID(String emplId) {
+    public synchronized  String createOrderID(String emplId) {
         String datePart = DateTimeFormatter.ofPattern("ddMMyy").format(LocalDate.now());
         String empl = emplId.substring(2);
         String prefix = "OR" + datePart + empl;
@@ -430,6 +430,7 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
         }
         return totalInStock == 0 ? 0 : (totalSold / totalInStock) * 100;
     }
+
     /**
      * Lấy tổng doanh thu đã bán
      *

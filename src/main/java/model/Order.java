@@ -63,7 +63,7 @@ public class Order implements Serializable {
                 totalDue += orderDetail.getLineTotal();
             }
         }
-        return totalDue * (1 - discount);
+        return totalDue - discount;
     }
 
     public Order(String orderID, LocalDateTime orderDate, String shipToAddress, PaymentMethod paymentMethod, Double discount, Employee employee, Customer customer, Prescription prescription) {
