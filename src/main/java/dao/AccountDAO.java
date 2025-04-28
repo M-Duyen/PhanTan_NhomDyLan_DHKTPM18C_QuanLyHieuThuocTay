@@ -198,7 +198,6 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
         // Cho phép đăng nhập
         account.setLoggedIn(true);
         update(account);
-        System.out.println(account.isLoggedIn());
 
         return true;
     }
@@ -211,12 +210,10 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
      */
     public boolean logout(String accountId) {
         Account account = findById(accountId);
-
-        // Cập nhật đăng xuất
+        em.getTransaction().begin();
         account.setLoggedIn(false);
         update(account);
-        System.out.println(account.isLoggedIn());
-
+        em.getTransaction().commit();
         return true;
     }
 
@@ -249,6 +246,15 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
         } else {
             return false;
         }
+    }
+
+    public boolean outAllAccount(){
+        String jpql = "UPDATE Account a SET a.loggedIn = false";
+        em.getTransaction().begin();
+        int updatedCount = em.createQuery(jpql)
+                .executeUpdate();
+        em.getTransaction().commit();
+        return updatedCount > 0;
     }
 
 
