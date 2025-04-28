@@ -69,6 +69,7 @@ public class RMIServerlocalhost {
         context.bind("rmi://localhost:7281/vendorService", vendorService);
         context.bind("rmi://localhost:7281/serverService", serverService);
 
+        accountDAO.outAllAccount();
         System.out.println("Server Started!");
     }
 }
