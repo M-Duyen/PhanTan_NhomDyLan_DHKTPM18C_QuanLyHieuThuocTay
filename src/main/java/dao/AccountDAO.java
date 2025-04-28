@@ -195,18 +195,6 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
     public boolean loginCheck(String accountId, String password) {
         Account account = findById(accountId);
 
-//        if (account == null) {
-//            throw new RuntimeException("Không tìm thấy tài khoản!");
-//        }
-//
-//        if (account.isLoggedIn()) {
-//            throw new RuntimeException("Tài khoản đang được đăng nhập trên thiết bị khác!");
-//        }
-//
-//        if (!account.getPassword().equals(password)) {
-//            throw new RuntimeException("Sai mật khẩu!");
-//        }
-
         // Cho phép đăng nhập
         account.setLoggedIn(true);
         update(account);
@@ -222,20 +210,18 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
      */
     public boolean logout(String accountId) {
         Account account = findById(accountId);
-
-        // Cập nhật đăng xuất
+        em.getTransaction().begin();
         account.setLoggedIn(false);
         update(account);
-
+        em.getTransaction().commit();
         return true;
     }
 
-    /**     * Kiểm tra tài khoản đã đăng nhập hay chưa
+    /** Kiểm tra tài khoản đã đăng nhập hay chưa
      *
      * @param accountId
      * @return
      */
-
     public boolean isAccountLoggedIn(String accountId) {
         Account account = findById(accountId);
         return account != null && account.isLoggedIn();
@@ -259,6 +245,15 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
         } else {
             return false;
         }
+    }
+
+    public boolean outAllAccount(){
+        String jpql = "UPDATE Account a SET a.loggedIn = false";
+        em.getTransaction().begin();
+        int updatedCount = em.createQuery(jpql)
+                .executeUpdate();
+        em.getTransaction().commit();
+        return updatedCount > 0;
     }
 
 

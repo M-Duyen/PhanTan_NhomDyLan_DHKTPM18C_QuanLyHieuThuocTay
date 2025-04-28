@@ -63,11 +63,7 @@ public class Order implements Serializable {
                 totalDue += orderDetail.getLineTotal();
             }
         }
-        double result = totalDue * (1.0 - this.discount);
-        if (orderID != null && orderID.startsWith("OC")) {
-            return -result;
-        }
-        return result;
+        return totalDue - discount;
     }
 
     public Order(String orderID, LocalDateTime orderDate, String shipToAddress, PaymentMethod paymentMethod, Double discount, Employee employee, Customer customer, Prescription prescription) {

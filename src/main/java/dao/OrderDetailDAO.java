@@ -11,10 +11,7 @@ import service.OrderDetailService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements OrderDetailService {
     public OrderDetailDAO(Class<OrderDetail> clazz) {
@@ -56,7 +53,7 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
                 "FROM OrderDetail od " +
                 "WHERE od.order.orderDate >= :startDateTime AND od.order.orderDate <= :endDateTime " +
                 "GROUP BY od.product.productID, od.unit, od.product.productName " +
-                "ORDER BY sumQty DESC ";
+                "ORDER BY sumQty DESC";
 
         List<Object[]> resultSold = em.createQuery(query, Object[].class)
                 .setParameter("startDateTime", startDateTime)
