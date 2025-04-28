@@ -385,26 +385,39 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         Product product = findById(productID);
         Map<PackagingUnit, Integer> result = new LinkedHashMap<>();
 
-        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 234, BLISTER_PACK: 6, PILL: 4
-        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
+        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 293, BLISTER_PACK: 10, PILL: 6
+        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet()); //BOX, BLISTER_PACK, PILL
 
         int smallestQty = 0;
+        boolean flag = false;
         for(int i = 0;  i < unitLevels.size();  i++) {
+            System.out.println(unitLevels.get(i));
             if(unitLevels.get(i).equals(sellUnit)) {
-                int uniteNotePart = unitNoteMap.get(unitLevels.get(i + 1));
-                if(uniteNotePart == 0) {
+                flag = true;
+            }
+            if(flag) {
+                if((i + 1 ) >= unitLevels.size()) {
                     break;
                 }
+                int uniteNotePart = unitNoteMap.get(unitLevels.get(i + 1));
+
                 smallestQty = qtyChange * uniteNotePart;
             }
         }
-        for(int i = unitLevels.size() - 1;  i >= 0;  i--) {
-            PackagingUnit unit = unitLevels.get(i);
-            System.out.println("Unit: " + unit);
-            int stock = product.getInstockQuantity(unit);
-            result.put(unitLevels.get(i), stock - smallestQty);
 
-            smallestQty = smallestQty / unitNoteMap.get(unit);
+        System.out.println(smallestQty);
+
+        boolean first = true;
+        for(int i = unitLevels.size() - 1;  i >= 0;  i--) {
+            if(!first) {
+                result.put(unitLevels.get(i), (int) Math.ceil(result.get(unitLevels.get(i + 1)) / unitNoteMap.get(unitLevels.get(i + 1))));
+            } else {
+                PackagingUnit unit = unitLevels.get(i);
+                int stock = product.getInstockQuantity(unit);
+                result.put(unitLevels.get(i), stock - smallestQty);
+                first = false;
+
+            }
         }
         return result;
     }
@@ -555,9 +568,24 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
+        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
-        System.out.println(dao.getIDProduct("PM", 0));
+        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
+        //System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
+        //System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
+        //System.out.println(dao.getIDProduct("PM", 3));
+        //PackagingUnit unit = PackagingUnit.fromString("BOX");
+        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
+        //System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
+
+        Product product = dao.findById("PM280425000001");
+        Map<PackagingUnit, Integer> unitNoteMap = product.parseUnitNote(); //BOX: 293, BLISTER_PACK: 10, PILL: 6
+        List<PackagingUnit> unitLevels = new ArrayList<>(unitNoteMap.keySet());
+
+        unitNoteMap.entrySet().forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue()));
+        //unitLevels.forEach(System.out::println);
+
+        PackagingUnit unit = PackagingUnit.fromString("BOX");
+        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM280425000001", 1, unit));
     }
-
-
 }

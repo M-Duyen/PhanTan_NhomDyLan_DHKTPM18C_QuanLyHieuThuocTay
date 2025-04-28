@@ -222,7 +222,6 @@ public class AccountDAO extends GenericDAO<Account, String> implements AccountSe
      * @param accountId
      * @return
      */
-
     public boolean isAccountLoggedIn(String accountId) {
         Account account = findById(accountId);
         return account != null && account.isLoggedIn();
