@@ -29,5 +29,5 @@ public class Promotion implements Serializable {
     @Column(name = "end_date", columnDefinition = "date")
     private LocalDate endDate;
     private double discount;
-    private boolean stats;
+    private boolean status;
 }

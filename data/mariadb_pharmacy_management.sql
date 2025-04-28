@@ -76,7 +76,7 @@ VALUES ('PR01', N'Khuyến mãi từ nhà cung cấp'),
 
 
 # --Thêm dữ liệu Promotion
-INSERT INTO pharmacy_management.promotions(promotion_id, promotion_name, start_date, end_date, stats, promotion_type_id,
+INSERT INTO pharmacy_management.promotions(promotion_id, promotion_name, start_date, end_date, status, promotion_type_id,
                                            discount)
 VALUES ('PR02102410102401', N'Khuyến mãi đợt 1 tháng 10', '2024-02-10', '2024-10-10', 0, 'PR01', 0.5),
        ('PR20102430102402', N'Khuyến mãi đợt 2 tháng 10', '2024-10-20', '2024-10-30', 0, 'PR02', 0.3),

@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import model.Promotion;
 import service.PromotionService;
-import utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +23,9 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements Promo
     @Override
     public boolean updatePromotionStatus() {
         String jpql = "UPDATE Promotion p " +
-                "SET p.stats = false " +
+                "SET p.status = false " +
                 "WHERE p.endDate < CURRENT_DATE " +
-                "AND p.stats = true";
+                "AND p.status = true";
 
         EntityTransaction transaction = em.getTransaction();
         try {
@@ -51,7 +50,7 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements Promo
         ArrayList<Promotion> promotionListByCriterous = new ArrayList<>();
         ArrayList<Promotion> promotionList = proList;
         for (Promotion promotion : promotionList) {
-            if (promotion.isStats() == criterious) {
+            if (promotion.isStatus() == criterious) {
                 promotionListByCriterous.add(promotion);
             }
         }
@@ -67,7 +66,7 @@ public class PromotionDAO extends GenericDAO<Promotion, String> implements Promo
      */
     @Override
     public List<Promotion> getPromotionListByStatus(boolean status) {
-        String jpql = "SELECT p FROM Promotion p WHERE p.stats = :status";
+        String jpql = "SELECT p FROM Promotion p WHERE p.status = :status";
         return em.createQuery(jpql, Promotion.class)
                 .setParameter("status", status)
                 .getResultList();
