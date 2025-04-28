@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ProductDAO extends GenericDAO<Product, String> implements ProductService {
     public ProductDAO(Class<Product> clazz) {
@@ -268,7 +269,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
 
         return newMaSP;
     }
-
 
     /**
      * Lấy danh mục của sản phẩm
@@ -555,14 +555,9 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
     public static void main(String[] args) {
-        //{BOX=234, BLISTER_PACK=6, PILL=4}
         ProductDAO dao = new ProductDAO(Product.class);
-        //System.out.println(dao.getProductID_NotCategory("PF021024000004"));
-        System.out.println(dao.getProduct_ByBarcode("8270425000002").parseUnitNote());
-        System.out.println(dao.getProduct_ByBarcode("8270425000002").getUnitDetails());
-        //System.out.println(dao.getIDProduct("PM", 3));
-        PackagingUnit unit = PackagingUnit.fromString("BOX");
-        //dao.getUnitNoteChangeSelling("PM270425000002", 1, unit);
-        System.out.println("After: " + dao.getUnitNoteChangeSelling("PM270425000002", 1, unit));
+        System.out.println(dao.getIDProduct("PM", 0));
     }
+
+
 }
