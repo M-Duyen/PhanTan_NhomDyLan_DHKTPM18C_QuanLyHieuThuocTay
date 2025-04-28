@@ -67,6 +67,7 @@ public class RMISever {
         context.bind("rmi://DESKTOP-IN8729E:7281/promotionService", promotionService);
         context.bind("rmi://DESKTOP-IN8729E:7281/promotionTypeService", promotionTypeService);
         context.bind("rmi://DESKTOP-IN8729E:7281/vendorService", vendorService);
+        context.bind("rmi://DESKTOP-IN8729E:7281/serverService", serverService);
 
         System.out.println("Server Started!");
     }
