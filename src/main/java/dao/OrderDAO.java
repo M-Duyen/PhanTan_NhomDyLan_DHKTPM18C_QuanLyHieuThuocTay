@@ -529,18 +529,18 @@ public class OrderDAO extends GenericDAO<Order, String> implements OrderService 
      */
     @Override
     public boolean orderIsExists(String orderID) {
-        String query = "SELECT o FROM Order o WHERE o.orderID = :orderID";
-        Order order = em.createQuery(query, Order.class)
+        List<Order> orders = em.createQuery(
+                        "SELECT o FROM Order o WHERE o.orderID = :orderID", Order.class)
                 .setParameter("orderID", orderID)
-                .getSingleResult();
-        return order != null;
+                .getResultList();
+        return !orders.isEmpty();
     }
 
     public static void main(String[] args) {
         OrderDAO orderDAO = new OrderDAO(JPAUtil.getEntityManager(), Order.class);
 //        System.out.println(orderDAO.getProfit());
 //        orderDAO.getAllDateHaveEmpID("EP1501").forEach(System.out::println);
-        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
-
+//        orderDAO.filterOrderByEmpID("EP1501", "2024-09-30").forEach(System.out::println);
+        System.out.println(orderDAO.findById("OC2804250903002").getTotalDue());
     }
 }

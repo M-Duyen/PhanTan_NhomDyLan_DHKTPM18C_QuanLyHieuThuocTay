@@ -52,14 +52,16 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
         LocalDateTime startDateTime = LocalDate.parse(start).atStartOfDay();
         LocalDateTime endDateTime = LocalDate.parse(end).atTime(23, 59, 59);
 
-        String query = "SELECT od.product.productID, od.unit, od.product.productName, SUM(od.orderQuantity) " +
+        String query = "SELECT od.product.productID, od.unit, od.product.productName, SUM(od.orderQuantity) AS sumQty " +
                 "FROM OrderDetail od " +
                 "WHERE od.order.orderDate >= :startDateTime AND od.order.orderDate <= :endDateTime " +
-                "GROUP BY od.product.productID, od.unit, od.product.productName";
+                "GROUP BY od.product.productID, od.unit, od.product.productName " +
+                "ORDER BY sumQty DESC ";
 
         List<Object[]> resultSold = em.createQuery(query, Object[].class)
                 .setParameter("startDateTime", startDateTime)
                 .setParameter("endDateTime", endDateTime)
+                .setMaxResults(14)
                 .getResultList();
 
         ArrayList<ModelDataPS> modelDataPSList = new ArrayList<>();

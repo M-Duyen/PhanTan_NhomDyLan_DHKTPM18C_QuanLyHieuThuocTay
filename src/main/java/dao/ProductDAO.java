@@ -557,6 +557,7 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     public static void main(String[] args) {
         ProductDAO dao = new ProductDAO(Product.class);
         System.out.println(dao.getIDProduct("PM", 0));
+//        System.out.println(dao.findById("OC2804250903002").ge);
     }
 
 
