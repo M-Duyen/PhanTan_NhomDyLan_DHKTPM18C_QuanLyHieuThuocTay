@@ -9,6 +9,7 @@ import utils.JPAUtil;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CustomerDAO extends GenericDAO<Customer, String> implements CustomerService {
@@ -75,9 +76,10 @@ public class CustomerDAO extends GenericDAO<Customer, String> implements Custome
     @Override
     public Customer getCustomerByPhone(String phone) {
         String query = "SELECT c FROM Customer c WHERE c.phoneNumber = :phone";
-        return em.createQuery(query, Customer.class)
+        List<Customer> customer = em.createQuery(query, Customer.class)
                 .setParameter("phone", phone)
-                .getSingleResult();
+                .getResultList();
+        return customer.isEmpty() ? null : customer.get(0);
     }
 
 
