@@ -29,12 +29,12 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
     }
 
 
-    public List<T> getAll() {
+    public synchronized List<T> getAll() {
         String jpql = "SELECT t FROM " + clazz.getSimpleName() + " t";
         return em.createQuery(jpql, clazz).getResultList();
     }
 
-    public boolean create(T t) {
+    public synchronized boolean create(T t) {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -48,11 +48,11 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         }
     }
 
-    public T findById(ID id) {
+    public synchronized T findById(ID id) {
         return em.find(clazz, id);
     }
 
-    public boolean update(T t) {
+    public synchronized boolean update(T t) {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -66,7 +66,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         }
     }
 
-    public boolean delete(ID id) {
+    public synchronized boolean delete(ID id) {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();

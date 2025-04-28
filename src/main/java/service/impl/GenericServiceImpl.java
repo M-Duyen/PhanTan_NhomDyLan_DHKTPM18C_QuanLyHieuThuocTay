@@ -19,27 +19,27 @@ public abstract class GenericServiceImpl<T, ID> extends UnicastRemoteObject impl
     }
 
     @Override
-    public List<T> getAll() throws RemoteException {
+    public synchronized List<T> getAll() throws RemoteException {
         return genericDAO.getAll();
     }
 
     @Override
-    public boolean create(T t) throws RemoteException {
+    public synchronized boolean create(T t) throws RemoteException {
         return genericDAO.create(t);
     }
 
     @Override
-    public T findById(ID id) throws RemoteException {
+    public synchronized T findById(ID id) throws RemoteException {
         return genericDAO.findById(id);
     }
 
     @Override
-    public boolean update(T t) throws RemoteException {
+    public synchronized boolean update(T t) throws RemoteException {
         return genericDAO.update(t);
     }
 
     @Override
-    public boolean delete(ID id) throws RemoteException {
+    public synchronized boolean delete(ID id) throws RemoteException {
         return genericDAO.delete(id);
     }
 

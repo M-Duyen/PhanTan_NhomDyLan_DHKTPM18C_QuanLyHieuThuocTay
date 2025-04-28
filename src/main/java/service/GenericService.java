@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface GenericService<T, ID> extends Remote {
     List<T> getAll() throws RemoteException;
-    boolean create(T t) throws RemoteException;
+    boolean  create(T t) throws RemoteException;
     T findById(ID id) throws RemoteException;
     boolean update(T t) throws RemoteException;
     boolean delete(ID id) throws RemoteException;
