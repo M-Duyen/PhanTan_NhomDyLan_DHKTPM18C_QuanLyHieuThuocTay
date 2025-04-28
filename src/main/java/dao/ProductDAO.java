@@ -182,11 +182,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
     }
 
 
-
-
-
-
-
     /**
      * Lọc danh sách sản phẩm và phân loại
      *
@@ -258,11 +253,11 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
             List<String> results = query.getResultList();
 
             if (results != null && !results.isEmpty()) {
-                currentMax = results.stream() // Bắt đầu "stream" (luồng) từ results.
-                        .filter(Objects::nonNull) //Bỏ qua những phần tử bị null
-                        .mapToInt(Integer::parseInt)// Chuyển từng String thành int.
-                        .max()// Tìm số lớn nhất trong danh sách đó.
-                        .orElse(0); // Nếu không tìm được số nào (list rỗng), trả về 0 thay vì null để tránh lỗi.
+                currentMax = results.stream()
+                        .filter(Objects::nonNull)
+                        .mapToInt(Integer::parseInt)
+                        .max()
+                        .orElse(0);
             }
 
             int nextMaSP = currentMax + 1 + (index == 0 ? 0 : index);
@@ -271,9 +266,6 @@ public class ProductDAO extends GenericDAO<Product, String> implements ProductSe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        int nextMaSP = currentMax + 1 + index;
-        newMaSP = numType + datePart + String.format("%06d", nextMaSP);
 
         return newMaSP;
     }

@@ -134,7 +134,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         entitySearchConfigMap.put("vendor", new EntitySearchConfig(Vendor.class, Arrays.asList("vendorID", "country", "vendorName")));
         entitySearchConfigMap.put("administration", new EntitySearchConfig(AdministrationRoute.class, Arrays.asList("administrationRouteID","administrationRouteName")));
         entitySearchConfigMap.put("category", new EntitySearchConfig(Category.class, Arrays.asList("categoryName")));
-        entitySearchConfigMap.put("customer", new EntitySearchConfig(Customer.class, Arrays.asList("customerID", "customerName", "phoneNumber", "email", "address")));
+        entitySearchConfigMap.put("customer", new EntitySearchConfig(Customer.class, Arrays.asList("customerID", "customerName", "phoneNumber", "email", "addr")));
         entitySearchConfigMap.put("employee", new EntitySearchConfig(Employee.class, Arrays.asList("employeeID", "employeeName", "phoneNumber", "email", "address", "status", "degree")));
         entitySearchConfigMap.put("functionalfood", new EntitySearchConfig(FunctionalFood.class, Arrays.asList("mainNutrients", "supplementaryIngredients")));
         entitySearchConfigMap.put("medicalsupply", new EntitySearchConfig(MedicalSupply.class, Arrays.asList("medicalSupplyType")));
@@ -142,8 +142,7 @@ public abstract class GenericDAO<T, ID> implements GenericService<T,ID> {
         entitySearchConfigMap.put("promotiontype", new EntitySearchConfig(PromotionType.class, Arrays.asList("promotionTypeName")));
         entitySearchConfigMap.put("promotion", new EntitySearchConfig(Promotion.class, Arrays.asList("status","promotionType.promotionTypeName")));
         entitySearchConfigMap.put("order", new EntitySearchConfig(Order.class, Arrays.asList("orderDate", "shipToAddress")));
-        entitySearchConfigMap.put("orderdetail", new EntitySearchConfig(OrderDetail.class, Arrays.asList("order.orderID", "product.productID", "unit", "orderQuantity")));
-
+        entitySearchConfigMap.put("orderdetail", new EntitySearchConfig(OrderDetail.class, Arrays.asList("order.orderID")));
 
         EntitySearchConfig config = entitySearchConfigMap.get(entityName.toLowerCase());
 

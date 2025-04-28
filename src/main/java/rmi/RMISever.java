@@ -48,6 +48,7 @@ public class RMISever {
         PromotionService promotionService = new PromotionServiceImpl(promotionDAO);
         PromotionTypeService promotionTypeService = new PromotionTypeServiceImpl(promotionTypeDAO);
         VendorService vendorService = new VendorServiceImpl(vendorDAO);
+        ServerService serverService = new ServerServiceImpl();
 
         //bind
         context.bind("rmi://DESKTOP-IN8729E:7281/customerService", customerService);

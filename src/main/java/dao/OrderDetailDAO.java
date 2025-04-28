@@ -183,6 +183,6 @@ public class OrderDetailDAO extends GenericDAO<OrderDetail, String> implements O
 
     public static void main(String[] args) {
         OrderDetailDAO dao = new OrderDetailDAO(OrderDetail.class);
-        dao.getProductStatistical("2025-01-15", "2025-04-28").forEach(x -> System.out.println(x.getSold()));
+        System.out.println(dao.getProductStatistical("2025-01-15", "2025-01-16"));
     }
 }
